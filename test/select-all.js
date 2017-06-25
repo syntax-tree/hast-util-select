@@ -124,6 +124,15 @@ test('select.selectAll()', function (t) {
       'should return deep matches'
     );
 
+    st.deepEqual(
+      selectAll('b s', h('p', [
+        h('b', h('s', '1')),
+        h('i', h('s', '2'))
+      ])),
+      [h('s', '1')],
+      'should not match outside other matches'
+    );
+
     st.end();
   });
 
