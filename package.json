@@ -13,7 +13,7 @@
     "match",
     "matches"
   ],
-  "repository": "https://github.com/syntax-tree/hast-util-select",
+  "repository": "syntax-tree/hast-util-select",
   "bugs": "https://github.com/syntax-tree/hast-util-select/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
