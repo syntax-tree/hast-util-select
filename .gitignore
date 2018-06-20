@@ -5,3 +5,4 @@ coverage/
 node_modules/
 hast-util-select.js
 hast-util-select.min.js
+yarn.lock
