@@ -29,16 +29,16 @@ selector.
 ##### Usage
 
 ```js
-var h = require('hastscript');
-var matches = require('hast-util-select').matches;
+var h = require('hastscript')
+var matches = require('hast-util-select').matches
 
-matches('b, i', h('b')); //=> true
-matches(':any-link', h('a')); //=> false
-matches(':any-link', h('a', {href: '#'})); //=> true
-matches('.classy', h('a', {className: ['classy']})); //=> true
-matches('#id', h('a', {id: 'id'})); //=> true
-matches('[lang|=en]', h('a', {lang: 'en'})); //=> true
-matches('[lang|=en]', h('a', {lang: 'en-GB'})); //=> true
+matches('b, i', h('b')) // => true
+matches(':any-link', h('a')) // => false
+matches(':any-link', h('a', {href: '#'})) // => true
+matches('.classy', h('a', {className: ['classy']})) // => true
+matches('#id', h('a', {id: 'id'})) // => true
+matches('[lang|=en]', h('a', {lang: 'en'})) // => true
+matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
 // ...
 ```
 
@@ -58,16 +58,21 @@ matches('[lang|=en]', h('a', {lang: 'en-GB'})); //=> true
 ##### Usage
 
 ```js
-var h = require('hastscript');
-var select = require('hast-util-select').select;
+var h = require('hastscript')
+var select = require('hast-util-select').select
 
-console.log(select('h1 ~ :nth-child(even)', h('section', [
-  h('p', 'Alpha'),
-  h('p', 'Bravo'),
-  h('h1', 'Charlie'),
-  h('p', 'Delta'),
-  h('p', 'Echo')
-])));
+console.log(
+  select(
+    'h1 ~ :nth-child(even)',
+    h('section', [
+      h('p', 'Alpha'),
+      h('p', 'Bravo'),
+      h('h1', 'Charlie'),
+      h('p', 'Delta'),
+      h('p', 'Echo')
+    ])
+  )
+)
 ```
 
 Yields:
@@ -99,18 +104,23 @@ tree itself).
 ##### Usage
 
 ```js
-var h = require('hastscript');
-var selectAll = require('hast-util-select').selectAll;
+var h = require('hastscript')
+var selectAll = require('hast-util-select').selectAll
 
-console.log(selectAll('h1 ~ :nth-child(even)', h('section', [
-  h('p', 'Alpha'),
-  h('p', 'Bravo'),
-  h('h1', 'Charlie'),
-  h('p', 'Delta'),
-  h('p', 'Echo'),
-  h('p', 'Foxtrot'),
-  h('p', 'Golf')
-])));
+console.log(
+  selectAll(
+    'h1 ~ :nth-child(even)',
+    h('section', [
+      h('p', 'Alpha'),
+      h('p', 'Bravo'),
+      h('h1', 'Charlie'),
+      h('p', 'Delta'),
+      h('p', 'Echo'),
+      h('p', 'Foxtrot'),
+      h('p', 'Golf')
+    ])
+  )
+)
 ```
 
 Yields:

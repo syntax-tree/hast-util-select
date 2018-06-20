@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-require('./matches');
-require('./select');
-require('./select-all');
-require('./all');
+require('./matches')
+require('./select')
+require('./select-all')
+require('./all')
