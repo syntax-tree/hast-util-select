@@ -17,16 +17,18 @@ exports.matches = matches
 exports.selectAll = selectAll
 exports.select = select
 
-function matches(selector, node) {
-  return Boolean(any(parse(selector), node, {one: true, shallow: true})[0])
+function matches(selector, node, space) {
+  return Boolean(
+    any(parse(selector), node, {space: space, one: true, shallow: true})[0]
+  )
 }
 
-function select(selector, node) {
-  return any(parse(selector), node, {one: true})[0] || null
+function select(selector, node, space) {
+  return any(parse(selector), node, {space: space, one: true})[0] || null
 }
 
-function selectAll(selector, node) {
-  return any(parse(selector), node, {})
+function selectAll(selector, node, space) {
+  return any(parse(selector), node, {space: space})
 }
 
 function parse(selector) {

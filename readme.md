@@ -19,7 +19,7 @@ npm install hast-util-select
 
 ## API
 
-### `select.matches(selector, node)`
+### `select.matches(selector, node[, space])`
 
 This only checks the element itself, not the surrounding tree.  Thus, nesting
 in selectors is not supported (`p b`, `p > b`), neither are selectors like
@@ -44,16 +44,18 @@ matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
 
 ##### Parameters
 
-*   `node` (`Node`)
-    — Thing to check, could be anything, but should be an [element][]
 *   `selector` (`string`)
     — CSS selectors (`,` is also supported)
+*   `node` (`Node`)
+    — Thing to check, could be anything, but should be an [element][]
+*   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
+    — Which space the node exists in
 
 ##### Returns
 
 `boolean` — Whether the node matches the selector.
 
-### `select.select(selector, tree)`
+### `select.select(selector, tree[, space])`
 
 ##### Usage
 
@@ -89,14 +91,16 @@ tree itself).
 
 ##### Parameters
 
-*   `tree` (`Node`) — Thing to search.
 *   `selector` (`string`) — CSS selectors (`,` is also supported)
+*   `tree` (`Node`) — Thing to search.
+*   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
+    — Which v the tree exists in
 
 ##### Returns
 
 `Element?` — The found element, if any.
 
-### `select.selectAll(selector, tree)`
+### `select.selectAll(selector, tree[, space])`
 
 Select all nodes matching `selector` in the given `tree` (could include the
 tree itself).
@@ -138,8 +142,10 @@ Yields:
 
 ##### Parameters
 
-*   `tree` (`Node`) — Thing to search.
 *   `selector` (`string`) — CSS selectors (`,` is also supported)
+*   `tree` (`Node`) — Thing to search.
+*   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
+    — Which space the tree exists in
 
 ##### Returns
 
