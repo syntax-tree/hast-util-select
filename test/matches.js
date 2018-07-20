@@ -3,6 +3,7 @@
 var test = require('tape')
 var u = require('unist-builder')
 var h = require('hastscript')
+var s = require('hastscript/svg')
 var matches = require('..').matches
 
 test('select.matches()', function(t) {
@@ -85,10 +86,10 @@ test('select.matches()', function(t) {
   t.test('parent-sensitive pseudo-selectors', function(st) {
     ;[
       'first-child',
-      'last-child',
-      'only-child',
       'first-of-type',
+      'last-child',
       'last-of-type',
+      'only-child',
       'only-of-type'
     ].forEach(function(pseudo) {
       st.throws(
@@ -895,6 +896,24 @@ test('select.matches()', function(t) {
       )
       sst.notOk(matches(':blank', h(null, h())), 'false if w/ elements')
       sst.notOk(matches(':blank', h(null, u('text', '.'))), 'false if w/ text')
+
+      sst.end()
+    })
+
+    st.test(':root', function(sst) {
+      sst.ok(matches(':root', h('html')), 'true if `<html>` in HTML space')
+
+      sst.notOk(
+        matches(':root', h('div')),
+        'false if not `<html>` in HTML space'
+      )
+
+      sst.ok(matches(':root', s('svg'), 'svg'), 'true if `<svg>` in SVG space')
+
+      sst.notOk(
+        matches(':root', s('circle'), 'svg'),
+        'false if not `<svg>` in SVG space'
+      )
 
       sst.end()
     })
