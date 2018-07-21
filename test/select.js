@@ -672,6 +672,25 @@ test('select.select()', function(t) {
       sst.end()
     })
 
+    st.test(':lang()', function(sst) {
+      sst.deepEqual(
+        select(
+          'q:lang(en)',
+          u('root', [
+            h('div', {lang: 'en'}, h('p', {lang: ''}, h('q', '0'))),
+            h('p', {lang: 'fr'}, h('q', {lang: 'fr'}, 'A')),
+            h('p', {lang: 'fr'}, h('q', {lang: ''}, 'B')),
+            h('p', {lang: 'fr'}, h('q', {lang: 'en-GB'}, 'C')),
+            h('p', {lang: 'fr'}, h('q', {lang: 'en'}, 'D'))
+          ])
+        ),
+        h('q', {lang: 'en-GB'}, 'C'),
+        'should return the correct matching element'
+      )
+
+      sst.end()
+    })
+
     st.test(':root', function(sst) {
       sst.deepEqual(
         select(

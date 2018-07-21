@@ -900,6 +900,66 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
+    st.test(':lang()', function(sst) {
+      sst.ok(
+        matches(':lang(de, en)', h('html', {xmlLang: 'en'})),
+        'true if the element has an `xml:lang` attribute'
+      )
+
+      sst.ok(
+        matches(':lang(de, en)', h('html', {lang: 'de'})),
+        'true if the element has a `lang` attribute'
+      )
+
+      sst.notOk(
+        matches(':lang(de, en)', h('html', {xmlLang: 'jp'})),
+        'false if the element has an different language set'
+      )
+
+      sst.notOk(
+        matches(':lang(de, en)', h('html', {xmlLang: 'jp', lang: 'de'})),
+        'should prefer `xmlLang` over `lang` (#1)'
+      )
+
+      sst.ok(
+        matches(':lang(de, en)', h('html', {xmlLang: 'de', lang: 'jp'})),
+        'should prefer `xmlLang` over `lang` (#2)'
+      )
+
+      sst.notOk(
+        matches(':lang(de, en)', h('html', {xmlLang: 'jp'})),
+        'false if the element has an different language set'
+      )
+
+      sst.ok(
+        matches(':lang("*")', h('html', {lang: 'en'})),
+        'should support wildcards'
+      )
+
+      sst.notOk(
+        matches(':lang(en)', h('html', {lang: ''})),
+        'false if [lang] is an empty string (means unknown language)'
+      )
+
+      sst.notOk(
+        matches(':lang(*)', h('html', {lang: ''})),
+        'false with wildcard if [lang] is an empty string (means unknown language)'
+      )
+
+      sst.ok(
+        matches(':lang("de-*-DE")', h('html', {lang: 'de-Latn-DE'})),
+        'should support non-primary wildcard subtags (#1)'
+      )
+
+      // Not supported by `css-selector-parser` yet :(
+      // sst.ok(
+      //   matches(':lang("fr-BE", "de-*-DE")', h('html', {lang: 'de-Latn-DE'})),
+      //   'should support non-primary wildcard subtags (#2)'
+      // )
+
+      sst.end()
+    })
+
     st.test(':root', function(sst) {
       sst.ok(matches(':root', h('html')), 'true if `<html>` in HTML space')
 

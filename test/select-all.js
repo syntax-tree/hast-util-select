@@ -709,6 +709,45 @@ test('select.selectAll()', function(t) {
       sst.end()
     })
 
+    st.test(':lang()', function(sst) {
+      sst.deepEqual(
+        selectAll(
+          'q:lang(en)',
+          u('root', [
+            h('div', {lang: 'en'}, h('p', {lang: ''}, h('q', '0'))),
+            h('p', {lang: 'fr'}, h('q', {lang: 'fr'}, 'A')),
+            h('p', {lang: 'fr'}, h('q', {lang: 'en'}, 'B')),
+            h('p', {lang: 'fr'}, h('q', {lang: 'en-GB'}, 'C')),
+            h('p', {lang: 'fr'}, h('q', {lang: ''}, 'D')),
+            h('p', {lang: 'fr'}, h('q', 'E')),
+            h('p', {lang: 'en'}, h('q', {lang: 'fr'}, 'F')),
+            h('p', {lang: 'en'}, h('q', {lang: 'en'}, 'G')),
+            h('p', {lang: 'en'}, h('q', {lang: 'en-GB'}, 'H')),
+            h('p', {lang: 'en'}, h('q', {lang: ''}, 'I')),
+            h('p', {lang: 'en'}, h('q', 'J')),
+            h('p', {lang: 'en-GB'}, h('q', {lang: 'fr'}, 'K')),
+            h('p', {lang: 'en-GB'}, h('q', {lang: 'en'}, 'L')),
+            h('p', {lang: 'en-GB'}, h('q', {lang: 'en-GB'}, 'M')),
+            h('p', {lang: 'en-GB'}, h('q', {lang: ''}, 'N')),
+            h('p', {lang: 'en-GB'}, h('q', 'O'))
+          ])
+        ),
+        [
+          h('q', {lang: 'en'}, 'B'),
+          h('q', {lang: 'en-GB'}, 'C'),
+          h('q', {lang: 'en'}, 'G'),
+          h('q', {lang: 'en-GB'}, 'H'),
+          h('q', 'J'),
+          h('q', {lang: 'en'}, 'L'),
+          h('q', {lang: 'en-GB'}, 'M'),
+          h('q', 'O')
+        ],
+        'should return the correct matching elements'
+      )
+
+      sst.end()
+    })
+
     st.test(':root', function(sst) {
       sst.deepEqual(
         selectAll(
