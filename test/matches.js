@@ -960,6 +960,158 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
+    st.test(':dir()', function(sst) {
+      var ltr = 'a'
+      var rtl = 'أ'
+      var neutral = '!'
+
+      sst.ok(
+        matches(':dir(ltr)', h('html', {dir: 'ltr'})),
+        'matching `ltr` if the element has a matching explicit `dir` attribute'
+      )
+
+      sst.ok(
+        matches(':dir(rtl)', h('html', {dir: 'rtl'})),
+        'matching `rtl` if the element has a matching explicit `dir` attribute'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('html')),
+        'matching `ltr` if the element is `html` with no `dir` attribute'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('html', {dir: 'foo'})),
+        'matching `ltr` if the element is `html` with an invalid `dir` attribute'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('input', {type: 'tel'})),
+        'matching `ltr` if the element is `input[type=tel]` with no `dir` attribute'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('input', {type: 'tel', dir: 'foo'})),
+        'matching `ltr` if the element is `input[type=tel]` with an invalid `dir` attribute'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('textarea', {dir: 'auto'}, ltr)),
+        'matching `ltr` if `[dir=auto]` on a textarea and it’s content is BIDI LTR'
+      )
+
+      sst.ok(
+        matches(':dir(rtl)', h('textarea', {dir: 'auto'}, rtl)),
+        'matching `rtl` if `[dir=auto]` on a textarea and it’s content is BIDI RTL'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('textarea', {dir: 'auto'}, neutral)),
+        'matching `ltr` if `[dir=auto]` on a textarea and it’s content is BIDI neutral'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('input', {dir: 'auto', value: ltr})),
+        'matching `ltr` if `[dir=auto]` on a text input and it’s value is BIDI LTR'
+      )
+
+      sst.ok(
+        matches(
+          ':dir(rtl)',
+          h('input', {type: 'search', dir: 'auto', value: rtl})
+        ),
+        'matching `rtl` if `[dir=auto]` on a search input and it’s value is BIDI RTL'
+      )
+
+      sst.ok(
+        matches(
+          ':dir(ltr)',
+          h('input', {type: 'url', dir: 'auto', value: neutral})
+        ),
+        'matching `ltr` if `[dir=auto]` on a URL input and it’s value is BIDI neutral'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('input', {type: 'email', dir: 'auto'})),
+        'matching `ltr` if `[dir=auto]` on an email input without value'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('p', {dir: 'auto'}, ltr)),
+        'matching `ltr` if `[dir=auto]` and the element has BIDI LTR text'
+      )
+
+      sst.ok(
+        matches(':dir(rtl)', h('p', {dir: 'auto'}, rtl)),
+        'matching `rtl` if `[dir=auto]` and the element has BIDI RTL text'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('p', {dir: 'auto'}, neutral)),
+        'matching `ltr` if `[dir=auto]` and the element has BIDI neutral text'
+      )
+
+      sst.ok(
+        matches(':dir(ltr)', h('p', {dir: 'auto'}, [neutral, ltr, rtl])),
+        'matching `ltr` if `[dir=auto]` and the element has BIDI neutral text followed by LTR text'
+      )
+
+      sst.ok(
+        matches(':dir(rtl)', h('p', {dir: 'auto'}, [neutral, rtl, ltr])),
+        'matching `rtl` if `[dir=auto]` and the element has BIDI neutral text followed by RTL text'
+      )
+
+      sst.ok(
+        matches(
+          ':dir(ltr)',
+          h('p', {dir: 'auto'}, [neutral, h('script', rtl), ltr])
+        ),
+        'matching `ltr` if `[dir=auto]`, ignoring BIDI text in scripts, followed by LTR text'
+      )
+
+      sst.ok(
+        matches(
+          ':dir(rtl)',
+          h('p', {dir: 'auto'}, [neutral, h('style', ltr), rtl])
+        ),
+        'matching `rtl` if `[dir=auto]`, ignoring BIDI text in styles, followed by RTL text'
+      )
+
+      sst.ok(
+        matches(
+          ':dir(ltr)',
+          h('p', {dir: 'auto'}, [neutral, h('span', {dir: 'rtl'}, rtl), ltr])
+        ),
+        'matching `ltr` if `[dir=auto]`, ignoring elements with directions, followed by LTR text'
+      )
+
+      sst.ok(
+        matches(
+          ':dir(rtl)',
+          h('p', {dir: 'auto'}, [neutral, h('span', {dir: 'ltr'}, ltr), rtl])
+        ),
+        'matching `rtl` if `[dir=auto]`, ignoring elements with directions, followed by RTL text'
+      )
+
+      sst.ok(
+        matches(
+          ':dir(ltr)',
+          h('bdi', [neutral, h('span', {dir: 'rtl'}, rtl), ltr])
+        ),
+        'matching `ltr` on `bdi` elements, ignoring elements with directions, followed by LTR text'
+      )
+
+      sst.ok(
+        matches(
+          ':dir(rtl)',
+          h('bdi', [neutral, h('span', {dir: 'ltr'}, ltr), rtl])
+        ),
+        'matching `rtl` on `bdi` elements, ignoring elements with directions, followed by RTL text'
+      )
+
+      sst.end()
+    })
+
     st.test(':root', function(sst) {
       sst.ok(matches(':root', h('html')), 'true if `<html>` in HTML space')
 

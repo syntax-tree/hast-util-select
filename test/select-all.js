@@ -748,6 +748,28 @@ test('select.selectAll()', function(t) {
       sst.end()
     })
 
+    st.test(':dir()', function(sst) {
+      var ltr = 'a'
+      var rtl = 'أ'
+
+      sst.deepEqual(
+        selectAll(
+          'q:dir(rtl)',
+          u('root', [
+            h('div', {dir: 'rtl'}, h('p', {dir: ''}, h('q#a', ltr))),
+            h('p', {dir: 'ltr'}, h('q#b', {dir: 'ltr'}, rtl)),
+            h('p', {dir: 'ltr'}, h('q#c', {dir: ''}, rtl)),
+            h('p', {dir: 'ltr'}, h('q#d', {dir: 'foo'}, rtl)),
+            h('p', {dir: 'ltr'}, h('q#e', {dir: 'rtl'}, rtl))
+          ])
+        ),
+        [h('q#a', ltr), h('q#e', {dir: 'rtl'}, rtl)],
+        'should return the correct matching element'
+      )
+
+      sst.end()
+    })
+
     st.test(':root', function(sst) {
       sst.deepEqual(
         selectAll(

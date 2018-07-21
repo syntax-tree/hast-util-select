@@ -691,6 +691,29 @@ test('select.select()', function(t) {
       sst.end()
     })
 
+    st.test(':dir()', function(sst) {
+      var ltr = 'a'
+      var rtl = 'أ'
+      var neutral = '!'
+
+      sst.deepEqual(
+        select(
+          'q:dir(rtl)',
+          u('root', [
+            h('div', {dir: 'rtl'}, h('p', {dir: ''}, h('q', ltr))),
+            h('p', {dir: 'ltr'}, h('q', {dir: 'ltr'}, rtl)),
+            h('p', {dir: 'ltr'}, h('q', {dir: ''}, neutral)),
+            h('p', {dir: 'ltr'}, h('q', {dir: 'foo'}, ltr)),
+            h('p', {dir: 'ltr'}, h('q', {dir: 'rtl'}, rtl))
+          ])
+        ),
+        h('q', ltr),
+        'should return the correct matching element'
+      )
+
+      sst.end()
+    })
+
     st.test(':root', function(sst) {
       sst.deepEqual(
         select(
