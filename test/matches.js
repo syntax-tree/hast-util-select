@@ -173,7 +173,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('attributes, existance: `[attr]`', function(st) {
+  t.test('attributes, existence: `[attr]`', function(st) {
     st.ok(matches('[class]', h('.one')), 'true if attribute exists')
     st.notOk(matches('[for]', h('.one')), 'false if attribute does not exist')
     st.ok(
@@ -704,7 +704,7 @@ test('select.matches()', function(t) {
         )
         sst.ok(
           matches(pseudo + '(a, [title], .class)', h('div', {title: '1'})),
-          'true if any matches (attribute existance)'
+          'true if any matches (attribute existence)'
         )
         sst.notOk(
           matches(pseudo + '(a, [title], .class)', h('i')),
@@ -726,7 +726,7 @@ test('select.matches()', function(t) {
       )
       sst.notOk(
         matches(':not(a, [title], .class)', h('div', {title: '1'})),
-        'false if any matches (attribute existance)'
+        'false if any matches (attribute existence)'
       )
       sst.ok(
         matches(':not(a, [title], .class)', h('i')),
