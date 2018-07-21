@@ -1130,6 +1130,67 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
+    st.test(':scope', function(sst) {
+      sst.ok(matches(':scope', h('html')), 'always true for elements')
+      sst.ok(matches(':scope', h('p')), 'always true for elements')
+      sst.notOk(matches(':scope', u('text'), '!'), 'always true for elements')
+      sst.end()
+    })
+
+    st.test(':read-write', function(sst) {
+      sst.ok(matches(':read-write', h('input')), 'true on input')
+      sst.ok(matches(':read-write', h('input')), 'true on textarea')
+      sst.notOk(
+        matches(':read-write', h('input', {readOnly: true})),
+        'false on input w/ readonly'
+      )
+      sst.notOk(
+        matches(':read-write', h('textarea', {readOnly: true})),
+        'false on textarea w/ readonly'
+      )
+      sst.notOk(
+        matches(':read-write', h('input', {disabled: true})),
+        'false on input w/ disabled'
+      )
+      sst.notOk(
+        matches(':read-write', h('textarea', {disabled: true})),
+        'false on textarea w/ disabled'
+      )
+      sst.ok(
+        matches(':read-write', h('div', {contentEditable: 'true'})),
+        'true on element w/ contenteditable'
+      )
+
+      sst.end()
+    })
+
+    st.test(':read-only', function(sst) {
+      sst.notOk(matches(':read-only', h('input')), 'false on input')
+      sst.notOk(matches(':read-only', h('input')), 'false on textarea')
+      sst.ok(
+        matches(':read-only', h('input', {readOnly: true})),
+        'true on input w/ readonly'
+      )
+      sst.ok(
+        matches(':read-only', h('textarea', {readOnly: true})),
+        'true on textarea w/ readonly'
+      )
+      sst.ok(
+        matches(':read-only', h('input', {disabled: true})),
+        'true on input w/ disabled'
+      )
+      sst.ok(
+        matches(':read-only', h('textarea', {disabled: true})),
+        'true on textarea w/ disabled'
+      )
+      sst.notOk(
+        matches(':read-only', h('div', {contentEditable: 'true'})),
+        'false on element w/ contenteditable'
+      )
+
+      sst.end()
+    })
+
     st.end()
   })
 

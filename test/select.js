@@ -714,6 +714,62 @@ test('select.select()', function(t) {
       sst.end()
     })
 
+    st.test(':read-write', function(sst) {
+      sst.deepEqual(
+        select(
+          'p:read-write',
+          u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
+        ),
+        h('p', 'A'),
+        'should return elements inside `[contentEditable=true]`'
+      )
+
+      sst.deepEqual(
+        select(
+          'a:read-write',
+          u('root', [
+            h('div', {contentEditable: 'true'}, [
+              s('svg', {viewBox: [0, 0, 50, 50]}, [
+                s('a', {download: true}, '!')
+              ])
+            ])
+          ])
+        ),
+        null,
+        'should not return elements inside SVG embedded in `[contentEditable=true]`'
+      )
+
+      sst.end()
+    })
+
+    st.test(':read-only', function(sst) {
+      sst.deepEqual(
+        select(
+          'p:read-only',
+          u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
+        ),
+        null,
+        'should not return elements inside `[contentEditable=true]`'
+      )
+
+      sst.deepEqual(
+        select(
+          'a:read-only',
+          u('root', [
+            h('div', {contentEditable: 'true'}, [
+              s('svg', {viewBox: [0, 0, 50, 50]}, [
+                s('a', {download: true}, '!')
+              ])
+            ])
+          ])
+        ),
+        s('a', {download: true}, '!'),
+        'should return elements inside SVG embedded in `[contentEditable=true]`'
+      )
+
+      sst.end()
+    })
+
     st.test(':root', function(sst) {
       sst.deepEqual(
         select(
@@ -785,6 +841,25 @@ test('select.select()', function(t) {
           ])
         ]),
         'should return the `<html>` element, not an embedded `<svg>` element'
+      )
+
+      sst.end()
+    })
+
+    st.test(':scope', function(sst) {
+      sst.deepEqual(
+        select(
+          ':scope',
+          u('root', [h('strong', h('b', 'a')), h('em', h('i', 'b'))])
+        ),
+        h('strong', h('b', 'a')),
+        'should select the first element directly in a `root`, if a `root` is given'
+      )
+
+      sst.deepEqual(
+        select(':scope', h('em', h('i', 'b'))),
+        h('em', h('i', 'b')),
+        'should select the root element if one is given'
       )
 
       sst.end()
