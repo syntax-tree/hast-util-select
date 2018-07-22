@@ -1,3 +1,5 @@
+<!--lint disable no-html-->
+
 # hast-util-select [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
 `querySelector`, `querySelectorAll`, and `matches` for [HAST][] nodes.
@@ -208,9 +210,13 @@ Yields:
 *   [ ] ‡ `[*|attr]` (any namespace attribute)
 *   [ ] ‡ `[|attr]` (no namespace attribute)
 *   [ ] ‡ `[attr=value i]` (attribute case-insensitive)
-*   [ ] ‡ `:has()` (functional pseudo class)
-*   [ ] ‖ `:nth-child(n of S)` (scoped to parent S)
-*   [ ] ‖ `:nth-last-child(n of S)` (scoped to parent S)
+*   [ ] ‡ `:has()` (functional pseudo-class).
+    <small>Relative selectors (`:has(> img)`) are not supported, but scope is
+    (`:has(:scope > img)`) </small>
+*   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class).
+    <small>Scoping to parents is not supported</small>
+*   [ ] ‖ `:nth-last-child(n of S)` (scoped to parent S).
+    <small>Scoping to parents is not supported</small>
 *   [ ] † `:active` (pseudo-class)
 *   [ ] † `:current` (pseudo-class)
 *   [ ] † `:current()` (functional pseudo-class)
