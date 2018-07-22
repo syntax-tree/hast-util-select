@@ -84,14 +84,23 @@ test('select.matches()', function(t) {
   })
 
   t.test('parent-sensitive pseudo-selectors', function(st) {
-    ;[
+    var simplePseudos = [
       'first-child',
       'first-of-type',
       'last-child',
       'last-of-type',
       'only-child',
       'only-of-type'
-    ].forEach(function(pseudo) {
+    ]
+
+    var functionalPseudos = [
+      'nth-child',
+      'nth-last-child',
+      'nth-of-type',
+      'nth-last-of-type'
+    ]
+
+    simplePseudos.forEach(function(pseudo) {
       st.throws(
         function() {
           matches(':' + pseudo, h())
@@ -100,17 +109,16 @@ test('select.matches()', function(t) {
         'should throw on `' + pseudo + '`'
       )
     })
-    ;['nth-child', 'nth-last-child', 'nth-of-type', 'nth-last-of-type'].forEach(
-      function(pseudo) {
-        st.throws(
-          function() {
-            matches(':' + pseudo + '()', h())
-          },
-          new RegExp('Error: Cannot use `:' + pseudo + '` without parent'),
-          'should throw on `' + pseudo + '()`'
-        )
-      }
-    )
+
+    functionalPseudos.forEach(function(pseudo) {
+      st.throws(
+        function() {
+          matches(':' + pseudo + '()', h())
+        },
+        new RegExp('Error: Cannot use `:' + pseudo + '` without parent'),
+        'should throw on `' + pseudo + '()`'
+      )
+    })
 
     st.end()
   })
@@ -710,6 +718,10 @@ test('select.matches()', function(t) {
           matches(pseudo + '(a, [title], .class)', h('i')),
           'false if nothing matches'
         )
+        sst.notOk(
+          matches(pseudo + '(a, [title], .class)', h('div', h('i.class'))),
+          'false if children match'
+        )
 
         sst.end()
       })
@@ -732,6 +744,134 @@ test('select.matches()', function(t) {
         matches(':not(a, [title], .class)', h('i')),
         'true if nothing matches'
       )
+      sst.ok(
+        matches(':not(a, [title], .class)', h('div', h('i.class'))),
+        'true if children match'
+      )
+
+      sst.end()
+    })
+
+    st.test(':has', function(sst) {
+      sst.doesNotThrow(function() {
+        matches('section:not(:has())', h('p'))
+      }, 'should not throw on empty selectors')
+
+      sst.doesNotThrow(function() {
+        matches('section:has()', h('p'))
+      }, 'should not throw on empty selectors')
+
+      sst.notOk(
+        matches('p:has(p)', h('p', h('s'))),
+        'should not match the scope element (#1)'
+      )
+      sst.ok(
+        matches('p:has(p)', h('p', h('p'))),
+        'should not match the scope element (#2)'
+      )
+      sst.ok(
+        matches('a:has(img)', h('a', h('img'))),
+        'true if children match the descendant selector'
+      )
+      sst.notOk(
+        matches('a:has(img)', h('a', h('span'))),
+        'false if no children match the descendant selector'
+      )
+      sst.ok(
+        matches('a:has(img)', h('a', h('span'), h('img'))),
+        'true if descendants match the descendant selector'
+      )
+      sst.notOk(
+        matches('a:has(img)', h('a', h('span', h('span')))),
+        'false if no descendants match the descendant selector'
+      )
+
+      sst.ok(
+        matches('dd:has(dt + dd)', h('dd', [h('dt'), h('dd')])),
+        'should support a nested next-sibling selector (#1)'
+      )
+
+      sst.notOk(
+        matches('dd:has(dt + dd)', h('dd', [h('dt'), h('dt')])),
+        'should support a nested next-sibling selector (#2)'
+      )
+
+      sst.ok(
+        matches('a:has([title])', h('a', h('s', {title: 'a'}))),
+        'should add `:scope` to sub-selectors (#1)'
+      )
+      sst.notOk(
+        matches('a:has([title])', h('a', {title: '!'}, h('s'))),
+        'should add `:scope` to sub-selectors (#2)'
+      )
+      sst.notOk(
+        matches('a:has(a, :scope i)', h('a', h('s'))),
+        'should add `:scope` to all sub-selectors (#2)'
+      )
+
+      sst.ok(
+        matches('section:not(:has(h1, h2, h3, h4, h5, h6))', h('section', [])),
+        'should add `:scope` to all sub-selectors (#3)'
+      )
+
+      sst.ok(
+        matches(
+          'section:not(:has(h1, h2, h3, h4, h5, h6))',
+          h('section', [h('p', '!')])
+        ),
+        'should add `:scope` to all sub-selectors (#4)'
+      )
+
+      sst.notOk(
+        matches(
+          'section:has(:lang(en, fr))',
+          h('section', [h('q', {lang: 'de'})])
+        ),
+        'should ignore commas in parens (#1)'
+      )
+      sst.ok(
+        matches(
+          'section:has(:lang(en, fr))',
+          h('section', [h('q', {lang: 'en'})])
+        ),
+        'should ignore commas in parens (#2)'
+      )
+
+      sst.notOk(
+        matches(
+          'section:has(:matches(i), :matches(b))',
+          h('section', [h('s')])
+        ),
+        'should support multiple relative selectors (#1)'
+      )
+      sst.ok(
+        matches(
+          'section:has(:matches(i), :matches(b))',
+          h('section', [h('b')])
+        ),
+        'should support multiple relative selectors (#2)'
+      )
+
+      // This checks white-space.
+      sst.ok(matches('a:has( img)', h('a', h('img'))), 'assertion (#1)')
+      sst.ok(matches('a:has( img  )', h('a', h('img'))), 'assertion (#2)')
+      sst.ok(matches('a:has(img )', h('a', h('img'))), 'assertion (#3)')
+      sst.ok(matches('a:has( img  ,\t p )', h('a', h('img'))), 'assertion (#4)')
+
+      // Sst.ok(
+      //   matches('a:has(> img)', h('a', h('img'))),
+      //   'true for relative direct child selector'
+      // )
+      // sst.notOk(
+      //   matches('a:has(> img)', h('a', h('span', h('img')))),
+      //   'false for relative direct child selectors'
+      // )
+      // sst.ok(
+      //   matches('a:has(> img, > span)', h('a', h('span', h('span')))),
+      //   'should support a list of relative selectors'
+      // )
+
+      // Note: These should be unquoted, but that’s not supported by the CSS parser.
 
       sst.end()
     })
