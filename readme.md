@@ -1,6 +1,6 @@
 <!--lint disable no-html-->
 
-# hast-util-select [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
+# hast-util-select [![Build][build-badge]][build] [![Coverage][coverage-badge]][coverage] [![Downloads][downloads-badge]][downloads] [![Chat][chat-badge]][chat]
 
 `querySelector`, `querySelectorAll`, and `matches` for [HAST][] nodes.
 
@@ -275,13 +275,21 @@ repository, organisation, or community you agree to abide by its terms.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/syntax-tree/hast-util-select.svg
+[build-badge]: https://img.shields.io/travis/syntax-tree/hast-util-select.svg
 
-[travis]: https://travis-ci.org/syntax-tree/hast-util-select
+[build]: https://travis-ci.org/syntax-tree/hast-util-select
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-select.svg
+[coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-select.svg
 
-[codecov]: https://codecov.io/github/syntax-tree/hast-util-select
+[coverage]: https://codecov.io/github/syntax-tree/hast-util-select
+
+[downloads-badge]: https://img.shields.io/npm/dm/hast-util-select.svg
+
+[downloads]: https://www.npmjs.com/package/hast-util-select
+
+[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+
+[chat]: https://spectrum.chat/unified/rehype
 
 [npm]: https://docs.npmjs.com/cli/install
 
