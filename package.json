@@ -78,9 +78,7 @@
     "prettier": true,
     "esnext": false,
     "rules": {
-      "guard-for-in": "off",
       "unicorn/prefer-type-error": "off",
-      "import/no-unassigned-import": "off",
       "max-params": "off"
     },
     "ignores": [
