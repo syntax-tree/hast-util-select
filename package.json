@@ -1,6 +1,6 @@
 {
   "name": "hast-util-select",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "`querySelector`, `querySelectorAll`, and `matches` in hast",
   "license": "MIT",
   "keywords": [
