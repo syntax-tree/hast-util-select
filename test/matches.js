@@ -858,7 +858,10 @@ test('select.matches()', function(t) {
       sst.ok(matches('a:has(img )', h('a', h('img'))), 'assertion (#3)')
       sst.ok(matches('a:has( img  ,\t p )', h('a', h('img'))), 'assertion (#4)')
 
-      // Sst.ok(
+      // Note: These should be unquoted, but that’s not supported by the CSS
+      // parser:
+      //
+      // sst.ok(
       //   matches('a:has(> img)', h('a', h('img'))),
       //   'true for relative direct child selector'
       // )
@@ -870,8 +873,6 @@ test('select.matches()', function(t) {
       //   matches('a:has(> img, > span)', h('a', h('span', h('span')))),
       //   'should support a list of relative selectors'
       // )
-
-      // Note: These should be unquoted, but that’s not supported by the CSS parser.
 
       sst.end()
     })
@@ -1092,6 +1093,7 @@ test('select.matches()', function(t) {
       )
 
       // Not supported by `css-selector-parser` yet :(
+      //
       // sst.ok(
       //   matches(':lang("fr-BE", "de-*-DE")', h('html', {lang: 'de-Latn-DE'})),
       //   'should support non-primary wildcard subtags (#2)'
