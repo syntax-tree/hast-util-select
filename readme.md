@@ -1,21 +1,30 @@
 <!--lint disable no-html-->
 
-# hast-util-select [![Build][build-badge]][build] [![Coverage][coverage-badge]][coverage] [![Downloads][downloads-badge]][downloads] [![Chat][chat-badge]][chat]
+# hast-util-select
 
-`querySelector`, `querySelectorAll`, and `matches` for [HAST][] nodes.
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![Size][size-badge]][size]
+[![Sponsors][sponsors-badge]][collective]
+[![Backers][backers-badge]][collective]
+[![Chat][chat-badge]][chat]
 
-One notable difference between DOM and HAST is that DOM nodes have references
+[**hast**][hast] utility with equivalents `querySelector`, `querySelectorAll`,
+and `matches`.
+
+One notable difference between DOM and hast is that DOM nodes have references
 to their parents, meaning that `document.body.matches(':last-child')` can
-be evaluated.  This information is not stored in HAST, so selectors like
-that don’t work.
+be evaluated.
+This information is not stored in hast, so selectors like that don’t work.
 
 [View the list of supported selectors »][support]
 
-## Installation
+## Install
 
 [npm][]:
 
-```bash
+```sh
 npm install hast-util-select
 ```
 
@@ -23,10 +32,13 @@ npm install hast-util-select
 
 ### `select.matches(selector, node[, space])`
 
-This only checks the element itself, not the surrounding tree.  Thus, nesting
-in selectors is not supported (`p b`, `p > b`), neither are selectors like
-`:first-child`, etc.  This simply checks that the given element matches the
-selector.
+Check that the given `node` matches `selector`.
+Returns boolean, whether the node matches or not.
+
+This only checks the element itself, not the surrounding tree.
+Thus, nesting in selectors is not supported (`p b`, `p > b`), neither are
+selectors like `:first-child`, etc.
+This only checks that the given element matches the selector.
 
 ##### Usage
 
@@ -48,8 +60,8 @@ matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
 
 *   `selector` (`string`)
     — CSS selectors (`,` is also supported)
-*   `node` (`Node`)
-    — Thing to check, could be anything, but should be an [element][]
+*   `node` ([`Node`][node])
+    — Thing to check, could be anything, but should be an [*element*][element]
 *   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
     — Which space the node exists in
 
@@ -58,6 +70,10 @@ matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
 `boolean` — Whether the node matches the selector.
 
 ### `select.select(selector, tree[, space])`
+
+Select the first `node` matching `selector` in the given `tree` (could be the
+tree itself).
+Searches the [*tree*][tree] in [*preorder*][preorder].
 
 ##### Usage
 
@@ -88,24 +104,22 @@ Yields:
   children: [ { type: 'text', value: 'Delta' } ] }
 ```
 
-Select the first node matching `selector` in the given `tree` (could be the
-tree itself).
-
 ##### Parameters
 
 *   `selector` (`string`) — CSS selectors (`,` is also supported)
-*   `tree` (`Node`) — Thing to search.
+*   `tree` ([`Node`][node]) — [*Tree*][tree] to search
 *   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
-    — Which v the tree exists in
+    — Which space the tree exists in
 
 ##### Returns
 
-`Element?` — The found element, if any.
+[`Element?`][element] — The found element, if any.
 
 ### `select.selectAll(selector, tree[, space])`
 
-Select all nodes matching `selector` in the given `tree` (could include the
-tree itself).
+Select all nodes matching `selector` in the given `tree` (could include the tree
+itself).
+Searches the [*tree*][tree] in [*preorder*][preorder].
 
 ##### Usage
 
@@ -145,13 +159,13 @@ Yields:
 ##### Parameters
 
 *   `selector` (`string`) — CSS selectors (`,` is also supported)
-*   `tree` (`Node`) — Thing to search.
+*   `tree` ([`Node`][node]) — [*Tree*][tree] to search
 *   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
     — Which space the tree exists in
 
 ##### Returns
 
-`Array.<Element>` — All found elements, if any.
+[`Array.<Element>`][element] — All found elements, if any.
 
 ## Support
 
@@ -255,7 +269,7 @@ Yields:
 
 ###### Notes
 
-*   \* — Not supported in `matches`.
+*   \* — Not supported in `matches`
 *   † — Needs a user, browser, interactivity, or scripting to make sense
 *   ‡ — Not supported by the underlying algorithm
 *   § — Not very interested in writing / including the code for this
@@ -263,11 +277,13 @@ Yields:
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/hast`][contributing] for ways to get
+See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
 started.
+See [`support.md`][help] for ways to get help.
 
-This organisation has a [Code of Conduct][coc].  By interacting with this
-repository, organisation, or community you agree to abide by its terms.
+This project has a [Code of Conduct][coc].
+By interacting with this repository, organisation, or community you agree to
+abide by its terms.
 
 ## License
 
@@ -287,9 +303,19 @@ repository, organisation, or community you agree to abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/hast-util-select
 
+[size-badge]: https://img.shields.io/bundlephobia/minzip/hast-util-select.svg
+
+[size]: https://bundlephobia.com/result?p=hast-util-select
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[collective]: https://opencollective.com/unified
+
 [chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
 
-[chat]: https://spectrum.chat/unified/rehype
+[chat]: https://spectrum.chat/unified/syntax-tree
 
 [npm]: https://docs.npmjs.com/cli/install
 
@@ -297,12 +323,20 @@ repository, organisation, or community you agree to abide by its terms.
 
 [author]: https://wooorm.com
 
+[contributing]: https://github.com/syntax-tree/.github/blob/master/contributing.md
+
+[help]: https://github.com/syntax-tree/.github/blob/master/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/master/code-of-conduct.md
+
+[tree]: https://github.com/syntax-tree/unist#tree
+
+[preorder]: https://github.com/syntax-tree/unist#preorder
+
 [hast]: https://github.com/syntax-tree/hast
+
+[node]: https://github.com/syntax-tree/hast#nodes
 
 [element]: https://github.com/syntax-tree/hast#element
 
 [support]: #support
-
-[contributing]: https://github.com/syntax-tree/hast/blob/master/contributing.md
-
-[coc]: https://github.com/syntax-tree/hast/blob/master/code-of-conduct.md
