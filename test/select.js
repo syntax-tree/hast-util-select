@@ -164,6 +164,27 @@ test('select.select()', function(t) {
       'should return next-sibling'
     )
 
+    st.deepEqual(
+      select(
+        'a + b',
+        u('root', [
+          u('text', '\n'),
+          h('a', 'Lorem'),
+          u('text', ' ipsum '),
+          h('b', 'dolor'),
+          u('text', ' sit '),
+          h('i', 'amet'),
+          u('text', ' sed '),
+          h('b', 'do'),
+          u('text', ' eiusmod '),
+          h('i', 'tempor'),
+          u('text', '.\n')
+        ])
+      ),
+      h('b', 'dolor'),
+      'should return next-sibling ignoring non-elements'
+    )
+
     st.equal(
       select(
         'h1 + p',
@@ -209,6 +230,27 @@ test('select.select()', function(t) {
       ),
       h('p', 'Delta'),
       'should return subsequent siblings'
+    )
+
+    st.deepEqual(
+      select(
+        'a ~ i',
+        u('root', [
+          u('text', '\n'),
+          h('a', 'Lorem'),
+          u('text', ' ipsum '),
+          h('b', 'dolor'),
+          u('text', ' sit '),
+          h('i', 'amet'),
+          u('text', ' sed '),
+          h('b', 'do'),
+          u('text', ' eiusmod '),
+          h('i', 'tempor'),
+          u('text', '.\n')
+        ])
+      ),
+      h('i', 'amet'),
+      'should return siblings ignoring non-elements'
     )
 
     st.equal(

@@ -11,12 +11,19 @@ test('all together now', function(t) {
       'dl > dt.foo:nth-of-type(odd)',
       u('root', [
         h('dl', [
+          '\n  ',
           h('dt.foo', 'Alpha'),
+          '\n  ',
           h('dd', 'Bravo'),
+          '\n  ',
           h('dt', 'Charlie'),
+          '\n  ',
           h('dd', 'Delta'),
+          '\n  ',
           h('dt', 'Echo'),
-          h('dd', 'Foxtrot')
+          '\n  ',
+          h('dd', 'Foxtrot'),
+          '\n'
         ])
       ])
     ),
@@ -28,14 +35,23 @@ test('all together now', function(t) {
       '.foo ~ dd:nth-of-type(even)',
       u('root', [
         h('dl', [
+          '\n  ',
           h('dt', 'Alpha'),
+          '\n  ',
           h('dd', 'Bravo'),
+          '\n  ',
           h('dt.foo', 'Charlie'),
+          '\n  ',
           h('dd', 'Delta'),
+          '\n  ',
           h('dt', 'Echo'),
+          '\n  ',
           h('dd', 'Foxtrot'),
+          '\n  ',
           h('dt', 'Golf'),
-          h('dd', 'Hotel')
+          '\n  ',
+          h('dd', 'Hotel'),
+          '\n'
         ])
       ])
     ),
@@ -47,14 +63,23 @@ test('all together now', function(t) {
       '.foo + dd:nth-of-type(even)',
       u('root', [
         h('dl', [
+          '\n  ',
           h('dt', 'Alpha'),
+          '\n  ',
           h('dd', 'Bravo'),
+          '\n  ',
           h('dt.foo', 'Charlie'),
+          '\n  ',
           h('dd', 'Delta'),
+          '\n  ',
           h('dt', 'Echo'),
+          '\n  ',
           h('dd', 'Foxtrot'),
+          '\n  ',
           h('dt', 'Golf'),
-          h('dd', 'Hotel')
+          '\n  ',
+          h('dd', 'Hotel'),
+          '\n'
         ])
       ])
     ),
