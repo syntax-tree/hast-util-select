@@ -1,15 +1,20 @@
 {
   "name": "hast-util-select",
   "version": "3.0.1",
-  "description": "`querySelector`, `querySelectorAll`, and `matches` in hast",
+  "description": "hast utility for `querySelector`, `querySelectorAll`, and `matches`",
   "license": "MIT",
   "keywords": [
+    "unist",
     "hast",
+    "hast-util",
+    "util",
+    "utility",
+    "html",
     "css",
     "select",
-    "selectAll",
+    "selectall",
     "selector",
-    "selectorAll",
+    "query",
     "match",
     "matches"
   ],
