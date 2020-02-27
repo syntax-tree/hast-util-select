@@ -167,7 +167,7 @@ test('select.selectAll()', function(t) {
     st.end()
   })
 
-  t.test('adjacent sibling selector', function(st) {
+  t.test('next-sibling selector', function(st) {
     st.deepEqual(
       selectAll(
         'h1 + p',
@@ -180,7 +180,7 @@ test('select.selectAll()', function(t) {
         ])
       ),
       [h('p', 'Charlie')],
-      'should return adjacent sibling'
+      'should return next-sibling'
     )
 
     st.deepEqual(
@@ -200,7 +200,7 @@ test('select.selectAll()', function(t) {
     st.end()
   })
 
-  t.test('general sibling selector', function(st) {
+  t.test('subsequent sibling selector', function(st) {
     st.deepEqual(
       selectAll(
         'h1 ~ p',
@@ -213,7 +213,7 @@ test('select.selectAll()', function(t) {
         ])
       ),
       [h('p', 'Charlie'), h('p', 'Delta')],
-      'should return adjacent sibling'
+      'should return subsequent sibling'
     )
 
     st.deepEqual(
@@ -227,7 +227,7 @@ test('select.selectAll()', function(t) {
         ])
       ),
       [h('p', 'Delta')],
-      'should return future siblings'
+      'should return subsequent siblings'
     )
 
     st.deepEqual(
