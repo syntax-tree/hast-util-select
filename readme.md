@@ -280,6 +280,17 @@ Yields:
 `hast-util-select` does not change the syntax tree so there are no openings for
 [cross-site scripting (XSS)][xss] attacks.
 
+## Related
+
+*   [`unist-util-select`](https://github.com/syntax-tree/unist-util-select)
+    — select unist nodes with CSS-like selectors
+*   [`hast-util-find-and-replace`](https://github.com/syntax-tree/hast-util-find-and-replace)
+    — find and replace text in a hast tree
+*   [`hast-util-parse-selector`](https://github.com/syntax-tree/hast-util-parse-selector)
+    — create an element from a simple CSS selector
+*   [`hast-util-from-selector`](https://github.com/syntax-tree/hast-util-from-selector)
+    — create an element from a complex CSS selector
+
 ## Contribute
 
 See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
