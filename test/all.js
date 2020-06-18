@@ -5,7 +5,7 @@ var u = require('unist-builder')
 var h = require('hastscript')
 var selectAll = require('..').selectAll
 
-test('all together now', function(t) {
+test('all together now', function (t) {
   t.deepEqual(
     selectAll(
       'dl > dt.foo:nth-of-type(odd)',

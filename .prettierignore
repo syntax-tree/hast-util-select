@@ -1,3 +1,5 @@
 coverage/
 hast-util-select.js
 hast-util-select.min.js
+*.json
+*.md

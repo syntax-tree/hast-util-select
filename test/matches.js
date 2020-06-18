@@ -6,10 +6,10 @@ var h = require('hastscript')
 var s = require('hastscript/svg')
 var matches = require('..').matches
 
-test('select.matches()', function(t) {
-  t.test('invalid selector', function(st) {
+test('select.matches()', function (t) {
+  t.test('invalid selector', function (st) {
     st.throws(
-      function() {
+      function () {
         matches()
       },
       /Error: Expected `string` as selector, not `undefined`/,
@@ -17,7 +17,7 @@ test('select.matches()', function(t) {
     )
 
     st.throws(
-      function() {
+      function () {
         matches([], h())
       },
       /Error: Expected `string` as selector, not ``/,
@@ -25,7 +25,7 @@ test('select.matches()', function(t) {
     )
 
     st.throws(
-      function() {
+      function () {
         matches('@supports (transform-origin: 5% 5%) {}', h())
       },
       /Error: Rule expected but "@" found./,
@@ -33,7 +33,7 @@ test('select.matches()', function(t) {
     )
 
     st.throws(
-      function() {
+      function () {
         matches('[foo%=bar]', h())
       },
       /Error: Expected "=" but "%" found./,
@@ -41,7 +41,7 @@ test('select.matches()', function(t) {
     )
 
     st.throws(
-      function() {
+      function () {
         matches(':active', h())
       },
       /Error: Unknown pseudo-selector `active`/,
@@ -49,7 +49,7 @@ test('select.matches()', function(t) {
     )
 
     st.throws(
-      function() {
+      function () {
         matches(':nth-foo(2n+1)', h())
       },
       /Error: Unknown pseudo-selector `nth-foo`/,
@@ -57,7 +57,7 @@ test('select.matches()', function(t) {
     )
 
     st.throws(
-      function() {
+      function () {
         matches('::before', h())
       },
       /Error: Unexpected pseudo-element or empty pseudo-class/,
@@ -65,7 +65,7 @@ test('select.matches()', function(t) {
     )
 
     st.throws(
-      function() {
+      function () {
         matches('foo bar', h())
       },
       /Error: Expected selector without nesting/,
@@ -73,7 +73,7 @@ test('select.matches()', function(t) {
     )
 
     st.throws(
-      function() {
+      function () {
         matches('foo > bar', h())
       },
       /Error: Expected selector without nesting/,
@@ -83,7 +83,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('parent-sensitive pseudo-selectors', function(st) {
+  t.test('parent-sensitive pseudo-selectors', function (st) {
     var simplePseudos = [
       'first-child',
       'first-of-type',
@@ -100,9 +100,9 @@ test('select.matches()', function(t) {
       'nth-last-of-type'
     ]
 
-    simplePseudos.forEach(function(pseudo) {
+    simplePseudos.forEach(function (pseudo) {
       st.throws(
-        function() {
+        function () {
           matches(':' + pseudo, h())
         },
         new RegExp('Error: Cannot use `:' + pseudo + '` without parent'),
@@ -110,9 +110,9 @@ test('select.matches()', function(t) {
       )
     })
 
-    functionalPseudos.forEach(function(pseudo) {
+    functionalPseudos.forEach(function (pseudo) {
       st.throws(
-        function() {
+        function () {
           matches(':' + pseudo + '()', h())
         },
         new RegExp('Error: Cannot use `:' + pseudo + '` without parent'),
@@ -123,7 +123,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('general', function(st) {
+  t.test('general', function (st) {
     st.notOk(matches('', h()), 'false for the empty string as selector')
     st.notOk(matches(' ', h()), 'false for a white-space only selector')
     st.notOk(matches('*'), 'false if not given a node')
@@ -135,14 +135,14 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('multiple selectors', function(st) {
+  t.test('multiple selectors', function (st) {
     st.ok(matches('b, i', h('b')), 'true for string')
     st.notOk(matches('i, s', h('b')), 'false for string')
 
     st.end()
   })
 
-  t.test('tag-names: `div`, `*`', function(st) {
+  t.test('tag-names: `div`, `*`', function (st) {
     st.ok(matches('*', h()), 'true for `*`')
     st.ok(matches('b', h('b')), 'true if tag-names matches')
     st.notOk(matches('b', h('i')), 'false if tag-names don’t matches')
@@ -150,7 +150,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('id: `#id`', function(st) {
+  t.test('id: `#id`', function (st) {
     st.notOk(matches('#one', h()), 'false if no id exists')
     st.ok(matches('#one', h('#one')), 'true for matchesing id’s')
     st.notOk(matches('#two', h('#one')), 'false for mismatchesed id’s')
@@ -166,7 +166,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('class: `.class`', function(st) {
+  t.test('class: `.class`', function (st) {
     st.notOk(matches('.one', h()), 'false if no class-name exists')
     st.ok(matches('.one', h('.one')), 'true for matchesing class-name')
     st.ok(
@@ -181,7 +181,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('attributes, existence: `[attr]`', function(st) {
+  t.test('attributes, existence: `[attr]`', function (st) {
     st.ok(matches('[class]', h('.one')), 'true if attribute exists')
     st.notOk(matches('[for]', h('.one')), 'false if attribute does not exist')
     st.ok(
@@ -200,7 +200,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('attributes, equality: `[attr=value]`', function(st) {
+  t.test('attributes, equality: `[attr=value]`', function (st) {
     st.ok(
       matches('[id=one]', h('#one')),
       'true if attribute matches (string value)'
@@ -278,7 +278,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('attributes, begins: `[attr^=value]`', function(st) {
+  t.test('attributes, begins: `[attr^=value]`', function (st) {
     st.ok(
       matches('[id^=one]', h('#one')),
       'true if attribute matches (string value)'
@@ -352,7 +352,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('attributes, ends: `[attr$=value]`', function(st) {
+  t.test('attributes, ends: `[attr$=value]`', function (st) {
     st.ok(
       matches('[id$=one]', h('#one')),
       'true if attribute matches (string value)'
@@ -426,7 +426,7 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('attributes, contains: `[attr*=value]`', function(st) {
+  t.test('attributes, contains: `[attr*=value]`', function (st) {
     st.ok(
       matches('[id*=one]', h('#one')),
       'true if attribute matches (string value)'
@@ -503,7 +503,7 @@ test('select.matches()', function(t) {
 
   t.test(
     'attributes, contains in space-separated list: `[attr~=value]`',
-    function(st) {
+    function (st) {
       st.ok(
         matches('[id~=one]', h('#one')),
         'true if attribute matches (string value)'
@@ -601,7 +601,7 @@ test('select.matches()', function(t) {
     }
   )
 
-  t.test('attributes, starts or prefixes: `[attr|=value]`', function(st) {
+  t.test('attributes, starts or prefixes: `[attr|=value]`', function (st) {
     st.ok(
       matches('[id|=one]', h('#one')),
       'true if attribute matches (string value)'
@@ -699,9 +699,9 @@ test('select.matches()', function(t) {
     st.end()
   })
 
-  t.test('pseudo-classes', function(st) {
-    ;[':any', ':matches'].forEach(function(pseudo) {
-      st.test(pseudo, function(sst) {
+  t.test('pseudo-classes', function (st) {
+    ;[':any', ':matches'].forEach(function (pseudo) {
+      st.test(pseudo, function (sst) {
         sst.ok(
           matches(pseudo + '(a, [title], .class)', h('a')),
           'true if any matches (type)'
@@ -727,7 +727,7 @@ test('select.matches()', function(t) {
       })
     })
 
-    st.test(':not()', function(sst) {
+    st.test(':not()', function (sst) {
       sst.notOk(
         matches(':not(a, [title], .class)', h('a')),
         'false if any matches (type)'
@@ -752,12 +752,12 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':has', function(sst) {
-      sst.doesNotThrow(function() {
+    st.test(':has', function (sst) {
+      sst.doesNotThrow(function () {
         matches('section:not(:has())', h('p'))
       }, 'should not throw on empty selectors')
 
-      sst.doesNotThrow(function() {
+      sst.doesNotThrow(function () {
         matches('section:has()', h('p'))
       }, 'should not throw on empty selectors')
 
@@ -877,8 +877,8 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':any-link', function(sst) {
-      ;['a', 'area', 'link'].forEach(function(name) {
+    st.test(':any-link', function (sst) {
+      ;['a', 'area', 'link'].forEach(function (name) {
         sst.ok(
           matches(':any-link', h(name, {href: '#'})),
           'true if w/ href on ' + name
@@ -889,7 +889,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':checked', function(sst) {
+    st.test(':checked', function (sst) {
       sst.ok(
         matches(':checked', h('input', {type: 'checkbox', checked: true})),
         'true for checkbox inputs w/ `checked`'
@@ -937,7 +937,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':disabled', function(sst) {
+    st.test(':disabled', function (sst) {
       ;[
         'button',
         'input',
@@ -947,7 +947,7 @@ test('select.matches()', function(t) {
         'option',
         'menuitem',
         'fieldset'
-      ].forEach(function(name) {
+      ].forEach(function (name) {
         sst.ok(
           matches(':disabled', h(name, {disabled: true})),
           'true if w/ disabled on ' + name
@@ -961,7 +961,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':enabled', function(sst) {
+    st.test(':enabled', function (sst) {
       ;[
         'button',
         'input',
@@ -971,7 +971,7 @@ test('select.matches()', function(t) {
         'option',
         'menuitem',
         'fieldset'
-      ].forEach(function(name) {
+      ].forEach(function (name) {
         sst.ok(matches(':enabled', h(name)), 'true if w/o disabled on ' + name)
         sst.notOk(
           matches(':enabled', h(name, {disabled: true})),
@@ -982,8 +982,8 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':required', function(sst) {
-      ;['input', 'textarea', 'select'].forEach(function(name) {
+    st.test(':required', function (sst) {
+      ;['input', 'textarea', 'select'].forEach(function (name) {
         sst.ok(
           matches(':required', h(name, {required: true})),
           'true if w/ required on ' + name
@@ -997,8 +997,8 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':optional', function(sst) {
-      ;['input', 'textarea', 'select'].forEach(function(name) {
+    st.test(':optional', function (sst) {
+      ;['input', 'textarea', 'select'].forEach(function (name) {
         sst.ok(matches(':optional', h(name)), 'true if w/o required on ' + name)
         sst.notOk(
           matches(':optional', h(name, {required: true})),
@@ -1009,7 +1009,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':empty', function(sst) {
+    st.test(':empty', function (sst) {
       sst.ok(matches(':empty', h()), 'true if w/o children')
       sst.ok(
         matches(':empty', h(null, u('comment', '?'))),
@@ -1025,7 +1025,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':blank', function(sst) {
+    st.test(':blank', function (sst) {
       sst.ok(matches(':blank', h()), 'true if w/o children')
       sst.ok(
         matches(':blank', h(null, u('comment', '?'))),
@@ -1041,7 +1041,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':lang()', function(sst) {
+    st.test(':lang()', function (sst) {
       sst.ok(
         matches(':lang(de, en)', h('html', {xmlLang: 'en'})),
         'true if the element has an `xml:lang` attribute'
@@ -1102,7 +1102,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':dir()', function(sst) {
+    st.test(':dir()', function (sst) {
       var ltr = 'a'
       var rtl = 'أ'
       var neutral = '!'
@@ -1254,7 +1254,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':root', function(sst) {
+    st.test(':root', function (sst) {
       sst.ok(matches(':root', h('html')), 'true if `<html>` in HTML space')
 
       sst.notOk(
@@ -1272,14 +1272,14 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':scope', function(sst) {
+    st.test(':scope', function (sst) {
       sst.ok(matches(':scope', h('html')), 'always true for elements')
       sst.ok(matches(':scope', h('p')), 'always true for elements')
       sst.notOk(matches(':scope', u('text'), '!'), 'always true for elements')
       sst.end()
     })
 
-    st.test(':read-write', function(sst) {
+    st.test(':read-write', function (sst) {
       sst.ok(matches(':read-write', h('input')), 'true on input')
       sst.ok(matches(':read-write', h('input')), 'true on textarea')
       sst.notOk(
@@ -1306,7 +1306,7 @@ test('select.matches()', function(t) {
       sst.end()
     })
 
-    st.test(':read-only', function(sst) {
+    st.test(':read-only', function (sst) {
       sst.notOk(matches(':read-only', h('input')), 'false on input')
       sst.notOk(matches(':read-only', h('input')), 'false on textarea')
       sst.ok(

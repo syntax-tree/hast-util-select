@@ -7,7 +7,7 @@ var h = require('hastscript')
 var select = require('..').select
 var selectAll = require('..').selectAll
 
-test('svg', function(t) {
+test('svg', function (t) {
   t.deepEqual(
     select(
       '[writing-mode]',
