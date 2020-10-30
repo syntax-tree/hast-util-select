@@ -87,10 +87,19 @@
     "prettier": true,
     "esnext": false,
     "rules": {
-      "unicorn/prefer-reflect-apply": "off",
+      "eqeqeq": [
+        "error",
+        "always",
+        {
+          "null": "ignore"
+        }
+      ],
+      "max-params": "off",
+      "no-eq-null": "off",
+      "unicorn/explicit-length-check": "off",
       "unicorn/prefer-includes": "off",
-      "unicorn/prefer-type-error": "off",
-      "max-params": "off"
+      "unicorn/prefer-reflect-apply": "off",
+      "unicorn/prefer-type-error": "off"
     },
     "ignores": [
       "hast-util-select.js"

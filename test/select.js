@@ -7,8 +7,8 @@ var h = require('hastscript')
 var select = require('..').select
 
 test('select.select()', function (t) {
-  t.test('invalid selectors', function (st) {
-    st.throws(
+  t.test('invalid selectors', function (t) {
+    t.throws(
       function () {
         select()
       },
@@ -16,7 +16,7 @@ test('select.select()', function (t) {
       'should throw without selector'
     )
 
-    st.throws(
+    t.throws(
       function () {
         select([], h())
       },
@@ -24,7 +24,7 @@ test('select.select()', function (t) {
       'should throw w/ invalid selector (1)'
     )
 
-    st.throws(
+    t.throws(
       function () {
         select('@supports (transform-origin: 5% 5%) {}', h())
       },
@@ -32,7 +32,7 @@ test('select.select()', function (t) {
       'should throw w/ invalid selector (2)'
     )
 
-    st.throws(
+    t.throws(
       function () {
         select('[foo%=bar]', h())
       },
@@ -40,7 +40,7 @@ test('select.select()', function (t) {
       'should throw on invalid attribute operators'
     )
 
-    st.throws(
+    t.throws(
       function () {
         select(':active', h())
       },
@@ -48,7 +48,7 @@ test('select.select()', function (t) {
       'should throw on invalid pseudo classes'
     )
 
-    st.throws(
+    t.throws(
       function () {
         select(':nth-foo(2n+1)', h())
       },
@@ -56,7 +56,7 @@ test('select.select()', function (t) {
       'should throw on invalid pseudo class “functions”'
     )
 
-    st.throws(
+    t.throws(
       function () {
         select('::before', h())
       },
@@ -64,24 +64,24 @@ test('select.select()', function (t) {
       'should throw on invalid pseudo elements'
     )
 
-    st.end()
+    t.end()
   })
 
-  t.test('general', function (st) {
-    st.equal(select('', h()), null, 'nothing for the empty string as selector')
-    st.equal(select(' ', h()), null, 'nothing for a white-space only selector')
-    st.equal(select('*'), null, 'nothing if not given a node')
-    st.equal(
+  t.test('general', function (t) {
+    t.equal(select('', h()), null, 'nothing for the empty string as selector')
+    t.equal(select(' ', h()), null, 'nothing for a white-space only selector')
+    t.equal(select('*'), null, 'nothing if not given a node')
+    t.equal(
       select('*', {type: 'text', value: 'a'}),
       null,
       'nothing if not given an element'
     )
 
-    st.end()
+    t.end()
   })
 
-  t.test('descendant selector', function (st) {
-    st.deepEqual(
+  t.test('descendant selector', function (t) {
+    t.deepEqual(
       select(
         'div',
         u('root', [
@@ -93,13 +93,13 @@ test('select.select()', function (t) {
       'should return the first descendant node'
     )
 
-    st.deepEqual(
+    t.deepEqual(
       select('div', h('#one')),
       h('#one'),
       'should return the given node if it matches'
     )
 
-    st.deepEqual(
+    t.deepEqual(
       select(
         'div',
         u('root', [h('#one', [h('#two'), h('#three', h('#four'))])])
@@ -108,17 +108,17 @@ test('select.select()', function (t) {
       'should return the first match'
     )
 
-    st.deepEqual(
+    t.deepEqual(
       select('p i s', u('root', [h('p', h('i', h('s', h('s'))))])),
       h('s', h('s')),
       'should return deep matches'
     )
 
-    st.end()
+    t.end()
   })
 
-  t.test('child selector', function (st) {
-    st.deepEqual(
+  t.test('child selector', function (t) {
+    t.deepEqual(
       select(
         'main > article',
         u('root', [
@@ -130,7 +130,7 @@ test('select.select()', function (t) {
       'should return child nodes'
     )
 
-    st.deepEqual(
+    t.deepEqual(
       select(
         'div > div',
         u('root', [h('#one', [h('#two'), h('#three', h('#four'))])])
@@ -139,17 +139,17 @@ test('select.select()', function (t) {
       'should return matches with nested matches'
     )
 
-    st.deepEqual(
+    t.deepEqual(
       select('p > i > s', u('root', [h('p', h('i', h('s', h('s'))))])),
       h('s', h('s')),
       'should return deep matches'
     )
 
-    st.end()
+    t.end()
   })
 
-  t.test('next-sibling selector', function (st) {
-    st.deepEqual(
+  t.test('next-sibling selector', function (t) {
+    t.deepEqual(
       select(
         'h1 + p',
         u('root', [
@@ -164,7 +164,7 @@ test('select.select()', function (t) {
       'should return next-sibling'
     )
 
-    st.deepEqual(
+    t.deepEqual(
       select(
         'a + b',
         u('root', [
@@ -185,7 +185,7 @@ test('select.select()', function (t) {
       'should return next-sibling ignoring non-elements'
     )
 
-    st.equal(
+    t.equal(
       select(
         'h1 + p',
         u('root', [
@@ -199,11 +199,11 @@ test('select.select()', function (t) {
       'should return nothing without matches'
     )
 
-    st.end()
+    t.end()
   })
 
-  t.test('subsequent sibling selector', function (st) {
-    st.deepEqual(
+  t.test('subsequent sibling selector', function (t) {
+    t.deepEqual(
       select(
         'h1 ~ p',
         u('root', [
@@ -218,7 +218,7 @@ test('select.select()', function (t) {
       'should return the first subsequent sibling'
     )
 
-    st.deepEqual(
+    t.deepEqual(
       select(
         'h1 ~ p',
         u('root', [
@@ -232,7 +232,7 @@ test('select.select()', function (t) {
       'should return subsequent siblings'
     )
 
-    st.deepEqual(
+    t.deepEqual(
       select(
         'a ~ i',
         u('root', [
@@ -253,7 +253,7 @@ test('select.select()', function (t) {
       'should return siblings ignoring non-elements'
     )
 
-    st.equal(
+    t.equal(
       select(
         'h1 ~ p',
         u('root', [h('p', 'Alpha'), h('h1', 'Bravo'), h('h2', 'Charlie')])
@@ -262,12 +262,12 @@ test('select.select()', function (t) {
       'should return nothing without matches'
     )
 
-    st.end()
+    t.end()
   })
 
-  t.test('parent-sensitive pseudo-selectors', function (st) {
-    st.test(':first-child', function (sst) {
-      sst.deepEqual(
+  t.test('parent-sensitive pseudo-selectors', function (t) {
+    t.test(':first-child', function (t) {
+      t.deepEqual(
         select(
           ':first-child',
           u('root', [
@@ -282,7 +282,7 @@ test('select.select()', function (t) {
         'should return the first child'
       )
 
-      sst.equal(
+      t.equal(
         select(
           'h1:first-child',
           u('root', [h('p', 'Alpha'), h('h1', 'Bravo'), h('p', 'Charlie')])
@@ -291,11 +291,11 @@ test('select.select()', function (t) {
         'should return nothing if nothing matches'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':last-child', function (sst) {
-      sst.deepEqual(
+    t.test(':last-child', function (t) {
+      t.deepEqual(
         select(
           ':last-child',
           u('root', [
@@ -310,7 +310,7 @@ test('select.select()', function (t) {
         'should return the last child'
       )
 
-      sst.equal(
+      t.equal(
         select(
           'h1:last-child',
           u('root', [h('p', 'Alpha'), h('h1', 'Bravo'), h('p', 'Charlie')])
@@ -319,11 +319,11 @@ test('select.select()', function (t) {
         'should return nothing if nothing matches'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':only-child', function (sst) {
-      sst.deepEqual(
+    t.test(':only-child', function (t) {
+      t.deepEqual(
         select(
           ':only-child',
           u('root', [
@@ -338,7 +338,7 @@ test('select.select()', function (t) {
         'should return an only child'
       )
 
-      sst.equal(
+      t.equal(
         select(
           'h1:only-child',
           u('root', [h('p', 'Alpha'), h('h1', 'Bravo'), h('p', 'Charlie')])
@@ -347,11 +347,11 @@ test('select.select()', function (t) {
         'should return nothing if nothing matches'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':nth-child', function (sst) {
-      sst.deepEqual(
+    t.test(':nth-child', function (t) {
+      t.deepEqual(
         select(
           'li:nth-child(odd)',
           h('ol', [
@@ -367,7 +367,7 @@ test('select.select()', function (t) {
         'should return the match for `:nth-child(odd)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'li:nth-child(2n+1)',
           h('ol', [
@@ -383,7 +383,7 @@ test('select.select()', function (t) {
         'should return the match for `:nth-child(2n+1)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'li:nth-child(even)',
           h('ol', [
@@ -399,7 +399,7 @@ test('select.select()', function (t) {
         'should return the match for `:nth-child(even)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'li:nth-child(2n+0)',
           h('ol', [
@@ -415,11 +415,11 @@ test('select.select()', function (t) {
         'should return the match for `:nth-child(2n+0)`'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':nth-last-child', function (sst) {
-      sst.deepEqual(
+    t.test(':nth-last-child', function (t) {
+      t.deepEqual(
         select(
           'li:nth-last-child(odd)',
           h('ol', [
@@ -435,7 +435,7 @@ test('select.select()', function (t) {
         'should return the last match for `:nth-last-child(odd)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'li:nth-last-child(2n+1)',
           h('ol', [
@@ -451,7 +451,7 @@ test('select.select()', function (t) {
         'should return the last match for `:nth-last-child(2n+1)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'li:nth-last-child(even)',
           h('ol', [
@@ -467,7 +467,7 @@ test('select.select()', function (t) {
         'should return the last match for `:nth-last-child(even)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'li:nth-last-child(2n+0)',
           h('ol', [
@@ -483,11 +483,11 @@ test('select.select()', function (t) {
         'should return the last match for `:nth-last-child(2n+0)`'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':nth-of-type', function (sst) {
-      sst.deepEqual(
+    t.test(':nth-of-type', function (t) {
+      t.deepEqual(
         select(
           'dt:nth-of-type(odd)',
           h('dl', [
@@ -503,7 +503,7 @@ test('select.select()', function (t) {
         'should return the first match for `:nth-of-type(odd)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'dt:nth-of-type(2n+1)',
           h('dl', [
@@ -519,7 +519,7 @@ test('select.select()', function (t) {
         'should return the first match for `:nth-of-type(2n+1)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'dt:nth-of-type(even)',
           h('dl', [
@@ -535,7 +535,7 @@ test('select.select()', function (t) {
         'should return the first match for `:nth-of-type(even)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'dt:nth-of-type(2n+0)',
           h('dl', [
@@ -551,11 +551,11 @@ test('select.select()', function (t) {
         'should return the first match for `:nth-of-type(2n+0)`'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':nth-last-of-type', function (sst) {
-      sst.deepEqual(
+    t.test(':nth-last-of-type', function (t) {
+      t.deepEqual(
         select(
           'dt:nth-last-of-type(odd)',
           h('dl', [
@@ -571,7 +571,7 @@ test('select.select()', function (t) {
         'should return the last match for `:nth-last-of-type(odd)`s'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'dt:nth-last-of-type(2n+1)',
           h('dl', [
@@ -587,7 +587,7 @@ test('select.select()', function (t) {
         'should return the last match for `:nth-last-of-type(2n+1)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'dt:nth-last-of-type(even)',
           h('dl', [
@@ -603,7 +603,7 @@ test('select.select()', function (t) {
         'should return the last match for `:nth-last-of-type(even)`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'dt:nth-last-of-type(2n+0)',
           h('dl', [
@@ -619,11 +619,11 @@ test('select.select()', function (t) {
         'should return the last match for `:nth-last-of-type(2n+0)`'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':first-of-type', function (sst) {
-      sst.deepEqual(
+    t.test(':first-of-type', function (t) {
+      t.deepEqual(
         select(
           'dt:first-of-type',
           h('dl', [
@@ -639,17 +639,17 @@ test('select.select()', function (t) {
         'should return the first match for `:first-of-type`'
       )
 
-      sst.equal(
+      t.equal(
         select('dt:first-of-type', h('dl', [])),
         null,
         'should return nothing without matches'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':last-of-type', function (sst) {
-      sst.deepEqual(
+    t.test(':last-of-type', function (t) {
+      t.deepEqual(
         select(
           'dt:last-of-type',
           h('dl', [
@@ -665,17 +665,17 @@ test('select.select()', function (t) {
         'should return the last match for `:last-of-type`s'
       )
 
-      sst.equal(
+      t.equal(
         select('dt:last-of-type', h('dl', [])),
         null,
         'should return nothing without matches'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':only-of-type', function (sst) {
-      sst.deepEqual(
+    t.test(':only-of-type', function (t) {
+      t.deepEqual(
         select(
           'dd:only-of-type',
           h('dl', [
@@ -689,7 +689,7 @@ test('select.select()', function (t) {
         'should return the only match'
       )
 
-      sst.equal(
+      t.equal(
         select(
           'dt:only-of-type',
           h('dl', [
@@ -705,17 +705,17 @@ test('select.select()', function (t) {
         'should return nothing with too many matches'
       )
 
-      sst.equal(
+      t.equal(
         select('dt:only-of-type', h('dl', [])),
         null,
         'should return nothing without matches'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':lang()', function (sst) {
-      sst.deepEqual(
+    t.test(':lang()', function (t) {
+      t.deepEqual(
         select(
           'q:lang(en)',
           u('root', [
@@ -730,15 +730,15 @@ test('select.select()', function (t) {
         'should return the correct matching element'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':dir()', function (sst) {
+    t.test(':dir()', function (t) {
       var ltr = 'a'
       var rtl = 'أ'
       var neutral = '!'
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'q:dir(rtl)',
           u('root', [
@@ -753,11 +753,11 @@ test('select.select()', function (t) {
         'should return the correct matching element'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':read-write', function (sst) {
-      sst.deepEqual(
+    t.test(':read-write', function (t) {
+      t.deepEqual(
         select(
           'p:read-write',
           u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
@@ -766,7 +766,7 @@ test('select.select()', function (t) {
         'should return elements inside `[contentEditable=true]`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'a:read-write',
           u('root', [
@@ -781,11 +781,11 @@ test('select.select()', function (t) {
         'should not return elements inside SVG embedded in `[contentEditable=true]`'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':read-only', function (sst) {
-      sst.deepEqual(
+    t.test(':read-only', function (t) {
+      t.deepEqual(
         select(
           'p:read-only',
           u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
@@ -794,7 +794,7 @@ test('select.select()', function (t) {
         'should not return elements inside `[contentEditable=true]`'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           'a:read-only',
           u('root', [
@@ -809,11 +809,11 @@ test('select.select()', function (t) {
         'should return elements inside SVG embedded in `[contentEditable=true]`'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':root', function (sst) {
-      sst.deepEqual(
+    t.test(':root', function (t) {
+      t.deepEqual(
         select(
           ':root',
           u('root', [
@@ -825,13 +825,13 @@ test('select.select()', function (t) {
         'should return the `<html>` element with a `root` as parent'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(':root', h('html', [h('title', 'Hello'), h('p', 'World')])),
         h('html', [h('title', 'Hello'), h('p', 'World')]),
         'should return the `<html>` element with a no parent'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           ':root',
           u('root', [
@@ -847,7 +847,7 @@ test('select.select()', function (t) {
         'should return the `<svg>` element with a `root` as parent'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           ':root',
           s('svg', {viewBox: [0, 0, 10, 10]}, [
@@ -861,7 +861,7 @@ test('select.select()', function (t) {
         'should return the `<svg>` element with a no parent'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(
           ':root',
           u('root', [
@@ -885,11 +885,11 @@ test('select.select()', function (t) {
         'should return the `<html>` element, not an embedded `<svg>` element'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.test(':scope', function (sst) {
-      sst.deepEqual(
+    t.test(':scope', function (t) {
+      t.deepEqual(
         select(
           ':scope',
           u('root', [h('strong', h('b', 'a')), h('em', h('i', 'b'))])
@@ -898,16 +898,16 @@ test('select.select()', function (t) {
         'should select the first element directly in a `root`, if a `root` is given'
       )
 
-      sst.deepEqual(
+      t.deepEqual(
         select(':scope', h('em', h('i', 'b'))),
         h('em', h('i', 'b')),
         'should select the root element if one is given'
       )
 
-      sst.end()
+      t.end()
     })
 
-    st.end()
+    t.end()
   })
 
   t.end()
