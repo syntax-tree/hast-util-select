@@ -1257,10 +1257,7 @@ test('select.matches()', function (t) {
     t.test(':root', function (t) {
       t.ok(matches(':root', h('html')), 'true if `<html>` in HTML space')
 
-      t.notOk(
-        matches(':root', h('div')),
-        'false if not `<html>` in HTML space'
-      )
+      t.notOk(matches(':root', h('div')), 'false if not `<html>` in HTML space')
 
       t.ok(matches(':root', s('svg'), 'svg'), 'true if `<svg>` in SVG space')
 
