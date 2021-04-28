@@ -1,11 +1,7 @@
-'use strict'
-
-var test = require('tape')
-var u = require('unist-builder')
-var s = require('hastscript/svg')
-var h = require('hastscript')
-var select = require('..').select
-var selectAll = require('..').selectAll
+import test from 'tape'
+import {u} from 'unist-builder'
+import {h, s} from 'hastscript'
+import {select, selectAll} from '../index.js'
 
 test('svg', function (t) {
   t.deepEqual(

@@ -22,6 +22,9 @@ This information is not stored in hast, so selectors like that don’t work.
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -30,7 +33,11 @@ npm install hast-util-select
 
 ## API
 
-### `select.matches(selector, node[, space])`
+This package exports the following identifiers: `matches`, `select`, and
+`selectAll`.
+There is no default export.
+
+### `matches(selector, node[, space])`
 
 Check that the given `node` matches `selector`.
 Returns boolean, whether the node matches or not.
@@ -43,8 +50,8 @@ This only checks that the given element matches the selector.
 ##### Use
 
 ```js
-var h = require('hastscript')
-var matches = require('hast-util-select').matches
+import {h} from 'hastscript'
+import {matches} from 'hast-util-select'
 
 matches('b, i', h('b')) // => true
 matches(':any-link', h('a')) // => false
@@ -69,7 +76,7 @@ matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
 
 `boolean` — Whether the node matches the selector.
 
-### `select.select(selector, tree[, space])`
+### `select(selector, tree[, space])`
 
 Select the first `node` matching `selector` in the given `tree` (could be the
 tree itself).
@@ -78,8 +85,8 @@ Searches the [*tree*][tree] in [*preorder*][preorder].
 ##### Use
 
 ```js
-var h = require('hastscript')
-var select = require('hast-util-select').select
+import {h} from 'hastscript'
+import {select} from 'hast-util-select'
 
 console.log(
   select(
@@ -115,7 +122,7 @@ Yields:
 
 [`Element?`][element] — The found element, if any.
 
-### `select.selectAll(selector, tree[, space])`
+### `selectAll(selector, tree[, space])`
 
 Select all nodes matching `selector` in the given `tree` (could include the tree
 itself).
@@ -124,8 +131,8 @@ Searches the [*tree*][tree] in [*preorder*][preorder].
 ##### Use
 
 ```js
-var h = require('hastscript')
-var selectAll = require('hast-util-select').selectAll
+import {h} from 'hastscript'
+import {selectAll} from 'hast-util-select'
 
 console.log(
   selectAll(
@@ -224,13 +231,13 @@ Yields:
 *   [ ] ‡ `[*|attr]` (any namespace attribute)
 *   [ ] ‡ `[|attr]` (no namespace attribute)
 *   [ ] ‡ `[attr=value i]` (attribute case-insensitive)
-*   [ ] ‡ `:has()` (functional pseudo-class).
-    <small>Relative selectors (`:has(> img)`) are not supported, but scope is
+*   [ ] ‡ `:has()` (functional pseudo-class).  <small>Relative
+    selectors (`:has(> img)`) are not supported, but scope is
     (`:has(:scope > img)`) </small>
-*   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class).
-    <small>Scoping to parents is not supported</small>
-*   [ ] ‖ `:nth-last-child(n of S)` (scoped to parent S).
-    <small>Scoping to parents is not supported</small>
+*   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class).  <small>Scoping
+    to parents is not supported</small>
+*   [ ] ‖ `:nth-last-child(n of S)` (scoped to parent S).  <small>Scoping
+    to parents is not supported</small>
 *   [ ] † `:active` (pseudo-class)
 *   [ ] † `:current` (pseudo-class)
 *   [ ] † `:current()` (functional pseudo-class)

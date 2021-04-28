@@ -1,10 +1,7 @@
-'use strict'
-
-var test = require('tape')
-var u = require('unist-builder')
-var h = require('hastscript')
-var s = require('hastscript/svg')
-var matches = require('..').matches
+import test from 'tape'
+import {u} from 'unist-builder'
+import {h, s} from 'hastscript'
+import {matches} from '../index.js'
 
 test('select.matches()', function (t) {
   t.test('invalid selector', function (t) {
@@ -18,7 +15,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
-        matches([], h())
+        matches([], h(''))
       },
       /Error: Expected `string` as selector, not ``/,
       'should throw w/ invalid selector (1)'
@@ -26,7 +23,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
-        matches('@supports (transform-origin: 5% 5%) {}', h())
+        matches('@supports (transform-origin: 5% 5%) {}', h(''))
       },
       /Error: Rule expected but "@" found./,
       'should throw w/ invalid selector (2)'
@@ -34,7 +31,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
-        matches('[foo%=bar]', h())
+        matches('[foo%=bar]', h(''))
       },
       /Error: Expected "=" but "%" found./,
       'should throw on invalid attribute operators'
@@ -42,7 +39,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
-        matches(':active', h())
+        matches(':active', h(''))
       },
       /Error: Unknown pseudo-selector `active`/,
       'should throw on invalid pseudo classes'
@@ -50,7 +47,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
-        matches(':nth-foo(2n+1)', h())
+        matches(':nth-foo(2n+1)', h(''))
       },
       /Error: Unknown pseudo-selector `nth-foo`/,
       'should throw on invalid pseudo class “functions”'
@@ -58,7 +55,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
-        matches('::before', h())
+        matches('::before', h(''))
       },
       /Error: Unexpected pseudo-element or empty pseudo-class/,
       'should throw on invalid pseudo elements'
@@ -66,7 +63,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
-        matches('foo bar', h())
+        matches('foo bar', h(''))
       },
       /Error: Expected selector without nesting/,
       'should throw on nested selectors (descendant)'
@@ -74,7 +71,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
-        matches('foo > bar', h())
+        matches('foo > bar', h(''))
       },
       /Error: Expected selector without nesting/,
       'should throw on nested selectors (direct child)'
@@ -103,7 +100,7 @@ test('select.matches()', function (t) {
     simplePseudos.forEach(function (pseudo) {
       t.throws(
         function () {
-          matches(':' + pseudo, h())
+          matches(':' + pseudo, h(''))
         },
         new RegExp('Error: Cannot use `:' + pseudo + '` without parent'),
         'should throw on `' + pseudo + '`'
@@ -113,7 +110,7 @@ test('select.matches()', function (t) {
     functionalPseudos.forEach(function (pseudo) {
       t.throws(
         function () {
-          matches(':' + pseudo + '()', h())
+          matches(':' + pseudo + '()', h(''))
         },
         new RegExp('Error: Cannot use `:' + pseudo + '` without parent'),
         'should throw on `' + pseudo + '()`'
@@ -124,8 +121,8 @@ test('select.matches()', function (t) {
   })
 
   t.test('general', function (t) {
-    t.notOk(matches('', h()), 'false for the empty string as selector')
-    t.notOk(matches(' ', h()), 'false for a white-space only selector')
+    t.notOk(matches('', h('')), 'false for the empty string as selector')
+    t.notOk(matches(' ', h('')), 'false for a white-space only selector')
     t.notOk(matches('*'), 'false if not given a node')
     t.notOk(
       matches('*', {type: 'text', value: 'a'}),
@@ -143,7 +140,7 @@ test('select.matches()', function (t) {
   })
 
   t.test('tag-names: `div`, `*`', function (t) {
-    t.ok(matches('*', h()), 'true for `*`')
+    t.ok(matches('*', h('')), 'true for `*`')
     t.ok(matches('b', h('b')), 'true if tag-names matches')
     t.notOk(matches('b', h('i')), 'false if tag-names don’t matches')
 
@@ -151,7 +148,7 @@ test('select.matches()', function (t) {
   })
 
   t.test('id: `#id`', function (t) {
-    t.notOk(matches('#one', h()), 'false if no id exists')
+    t.notOk(matches('#one', h('')), 'false if no id exists')
     t.ok(matches('#one', h('#one')), 'true for matchesing id’s')
     t.notOk(matches('#two', h('#one')), 'false for mismatchesed id’s')
     t.ok(
@@ -167,7 +164,7 @@ test('select.matches()', function (t) {
   })
 
   t.test('class: `.class`', function (t) {
-    t.notOk(matches('.one', h()), 'false if no class-name exists')
+    t.notOk(matches('.one', h('')), 'false if no class-name exists')
     t.ok(matches('.one', h('.one')), 'true for matchesing class-name')
     t.ok(
       matches('.one', h('.one.two')),
@@ -932,7 +929,7 @@ test('select.matches()', function (t) {
         'false for options w/o `selected`'
       )
 
-      t.notOk(matches(':checked', h()), 'false for other nodes')
+      t.notOk(matches(':checked', h('')), 'false for other nodes')
 
       t.end()
     })
@@ -1010,15 +1007,15 @@ test('select.matches()', function (t) {
     })
 
     t.test(':empty', function (t) {
-      t.ok(matches(':empty', h()), 'true if w/o children')
+      t.ok(matches(':empty', h('')), 'true if w/o children')
       t.ok(
-        matches(':empty', h(null, u('comment', '?'))),
+        matches(':empty', h('', u('comment', '?'))),
         'true if w/o elements or texts'
       )
-      t.notOk(matches(':empty', h(null, h())), 'false if w/ elements')
-      t.notOk(matches(':empty', h(null, u('text', '.'))), 'false if w/ text')
+      t.notOk(matches(':empty', h('', h(''))), 'false if w/ elements')
+      t.notOk(matches(':empty', h('', u('text', '.'))), 'false if w/ text')
       t.notOk(
-        matches(':empty', h(null, u('text', ' '))),
+        matches(':empty', h('', u('text', ' '))),
         'false if w/ white-space text'
       )
 
@@ -1026,17 +1023,17 @@ test('select.matches()', function (t) {
     })
 
     t.test(':blank', function (t) {
-      t.ok(matches(':blank', h()), 'true if w/o children')
+      t.ok(matches(':blank', h('')), 'true if w/o children')
       t.ok(
-        matches(':blank', h(null, u('comment', '?'))),
+        matches(':blank', h('', u('comment', '?'))),
         'true if w/o elements or texts'
       )
       t.ok(
-        matches(':blank', h(null, u('text', ' '))),
+        matches(':blank', h('', u('text', ' '))),
         'true if w/ white-space text'
       )
-      t.notOk(matches(':blank', h(null, h())), 'false if w/ elements')
-      t.notOk(matches(':blank', h(null, u('text', '.'))), 'false if w/ text')
+      t.notOk(matches(':blank', h('', h(''))), 'false if w/ elements')
+      t.notOk(matches(':blank', h('', u('text', '.'))), 'false if w/ text')
 
       t.end()
     })

@@ -1,10 +1,7 @@
-'use strict'
-
-var test = require('tape')
-var u = require('unist-builder')
-var s = require('hastscript/svg')
-var h = require('hastscript')
-var select = require('..').select
+import test from 'tape'
+import {u} from 'unist-builder'
+import {h, s} from 'hastscript'
+import {select} from '../index.js'
 
 test('select.select()', function (t) {
   t.test('invalid selectors', function (t) {
@@ -18,7 +15,7 @@ test('select.select()', function (t) {
 
     t.throws(
       function () {
-        select([], h())
+        select([], h(''))
       },
       /Error: Expected `string` as selector, not ``/,
       'should throw w/ invalid selector (1)'
@@ -26,7 +23,7 @@ test('select.select()', function (t) {
 
     t.throws(
       function () {
-        select('@supports (transform-origin: 5% 5%) {}', h())
+        select('@supports (transform-origin: 5% 5%) {}', h(''))
       },
       /Error: Rule expected but "@" found./,
       'should throw w/ invalid selector (2)'
@@ -34,7 +31,7 @@ test('select.select()', function (t) {
 
     t.throws(
       function () {
-        select('[foo%=bar]', h())
+        select('[foo%=bar]', h(''))
       },
       /Error: Expected "=" but "%" found./,
       'should throw on invalid attribute operators'
@@ -42,7 +39,7 @@ test('select.select()', function (t) {
 
     t.throws(
       function () {
-        select(':active', h())
+        select(':active', h(''))
       },
       /Error: Unknown pseudo-selector `active`/,
       'should throw on invalid pseudo classes'
@@ -50,7 +47,7 @@ test('select.select()', function (t) {
 
     t.throws(
       function () {
-        select(':nth-foo(2n+1)', h())
+        select(':nth-foo(2n+1)', h(''))
       },
       /Error: Unknown pseudo-selector `nth-foo`/,
       'should throw on invalid pseudo class “functions”'
@@ -58,7 +55,7 @@ test('select.select()', function (t) {
 
     t.throws(
       function () {
-        select('::before', h())
+        select('::before', h(''))
       },
       /Error: Unexpected pseudo-element or empty pseudo-class/,
       'should throw on invalid pseudo elements'
@@ -68,8 +65,8 @@ test('select.select()', function (t) {
   })
 
   t.test('general', function (t) {
-    t.equal(select('', h()), null, 'nothing for the empty string as selector')
-    t.equal(select(' ', h()), null, 'nothing for a white-space only selector')
+    t.equal(select('', h('')), null, 'nothing for the empty string as selector')
+    t.equal(select(' ', h('')), null, 'nothing for a white-space only selector')
     t.equal(select('*'), null, 'nothing if not given a node')
     t.equal(
       select('*', {type: 'text', value: 'a'}),

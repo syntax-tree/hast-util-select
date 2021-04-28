@@ -1,10 +1,7 @@
-'use strict'
-
-var test = require('tape')
-var u = require('unist-builder')
-var s = require('hastscript/svg')
-var h = require('hastscript')
-var selectAll = require('..').selectAll
+import test from 'tape'
+import {u} from 'unist-builder'
+import {h, s} from 'hastscript'
+import {selectAll} from '../index.js'
 
 test('select.selectAll()', function (t) {
   t.test('invalid selectors', function (t) {
@@ -18,7 +15,7 @@ test('select.selectAll()', function (t) {
 
     t.throws(
       function () {
-        selectAll([], h())
+        selectAll([], h(''))
       },
       /Error: Expected `string` as selector, not ``/,
       'should throw w/ invalid selector (1)'
@@ -26,7 +23,7 @@ test('select.selectAll()', function (t) {
 
     t.throws(
       function () {
-        selectAll('@supports (transform-origin: 5% 5%) {}', h())
+        selectAll('@supports (transform-origin: 5% 5%) {}', h(''))
       },
       /Error: Rule expected but "@" found./,
       'should throw w/ invalid selector (2)'
@@ -34,7 +31,7 @@ test('select.selectAll()', function (t) {
 
     t.throws(
       function () {
-        selectAll('[foo%=bar]', h())
+        selectAll('[foo%=bar]', h(''))
       },
       /Error: Expected "=" but "%" found./,
       'should throw on invalid attribute operators'
@@ -42,7 +39,7 @@ test('select.selectAll()', function (t) {
 
     t.throws(
       function () {
-        selectAll(':active', h())
+        selectAll(':active', h(''))
       },
       /Error: Unknown pseudo-selector `active`/,
       'should throw on invalid pseudo classes'
@@ -50,7 +47,7 @@ test('select.selectAll()', function (t) {
 
     t.throws(
       function () {
-        selectAll(':nth-foo(2n+1)', h())
+        selectAll(':nth-foo(2n+1)', h(''))
       },
       /Error: Unknown pseudo-selector `nth-foo`/,
       'should throw on invalid pseudo class “functions”'
@@ -58,7 +55,7 @@ test('select.selectAll()', function (t) {
 
     t.throws(
       function () {
-        selectAll('::before', h())
+        selectAll('::before', h(''))
       },
       /Error: Unexpected pseudo-element or empty pseudo-class/,
       'should throw on invalid pseudo elements'
@@ -69,12 +66,12 @@ test('select.selectAll()', function (t) {
 
   t.test('general', function (t) {
     t.deepEqual(
-      selectAll('', h()),
+      selectAll('', h('')),
       [],
       'nothing for the empty string as selector'
     )
     t.deepEqual(
-      selectAll(' ', h()),
+      selectAll(' ', h('')),
       [],
       'nothing for a white-space only selector'
     )

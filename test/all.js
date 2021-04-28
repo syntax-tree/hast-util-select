@@ -1,9 +1,7 @@
-'use strict'
-
-var test = require('tape')
-var u = require('unist-builder')
-var h = require('hastscript')
-var selectAll = require('..').selectAll
+import test from 'tape'
+import {u} from 'unist-builder'
+import {h} from 'hastscript'
+import {selectAll} from '../index.js'
 
 test('all together now', function (t) {
   t.deepEqual(
