@@ -58,7 +58,7 @@
     "tape": "^5.0.0",
     "tinyify": "^3.0.0",
     "unist-builder": "^2.0.0",
-    "xo": "^0.35.0"
+    "xo": "^0.38.0"
   },
   "scripts": {
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
@@ -99,7 +99,8 @@
       "unicorn/explicit-length-check": "off",
       "unicorn/prefer-includes": "off",
       "unicorn/prefer-reflect-apply": "off",
-      "unicorn/prefer-type-error": "off"
+      "unicorn/prefer-type-error": "off",
+      "unicorn/no-array-for-each": "off"
     },
     "ignores": [
       "hast-util-select.js"
