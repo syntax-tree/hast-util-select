@@ -7,6 +7,7 @@ test('select.matches()', function (t) {
   t.test('invalid selector', function (t) {
     t.throws(
       function () {
+        // @ts-ignore runtime.
         matches()
       },
       /Error: Expected `string` as selector, not `undefined`/,
@@ -15,6 +16,7 @@ test('select.matches()', function (t) {
 
     t.throws(
       function () {
+        // @ts-ignore runtime.
         matches([], h(''))
       },
       /Error: Expected `string` as selector, not ``/,
@@ -1269,7 +1271,7 @@ test('select.matches()', function (t) {
     t.test(':scope', function (t) {
       t.ok(matches(':scope', h('html')), 'always true for elements')
       t.ok(matches(':scope', h('p')), 'always true for elements')
-      t.notOk(matches(':scope', u('text'), '!'), 'always true for elements')
+      t.notOk(matches(':scope', u('text', '!')), 'always true for elements')
       t.end()
     })
 
