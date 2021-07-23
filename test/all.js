@@ -3,7 +3,7 @@ import {u} from 'unist-builder'
 import {h} from 'hastscript'
 import {selectAll} from '../index.js'
 
-test('all together now', function (t) {
+test('all together now', (t) => {
   t.deepEqual(
     selectAll(
       'dl > dt.foo:nth-of-type(odd)',

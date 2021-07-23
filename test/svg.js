@@ -3,7 +3,7 @@ import {u} from 'unist-builder'
 import {h, s} from 'hastscript'
 import {select, selectAll} from '../index.js'
 
-test('svg', function (t) {
+test('svg', (t) => {
   t.deepEqual(
     select(
       '[writing-mode]',

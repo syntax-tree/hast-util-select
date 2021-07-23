@@ -3,10 +3,10 @@ import {u} from 'unist-builder'
 import {h, s} from 'hastscript'
 import {selectAll} from '../index.js'
 
-test('select.selectAll()', function (t) {
-  t.test('invalid selectors', function (t) {
+test('select.selectAll()', (t) => {
+  t.test('invalid selectors', (t) => {
     t.throws(
-      function () {
+      () => {
         // @ts-ignore runtime.
         selectAll()
       },
@@ -15,7 +15,7 @@ test('select.selectAll()', function (t) {
     )
 
     t.throws(
-      function () {
+      () => {
         // @ts-ignore runtime.
         selectAll([], h(''))
       },
@@ -24,7 +24,7 @@ test('select.selectAll()', function (t) {
     )
 
     t.throws(
-      function () {
+      () => {
         selectAll('@supports (transform-origin: 5% 5%) {}', h(''))
       },
       /Error: Rule expected but "@" found./,
@@ -32,7 +32,7 @@ test('select.selectAll()', function (t) {
     )
 
     t.throws(
-      function () {
+      () => {
         selectAll('[foo%=bar]', h(''))
       },
       /Error: Expected "=" but "%" found./,
@@ -40,7 +40,7 @@ test('select.selectAll()', function (t) {
     )
 
     t.throws(
-      function () {
+      () => {
         selectAll(':active', h(''))
       },
       /Error: Unknown pseudo-selector `active`/,
@@ -48,7 +48,7 @@ test('select.selectAll()', function (t) {
     )
 
     t.throws(
-      function () {
+      () => {
         selectAll(':nth-foo(2n+1)', h(''))
       },
       /Error: Unknown pseudo-selector `nth-foo`/,
@@ -56,7 +56,7 @@ test('select.selectAll()', function (t) {
     )
 
     t.throws(
-      function () {
+      () => {
         selectAll('::before', h(''))
       },
       /Error: Unexpected pseudo-element or empty pseudo-class/,
@@ -66,7 +66,7 @@ test('select.selectAll()', function (t) {
     t.end()
   })
 
-  t.test('general', function (t) {
+  t.test('general', (t) => {
     t.deepEqual(
       selectAll('', h('')),
       [],
@@ -87,7 +87,7 @@ test('select.selectAll()', function (t) {
     t.end()
   })
 
-  t.test('descendant selector', function (t) {
+  t.test('descendant selector', (t) => {
     t.deepEqual(
       selectAll(
         'div',
@@ -135,7 +135,7 @@ test('select.selectAll()', function (t) {
     t.end()
   })
 
-  t.test('child selector', function (t) {
+  t.test('child selector', (t) => {
     t.deepEqual(
       selectAll(
         'main > article',
@@ -166,7 +166,7 @@ test('select.selectAll()', function (t) {
     t.end()
   })
 
-  t.test('next-sibling selector', function (t) {
+  t.test('next-sibling selector', (t) => {
     t.deepEqual(
       selectAll(
         'h1 + p',
@@ -220,7 +220,7 @@ test('select.selectAll()', function (t) {
     t.end()
   })
 
-  t.test('subsequent sibling selector', function (t) {
+  t.test('subsequent sibling selector', (t) => {
     t.deepEqual(
       selectAll(
         'h1 ~ p',
@@ -283,8 +283,8 @@ test('select.selectAll()', function (t) {
     t.end()
   })
 
-  t.test('parent-sensitive pseudo-selectors', function (t) {
-    t.test(':first-child', function (t) {
+  t.test('parent-sensitive pseudo-selectors', (t) => {
+    t.test(':first-child', (t) => {
       t.deepEqual(
         selectAll(
           ':first-child',
@@ -321,7 +321,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':last-child', function (t) {
+    t.test(':last-child', (t) => {
       t.deepEqual(
         selectAll(
           ':last-child',
@@ -358,7 +358,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':only-child', function (t) {
+    t.test(':only-child', (t) => {
       t.deepEqual(
         selectAll(
           ':only-child',
@@ -386,7 +386,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':nth-child', function (t) {
+    t.test(':nth-child', (t) => {
       t.deepEqual(
         selectAll(
           'li:nth-child(odd)',
@@ -454,7 +454,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':nth-last-child', function (t) {
+    t.test(':nth-last-child', (t) => {
       t.deepEqual(
         selectAll(
           'li:nth-last-child(odd)',
@@ -522,7 +522,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':nth-of-type', function (t) {
+    t.test(':nth-of-type', (t) => {
       t.deepEqual(
         selectAll(
           'dt:nth-of-type(odd)',
@@ -590,7 +590,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':nth-last-of-type', function (t) {
+    t.test(':nth-last-of-type', (t) => {
       t.deepEqual(
         selectAll(
           'dt:nth-last-of-type(odd)',
@@ -658,7 +658,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':first-of-type', function (t) {
+    t.test(':first-of-type', (t) => {
       t.deepEqual(
         selectAll(
           'dt:first-of-type',
@@ -684,7 +684,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':last-of-type', function (t) {
+    t.test(':last-of-type', (t) => {
       t.deepEqual(
         selectAll(
           'dt:last-of-type',
@@ -710,7 +710,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':only-of-type', function (t) {
+    t.test(':only-of-type', (t) => {
       t.deepEqual(
         selectAll(
           'dd:only-of-type',
@@ -750,7 +750,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':lang()', function (t) {
+    t.test(':lang()', (t) => {
       t.deepEqual(
         selectAll(
           'q:lang(en)',
@@ -789,9 +789,9 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':dir()', function (t) {
-      var ltr = 'a'
-      var rtl = 'أ'
+    t.test(':dir()', (t) => {
+      const ltr = 'a'
+      const rtl = 'أ'
 
       t.deepEqual(
         selectAll(
@@ -811,7 +811,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':read-write', function (t) {
+    t.test(':read-write', (t) => {
       t.deepEqual(
         selectAll(
           'p:read-write',
@@ -839,7 +839,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':read-only', function (t) {
+    t.test(':read-only', (t) => {
       t.deepEqual(
         selectAll(
           'p:read-only',
@@ -867,7 +867,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':root', function (t) {
+    t.test(':root', (t) => {
       t.deepEqual(
         selectAll(
           ':root',
@@ -949,7 +949,7 @@ test('select.selectAll()', function (t) {
       t.end()
     })
 
-    t.test(':scope', function (t) {
+    t.test(':scope', (t) => {
       t.deepEqual(
         selectAll(
           ':scope',
