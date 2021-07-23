@@ -7,7 +7,7 @@ test('select.select()', (t) => {
   t.test('invalid selectors', (t) => {
     t.throws(
       () => {
-        // @ts-ignore runtime.
+        // @ts-expect-error runtime.
         select()
       },
       /Error: Expected `string` as selector, not `undefined`/,
@@ -16,7 +16,7 @@ test('select.select()', (t) => {
 
     t.throws(
       () => {
-        // @ts-ignore runtime.
+        // @ts-expect-error runtime.
         select([], h(''))
       },
       /Error: Expected `string` as selector, not ``/,

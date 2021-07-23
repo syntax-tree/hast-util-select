@@ -7,7 +7,7 @@ test('select.matches()', (t) => {
   t.test('invalid selector', (t) => {
     t.throws(
       () => {
-        // @ts-ignore runtime.
+        // @ts-expect-error runtime.
         matches()
       },
       /Error: Expected `string` as selector, not `undefined`/,
@@ -16,7 +16,7 @@ test('select.matches()', (t) => {
 
     t.throws(
       () => {
-        // @ts-ignore runtime.
+        // @ts-expect-error runtime.
         matches([], h(''))
       },
       /Error: Expected `string` as selector, not ``/,
