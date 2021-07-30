@@ -52,7 +52,7 @@
     "nth-check": "^2.0.0",
     "property-information": "^6.0.0",
     "space-separated-tokens": "^2.0.0",
-    "unist-util-visit": "^3.0.0",
+    "unist-util-visit": "^4.0.0",
     "zwitch": "^2.0.0"
   },
   "devDependencies": {
