@@ -76,6 +76,12 @@ test('select.select()', (t) => {
       'nothing if not given an element'
     )
 
+    t.deepEqual(
+      select('h1, h2', h('main', [h('h1', 'Alpha'), h('h2', 'Bravo')])),
+      h('h1', 'Alpha'),
+      'should select one of several elements'
+    )
+
     t.end()
   })
 
