@@ -118,7 +118,7 @@ test('select.matches()', (t) => {
         () => {
           matches(':' + pseudo + '()', h(''))
         },
-        new RegExp('Error: Cannot use `:' + pseudo + '` without parent'),
+        /n-th rule couldn't be parsed/,
         'should throw on `' + pseudo + '()`'
       )
     }
