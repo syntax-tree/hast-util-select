@@ -217,7 +217,10 @@ test('select.matches()', (t) => {
       'true if attribute matches (space-separated list, 2)'
     )
     t.ok(
-      matches('[accept=audio/*]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches(
+        '[accept=audio/*]',
+        h('input', {type: 'file', accept: ['audio/*']})
+      ),
       'true if attribute matches (comma-separated list)'
     )
     t.ok(
@@ -254,7 +257,10 @@ test('select.matches()', (t) => {
       'false if attribute does not matches (space-separated list, 2)'
     )
     t.notOk(
-      matches('[accept=image/*]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches(
+        '[accept=image/*]',
+        h('input', {type: 'file', accept: ['audio/*']})
+      ),
       'false if attribute does not matches (comma-separated list)'
     )
     t.notOk(
@@ -295,7 +301,10 @@ test('select.matches()', (t) => {
       'true if attribute starts with (space-separated list)'
     )
     t.ok(
-      matches('[accept^=audio]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches(
+        '[accept^=audio]',
+        h('input', {type: 'file', accept: ['audio/*']})
+      ),
       'true if attribute starts with (comma-separated list)'
     )
     t.ok(
@@ -328,7 +337,10 @@ test('select.matches()', (t) => {
       'false if attribute does not start with (space-separated list)'
     )
     t.notOk(
-      matches('[accept^=video]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches(
+        '[accept^=video]',
+        h('input', {type: 'file', accept: ['audio/*']})
+      ),
       'false if attribute does not start with (comma-separated list)'
     )
     t.notOk(
@@ -443,7 +455,10 @@ test('select.matches()', (t) => {
       'true if attribute contains (space-separated list)'
     )
     t.ok(
-      matches('[accept*=audio/*]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches(
+        '[accept*=audio/*]',
+        h('input', {type: 'file', accept: ['audio/*']})
+      ),
       'true if attribute contains (comma-separated list)'
     )
     t.ok(
@@ -476,7 +491,10 @@ test('select.matches()', (t) => {
       'false if attribute does not contain (space-separated list)'
     )
     t.notOk(
-      matches('[accept*=video/*]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches(
+        '[accept*=video/*]',
+        h('input', {type: 'file', accept: ['audio/*']})
+      ),
       'false if attribute does not contain (comma-separated list)'
     )
 
@@ -618,7 +636,10 @@ test('select.matches()', (t) => {
       'true if attribute matches (space-separated list, 2)'
     )
     t.ok(
-      matches('[accept|=audio/*]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches(
+        '[accept|=audio/*]',
+        h('input', {type: 'file', accept: ['audio/*']})
+      ),
       'true if attribute matches (comma-separated list)'
     )
     t.ok(
@@ -655,7 +676,10 @@ test('select.matches()', (t) => {
       'false if attribute does not matches (space-separated list, 2)'
     )
     t.notOk(
-      matches('[accept|=video/*]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches(
+        '[accept|=video/*]',
+        h('input', {type: 'file', accept: ['audio/*']})
+      ),
       'false if attribute does not matches (comma-separated list)'
     )
     t.notOk(
