@@ -33,7 +33,7 @@ export function select(selector, node, space) {
  * @param {string} selector
  * @param {HastNode} [node]
  * @param {Space} [space]
- * @returns {Array.<Element>}
+ * @returns {Array<Element>}
  */
 export function selectAll(selector, node, space) {
   return any(parse(selector), node, {space})

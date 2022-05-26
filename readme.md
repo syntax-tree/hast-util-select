@@ -172,7 +172,7 @@ Yields:
 
 ##### Returns
 
-[`Array.<Element>`][element] — All found elements, if any.
+[`Array<Element>`][element] — All found elements, if any.
 
 ## Support
 
