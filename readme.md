@@ -10,44 +10,90 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[**hast**][hast] utility with equivalents `querySelector`, `querySelectorAll`,
+[hast][] utility with equivalents for `querySelector`, `querySelectorAll`,
 and `matches`.
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [API](#api)
+    *   [`matches(selector, node[, space])`](#matchesselector-node-space)
+    *   [`select(selector, tree[, space])`](#selectselector-tree-space)
+    *   [`selectAll(selector, tree[, space])`](#selectallselector-tree-space)
+*   [Support](#support)
+*   [Unsupported](#unsupported)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Security](#security)
+*   [Related](#related)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package lets you find nodes in a tree, similar to how `querySelector`,
+`querySelectorAll`, and `matches` work with the DOM.
 
 One notable difference between DOM and hast is that DOM nodes have references
 to their parents, meaning that `document.body.matches(':last-child')` can
-be evaluated.
+be evaluated to check whether the body is the last child of its parent.
 This information is not stored in hast, so selectors like that don’t work.
 
-[View the list of supported selectors »][support]
+## When should I use this?
+
+This is a small utility that is quite useful, but is rather slow if you use it a
+lot.
+For each call, it has to walk the entire tree.
+In some cases, walking the tree once with [`unist-util-visit`][unist-util-visit]
+is smarter, such as when you want to change certain nodes.
+On the other hand, this is quite powerful and fast enough for many other cases.
+
+This utility is similar to [`unist-util-select`][unist-util-select], which can
+find and match any unist node.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, 16.0+, 18.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-select
 ```
 
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import {matches, select, selectAll} from "https://esm.sh/hast-util-select@5"
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import {matches, select, selectAll} from "https://esm.sh/hast-util-select@5?bundle"
+</script>
+```
+
 ## API
 
-This package exports the following identifiers: `matches`, `select`, and
-`selectAll`.
+This package exports the identifiers `matches`, `select`, and `selectAll`.
 There is no default export.
 
 ### `matches(selector, node[, space])`
 
-Check that the given `node` matches `selector`.
-Returns boolean, whether the node matches or not.
+Check that the given `node` ([`Node`][node], should be [element][]) matches the
+CSS selector `selector` (`string`, stuff like `a, b` is also supported).
+Also accepts a `space` (enum, `'svg'` or `'html'`, default: `'html'`)
+Returns whether the node matches or not (`boolean`).
 
 This only checks the element itself, not the surrounding tree.
 Thus, nesting in selectors is not supported (`p b`, `p > b`), neither are
 selectors like `:first-child`, etc.
 This only checks that the given element matches the selector.
 
-##### Use
+###### Example
 
 ```js
 import {h} from 'hastscript'
@@ -63,26 +109,14 @@ matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
 // ...
 ```
 
-##### Parameters
-
-*   `selector` (`string`)
-    — CSS selectors (`,` is also supported)
-*   `node` ([`Node`][node])
-    — Thing to check, could be anything, but should be an [*element*][element]
-*   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
-    — Which space the node exists in
-
-##### Returns
-
-`boolean` — Whether the node matches the selector.
-
 ### `select(selector, tree[, space])`
 
-Select the first `node` matching `selector` in the given `tree` (could be the
-tree itself).
-Searches the [*tree*][tree] in [*preorder*][preorder].
+Select the first [element][] (or `null`) matching the CSS selector `selector` in
+the given `tree` ([`Node`][node]), which could be the tree itself.
+Searches the [tree][] in *[preorder][]*.
+Also accepts a `space` (enum, `'svg'` or `'html'`, default: `'html'`)
 
-##### Use
+###### Example
 
 ```js
 import {h} from 'hastscript'
@@ -111,24 +145,14 @@ Yields:
   children: [ { type: 'text', value: 'Delta' } ] }
 ```
 
-##### Parameters
-
-*   `selector` (`string`) — CSS selectors (`,` is also supported)
-*   `tree` ([`Node`][node]) — [*Tree*][tree] to search
-*   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
-    — Which space the tree exists in
-
-##### Returns
-
-[`Element?`][element] — The found element, if any.
-
 ### `selectAll(selector, tree[, space])`
 
-Select all nodes matching `selector` in the given `tree` (could include the tree
-itself).
-Searches the [*tree*][tree] in [*preorder*][preorder].
+Select all [element][]s (`Array<Element>`) matching the CSS selector `selector`
+in the given `tree` ([`Node`][node]), which could include the tree itself.
+Searches the [tree][] in *[preorder][]*.
+Also accepts a `space` (enum, `'svg'` or `'html'`, default: `'html'`)
 
-##### Use
+###### Example
 
 ```js
 import {h} from 'hastscript'
@@ -162,17 +186,6 @@ Yields:
     properties: {},
     children: [ { type: 'text', value: 'Foxtrot' } ] } ]
 ```
-
-##### Parameters
-
-*   `selector` (`string`) — CSS selectors (`,` is also supported)
-*   `tree` ([`Node`][node]) — [*Tree*][tree] to search
-*   `space` (enum, `'svg'` or `'html'`, default: `'html'`)
-    — Which space the tree exists in
-
-##### Returns
-
-[`Array<Element>`][element] — All found elements, if any.
 
 ## Support
 
@@ -282,6 +295,18 @@ Yields:
 *   § — Not very interested in writing / including the code for this
 *   ‖ — Too new, the spec is still changing
 
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional type `Space`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
+
 ## Security
 
 `hast-util-select` does not change the syntax tree so there are no openings for
@@ -300,8 +325,8 @@ Yields:
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
-started.
+See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
+ways to get started.
 See [`support.md`][help] for ways to get help.
 
 This project has a [code of conduct][coc].
@@ -342,15 +367,23 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [license]: license
 
 [author]: https://wooorm.com
 
-[contributing]: https://github.com/syntax-tree/.github/blob/HEAD/contributing.md
+[health]: https://github.com/syntax-tree/.github
 
-[help]: https://github.com/syntax-tree/.github/blob/HEAD/support.md
+[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
 
-[coc]: https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md
+[help]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
 
 [tree]: https://github.com/syntax-tree/unist#tree
 
@@ -364,4 +397,6 @@ abide by its terms.
 
 [xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
 
-[support]: #support
+[unist-util-visit]: https://github.com/syntax-tree/unist-util-visit
+
+[unist-util-select]: https://github.com/syntax-tree/unist-util-select
