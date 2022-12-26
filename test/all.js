@@ -1,10 +1,11 @@
-import test from 'tape'
+import assert from 'node:assert/strict'
+import test from 'node:test'
 import {u} from 'unist-builder'
 import {h} from 'hastscript'
 import {selectAll} from '../index.js'
 
-test('all together now', (t) => {
-  t.deepEqual(
+test('all together now', () => {
+  assert.deepEqual(
     selectAll(
       'dl > dt.foo:nth-of-type(odd)',
       u('root', [
@@ -28,7 +29,7 @@ test('all together now', (t) => {
     [h('dt.foo', 'Alpha')]
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     selectAll(
       '.foo ~ dd:nth-of-type(even)',
       u('root', [
@@ -56,7 +57,7 @@ test('all together now', (t) => {
     [h('dd', 'Delta'), h('dd', 'Hotel')]
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     selectAll(
       '.foo + dd:nth-of-type(even)',
       u('root', [
@@ -84,7 +85,7 @@ test('all together now', (t) => {
     [h('dd', 'Delta')]
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     selectAll(
       '.foo, :nth-of-type(even), [title]',
       u('root', [
@@ -109,6 +110,4 @@ test('all together now', (t) => {
       h('dt', {title: 'bar'}, 'Alpha')
     ]
   )
-
-  t.end()
 })

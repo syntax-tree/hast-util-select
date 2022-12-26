@@ -1,10 +1,11 @@
-import test from 'tape'
+import assert from 'node:assert/strict'
+import test from 'node:test'
 import {u} from 'unist-builder'
 import {h, s} from 'hastscript'
 import {select, selectAll} from '../index.js'
 
-test('svg', (t) => {
-  t.deepEqual(
+test('svg', () => {
+  assert.deepEqual(
     select(
       '[writing-mode]',
       u('root', [
@@ -21,7 +22,7 @@ test('svg', (t) => {
     s('text', {writingMode: 'lr-tb'}, '!')
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     selectAll(
       '[writing-mode]',
       u('root', [
@@ -38,15 +39,13 @@ test('svg', (t) => {
     [s('text', {writingMode: 'lr-tb'}, '!')]
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     select('[writing-mode]', s('text', {writingMode: 'lr-tb'}, '!')),
     null
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     select('[writing-mode]', s('text', {writingMode: 'lr-tb'}, '!'), 'svg'),
     s('text', {writingMode: 'lr-tb'}, '!')
   )
-
-  t.end()
 })
