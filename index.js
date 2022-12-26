@@ -4,6 +4,7 @@
  * @typedef {import('./lib/types.js').Space} Space
  */
 
+import {html, svg} from 'property-information'
 import {any} from './lib/any.js'
 import {parse} from './lib/parse.js'
 
@@ -25,13 +26,10 @@ import {parse} from './lib/parse.js'
  *   Whether `node` matches `selector`.
  */
 export function matches(selector, node, space) {
-  return Boolean(
-    any(parse(selector), node || undefined, {
-      space: space || undefined,
-      one: true,
-      shallow: true
-    })[0]
-  )
+  const state = createState(node, space)
+  state.one = true
+  state.shallow = true
+  return Boolean(any(parse(selector), node || undefined, state)[0])
 }
 
 /**
@@ -44,19 +42,16 @@ export function matches(selector, node, space) {
  *   Tree to search.
  * @param {Space | null | undefined} [space='html']
  *   Name of namespace (`'svg'` or `'html'`).
- * @returns {Element|null}
+ * @returns {Element | null}
  *   First element in `tree` that matches `selector` or `null` if nothing is
  *   found.
  *   This could be `tree` itself.
  */
 export function select(selector, tree, space) {
+  const state = createState(tree, space)
+  state.one = true
   // To do in major: return `undefined` instead.
-  return (
-    any(parse(selector), tree || undefined, {
-      space: space || undefined,
-      one: true
-    })[0] || null
-  )
+  return any(parse(selector), tree || undefined, state)[0] || null
 }
 
 /**
@@ -74,5 +69,33 @@ export function select(selector, tree, space) {
  *   This could include `tree` itself.
  */
 export function selectAll(selector, tree, space) {
-  return any(parse(selector), tree || undefined, {space: space || undefined})
+  const state = createState(tree, space)
+  return any(parse(selector), tree || undefined, state)
+}
+
+/**
+ * @param {Node | null | undefined} [tree]
+ *   Tree to search.
+ * @param {Space | null | undefined} [space='html']
+ *   Name of namespace (`'svg'` or `'html'`).
+ * @returns {import('./lib/types.js').SelectState} SelectState
+ */
+function createState(tree, space) {
+  return {
+    // @ts-expect-error assume elements.
+    scopeElements: tree ? (tree.type === 'root' ? tree.children : [tree]) : [],
+    iterator: undefined,
+    one: false,
+    shallow: false,
+    index: false,
+    found: false,
+    schema: space === 'svg' ? svg : html,
+    language: undefined,
+    direction: 'ltr',
+    editableOrEditingHost: false,
+    typeIndex: undefined,
+    elementIndex: undefined,
+    typeCount: undefined,
+    elementCount: undefined
+  }
 }
