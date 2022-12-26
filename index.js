@@ -17,16 +17,20 @@ import {parse} from './lib/parse.js'
  *
  * @param {string} selector
  *   CSS selector, such as (`h1`, `a, b`).
- * @param {Node|undefined} [node]
+ * @param {Node | null | undefined} [node]
  *   Node that might match `selector`, should be an element.
- * @param {Space|undefined} [space='html']
+ * @param {Space | null | undefined} [space='html']
  *   Name of namespace (`'svg'` or `'html'`).
  * @returns {boolean}
  *   Whether `node` matches `selector`.
  */
 export function matches(selector, node, space) {
   return Boolean(
-    any(parse(selector), node, {space, one: true, shallow: true})[0]
+    any(parse(selector), node || undefined, {
+      space: space || undefined,
+      one: true,
+      shallow: true
+    })[0]
   )
 }
 
@@ -36,9 +40,9 @@ export function matches(selector, node, space) {
  *
  * @param {string} selector
  *   CSS selector, such as (`h1`, `a, b`).
- * @param {Node|undefined} [tree]
+ * @param {Node | null | undefined} [tree]
  *   Tree to search.
- * @param {Space|undefined} [space='html']
+ * @param {Space | null | undefined} [space='html']
  *   Name of namespace (`'svg'` or `'html'`).
  * @returns {Element|null}
  *   First element in `tree` that matches `selector` or `null` if nothing is
@@ -46,7 +50,13 @@ export function matches(selector, node, space) {
  *   This could be `tree` itself.
  */
 export function select(selector, tree, space) {
-  return any(parse(selector), tree, {space, one: true})[0] || null
+  // To do in major: return `undefined` instead.
+  return (
+    any(parse(selector), tree || undefined, {
+      space: space || undefined,
+      one: true
+    })[0] || null
+  )
 }
 
 /**
@@ -55,14 +65,14 @@ export function select(selector, tree, space) {
  *
  * @param {string} selector
  *   CSS selector, such as (`h1`, `a, b`).
- * @param {Node|undefined} [tree]
+ * @param {Node | null | undefined} [tree]
  *   Tree to search.
- * @param {Space|undefined} [space='html']
+ * @param {Space | null | undefined} [space='html']
  *   Name of namespace (`'svg'` or `'html'`).
  * @returns {Array<Element>}
  *   Elements in `tree` that match `selector`.
  *   This could include `tree` itself.
  */
 export function selectAll(selector, tree, space) {
-  return any(parse(selector), tree, {space})
+  return any(parse(selector), tree || undefined, {space: space || undefined})
 }
