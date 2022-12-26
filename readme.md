@@ -83,15 +83,25 @@ There is no default export.
 
 ### `matches(selector, node[, space])`
 
-Check that the given `node` ([`Node`][node], should be [element][]) matches the
-CSS selector `selector` (`string`, stuff like `a, b` is also supported).
-Also accepts a `space` (enum, `'svg'` or `'html'`, default: `'html'`)
-Returns whether the node matches or not (`boolean`).
+Check that the given `node` matches `selector`.
 
 This only checks the element itself, not the surrounding tree.
 Thus, nesting in selectors is not supported (`p b`, `p > b`), neither are
 selectors like `:first-child`, etc.
 This only checks that the given element matches the selector.
+
+###### Parameters
+
+*   `selector` (`string`)
+    — CSS selector, such as (`h1`, `a, b`)
+*   `node` ([`Node`][node], optional)
+    — node that might match `selector`, should be an element
+*   `space` (`'svg'` or `'html'`, default: `'html'`)
+    — name of namespace
+
+###### Returns
+
+Whether `node` matches `selector` (`boolean`).
 
 ###### Example
 
@@ -106,15 +116,27 @@ matches('.classy', h('a', {className: ['classy']})) // => true
 matches('#id', h('a', {id: 'id'})) // => true
 matches('[lang|=en]', h('a', {lang: 'en'})) // => true
 matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
-// ...
+// …
 ```
 
 ### `select(selector, tree[, space])`
 
-Select the first [element][] (or `null`) matching the CSS selector `selector` in
-the given `tree` ([`Node`][node]), which could be the tree itself.
-Searches the [tree][] in *[preorder][]*.
-Also accepts a `space` (enum, `'svg'` or `'html'`, default: `'html'`)
+Select the first element that matches `selector` in the given `tree`.
+Searches the tree in *[preorder][]*.
+
+###### Parameters
+
+*   `selector` (`string`)
+    — CSS selector, such as (`h1`, `a, b`)
+*   `tree` ([`Node`][node], optional)
+    — tree to search
+*   `space` (`'svg'` or `'html'`, default: `'html'`)
+    — name of namespace
+
+###### Returns
+
+First element in `tree` that matches `selector` or `null` if nothing is found.
+This could be `tree` itself.
 
 ###### Example
 
@@ -147,10 +169,22 @@ Yields:
 
 ### `selectAll(selector, tree[, space])`
 
-Select all [element][]s (`Array<Element>`) matching the CSS selector `selector`
-in the given `tree` ([`Node`][node]), which could include the tree itself.
-Searches the [tree][] in *[preorder][]*.
-Also accepts a `space` (enum, `'svg'` or `'html'`, default: `'html'`)
+Select all elements that match `selector` in the given `tree`.
+Searches the tree in *preorder*.
+
+###### Parameters
+
+*   `selector` (`string`)
+    — CSS selector, such as (`h1`, `a, b`)
+*   `tree` ([`Node`][node], optional)
+    — tree to search
+*   `space` (`'svg'` or `'html'`, default: `'html'`)
+    — name of namespace
+
+###### Returns
+
+Elements in `tree` that match `selector`.
+This could include `tree` itself.
 
 ###### Example
 
@@ -385,15 +419,11 @@ abide by its terms.
 
 [coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
 
-[tree]: https://github.com/syntax-tree/unist#tree
-
 [preorder]: https://github.com/syntax-tree/unist#preorder
 
 [hast]: https://github.com/syntax-tree/hast
 
 [node]: https://github.com/syntax-tree/hast#nodes
-
-[element]: https://github.com/syntax-tree/hast#element
 
 [xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
 
