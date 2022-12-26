@@ -1,5 +1,3 @@
-<!--lint disable no-html-->
-
 # hast-util-select
 
 [![Build][build-badge]][build]
@@ -18,6 +16,7 @@ and `matches`.
 *   [What is this?](#what-is-this)
 *   [When should I use this?](#when-should-i-use-this)
 *   [Install](#install)
+*   [Use](#use)
 *   [API](#api)
     *   [`matches(selector, node[, space])`](#matchesselector-node-space)
     *   [`select(selector, tree[, space])`](#selectselector-tree-space)
@@ -56,7 +55,7 @@ find and match any unist node.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, 16.0+, 18.0+), install with [npm][]:
+In Node.js (version 14.14+, 16.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-select
@@ -74,6 +73,31 @@ In browsers with [`esm.sh`][esmsh]:
 <script type="module">
   import {matches, select, selectAll} from "https://esm.sh/hast-util-select@5?bundle"
 </script>
+```
+
+## Use
+
+```js
+import {h} from 'hastscript'
+import {matches, select, selectAll} from 'hast-util-select'
+
+const tree = h('section', [
+  h('p', 'Alpha'),
+  h('p', 'Bravo'),
+  h('h1', 'Charlie'),
+  h('p', 'Delta'),
+  h('p', 'Echo'),
+  h('p', 'Foxtrot'),
+  h('p', 'Golf')
+])
+
+matches('section', tree) // `true`
+
+console.log(select('h1 ~ :nth-child(even)', tree))
+// The paragraph with `Delta`
+
+console.log(selectAll('h1 ~ :nth-child(even)', tree))
+// The paragraphs with `Delta` and `Foxtrot`
 ```
 
 ## API
@@ -116,7 +140,6 @@ matches('.classy', h('a', {className: ['classy']})) // => true
 matches('#id', h('a', {id: 'id'})) // => true
 matches('[lang|=en]', h('a', {lang: 'en'})) // => true
 matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
-// …
 ```
 
 ### `select(selector, tree[, space])`
@@ -278,13 +301,12 @@ Yields:
 *   [ ] ‡ `[*|attr]` (any namespace attribute)
 *   [ ] ‡ `[|attr]` (no namespace attribute)
 *   [ ] ‡ `[attr=value i]` (attribute case-insensitive)
-*   [ ] ‡ `:has()` (functional pseudo-class).  <small>Relative
-    selectors (`:has(> img)`) are not supported, but scope is
-    (`:has(:scope > img)`) </small>
-*   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class).  <small>Scoping
-    to parents is not supported</small>
-*   [ ] ‖ `:nth-last-child(n of S)` (scoped to parent S).  <small>Scoping
-    to parents is not supported</small>
+*   [ ] ‡ `:has()` (functional pseudo-class, note: relative selectors such as
+    `:has(> img)` are not supported, but scope is: `:has(:scope > img)`)
+*   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class, note: scoping to
+    parents is not supported)
+*   [ ] ‖ `:nth-last-child(n of S)` (functional pseudo-class, note: scoping to
+    parents is not supported)
 *   [ ] † `:active` (pseudo-class)
 *   [ ] † `:current` (pseudo-class)
 *   [ ] † `:current()` (functional pseudo-class)
@@ -323,11 +345,11 @@ Yields:
 
 ###### Notes
 
-*   \* — Not supported in `matches`
-*   † — Needs a user, browser, interactivity, or scripting to make sense
-*   ‡ — Not supported by the underlying algorithm
-*   § — Not very interested in writing / including the code for this
-*   ‖ — Too new, the spec is still changing
+*   \* — not supported in `matches`
+*   † — needs a user, browser, interactivity, or scripting to make sense
+*   ‡ — not supported by the underlying algorithm
+*   § — not very interested in writing / including the code for this
+*   ‖ — too new, the spec is still changing
 
 ## Types
 
@@ -338,12 +360,12 @@ It exports the additional type `Space`.
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
 
-`hast-util-select` does not change the syntax tree so there are no openings for
+This package does not change the syntax tree so there are no openings for
 [cross-site scripting (XSS)][xss] attacks.
 
 ## Related
