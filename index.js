@@ -2,6 +2,7 @@
  * @typedef {import('./lib/types.js').Element} Element
  * @typedef {import('./lib/types.js').Node} Node
  * @typedef {import('./lib/types.js').Space} Space
+ * @typedef {import('./lib/types.js').SelectState} SelectState
  */
 
 import {html, svg} from 'property-information'
@@ -29,7 +30,8 @@ export function matches(selector, node, space) {
   const state = createState(node, space)
   state.one = true
   state.shallow = true
-  return Boolean(any(parse(selector), node || undefined, state)[0])
+  any(parse(selector), node || undefined, state)
+  return state.results.length > 0
 }
 
 /**
@@ -50,8 +52,9 @@ export function matches(selector, node, space) {
 export function select(selector, tree, space) {
   const state = createState(tree, space)
   state.one = true
+  any(parse(selector), tree || undefined, state)
   // To do in major: return `undefined` instead.
-  return any(parse(selector), tree || undefined, state)[0] || null
+  return state.results[0] || null
 }
 
 /**
@@ -70,7 +73,8 @@ export function select(selector, tree, space) {
  */
 export function selectAll(selector, tree, space) {
   const state = createState(tree, space)
-  return any(parse(selector), tree || undefined, state)
+  any(parse(selector), tree || undefined, state)
+  return state.results
 }
 
 /**
@@ -78,10 +82,11 @@ export function selectAll(selector, tree, space) {
  *   Tree to search.
  * @param {Space | null | undefined} [space='html']
  *   Name of namespace (`'svg'` or `'html'`).
- * @returns {import('./lib/types.js').SelectState} SelectState
+ * @returns {SelectState} SelectState
  */
-function createState(tree, space) {
+export function createState(tree, space) {
   return {
+    results: [],
     // @ts-expect-error assume elements.
     scopeElements: tree ? (tree.type === 'root' ? tree.children : [tree]) : [],
     iterator: undefined,
