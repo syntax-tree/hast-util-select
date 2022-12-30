@@ -862,7 +862,7 @@ test('select.matches()', async (t) => {
         'assertion (#4)'
       )
 
-      // Note: These should be unquoted, but that’s not supported by the CSS
+      // Note: These should be uncommented, but that’s not supported by the CSS
       // parser:
       //
       // assert.ok(

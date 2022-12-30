@@ -6,7 +6,7 @@
  */
 
 import {html, svg} from 'property-information'
-import {any} from './lib/any.js'
+import {queryToSelectors, walk} from './lib/walk.js'
 import {parse} from './lib/parse.js'
 
 /**
@@ -27,10 +27,10 @@ import {parse} from './lib/parse.js'
  *   Whether `node` matches `selector`.
  */
 export function matches(selector, node, space) {
-  const state = createState(node, space)
+  const state = createState(selector, node, space)
   state.one = true
   state.shallow = true
-  any(parse(selector), node || undefined, state)
+  walk(state, node || undefined)
   return state.results.length > 0
 }
 
@@ -50,9 +50,9 @@ export function matches(selector, node, space) {
  *   This could be `tree` itself.
  */
 export function select(selector, tree, space) {
-  const state = createState(tree, space)
+  const state = createState(selector, tree, space)
   state.one = true
-  any(parse(selector), tree || undefined, state)
+  walk(state, tree || undefined)
   // To do in major: return `undefined` instead.
   return state.results[0] || null
 }
@@ -72,28 +72,31 @@ export function select(selector, tree, space) {
  *   This could include `tree` itself.
  */
 export function selectAll(selector, tree, space) {
-  const state = createState(tree, space)
-  any(parse(selector), tree || undefined, state)
+  const state = createState(selector, tree, space)
+  walk(state, tree || undefined)
   return state.results
 }
 
 /**
+ * @param {string} selector
+ *   Tree to search.
  * @param {Node | null | undefined} [tree]
  *   Tree to search.
  * @param {Space | null | undefined} [space='html']
  *   Name of namespace (`'svg'` or `'html'`).
  * @returns {SelectState} SelectState
  */
-export function createState(tree, space) {
+export function createState(selector, tree, space) {
   return {
+    // State of the query.
+    rootQuery: queryToSelectors(parse(selector)),
     results: [],
     // @ts-expect-error assume elements.
     scopeElements: tree ? (tree.type === 'root' ? tree.children : [tree]) : [],
-    iterator: undefined,
     one: false,
     shallow: false,
-    index: false,
     found: false,
+    // State in the tree.
     schema: space === 'svg' ? svg : html,
     language: undefined,
     direction: 'ltr',

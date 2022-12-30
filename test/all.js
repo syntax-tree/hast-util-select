@@ -102,12 +102,12 @@ test('all together now', () => {
       ])
     ),
     [
+      h('dt', {title: 'bar'}, 'Alpha'),
       h('dt.foo', 'Charlie'),
-      h('dd.foo', {title: 'baz'}, 'Foxtrot'),
       h('dd', 'Delta'),
+      h('dd.foo', {title: 'baz'}, 'Foxtrot'),
       h('dt', 'Golf'),
-      h('dd', 'Hotel'),
-      h('dt', {title: 'bar'}, 'Alpha')
+      h('dd', 'Hotel')
     ]
   )
 })

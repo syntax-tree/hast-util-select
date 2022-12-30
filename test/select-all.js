@@ -718,184 +718,171 @@ test('select.selectAll()', async (t) => {
         'should return nothing without matches'
       )
     })
+  })
 
-    await t.test(':lang()', () => {
-      assert.deepEqual(
-        selectAll(
-          'q:lang(en)',
-          u('root', [
-            h('div', {lang: 'en'}, h('p', {lang: ''}, h('q', '0'))),
-            h('p', {lang: 'fr'}, h('q', {lang: 'fr'}, 'A')),
-            h('p', {lang: 'fr'}, h('q', {lang: 'en'}, 'B')),
-            h('p', {lang: 'fr'}, h('q', {lang: 'en-GB'}, 'C')),
-            h('p', {lang: 'fr'}, h('q', {lang: ''}, 'D')),
-            h('p', {lang: 'fr'}, h('q', 'E')),
-            h('p', {lang: 'en'}, h('q', {lang: 'fr'}, 'F')),
-            h('p', {lang: 'en'}, h('q', {lang: 'en'}, 'G')),
-            h('p', {lang: 'en'}, h('q', {lang: 'en-GB'}, 'H')),
-            h('p', {lang: 'en'}, h('q', {lang: ''}, 'I')),
-            h('p', {lang: 'en'}, h('q', 'J')),
-            h('p', {lang: 'en-GB'}, h('q', {lang: 'fr'}, 'K')),
-            h('p', {lang: 'en-GB'}, h('q', {lang: 'en'}, 'L')),
-            h('p', {lang: 'en-GB'}, h('q', {lang: 'en-GB'}, 'M')),
-            h('p', {lang: 'en-GB'}, h('q', {lang: ''}, 'N')),
-            h('p', {lang: 'en-GB'}, h('q', 'O'))
+  await t.test(':lang()', () => {
+    assert.deepEqual(
+      selectAll(
+        'q:lang(en)',
+        u('root', [
+          h('div', {lang: 'en'}, h('p', {lang: ''}, h('q', '0'))),
+          h('p', {lang: 'fr'}, h('q', {lang: 'fr'}, 'A')),
+          h('p', {lang: 'fr'}, h('q', {lang: 'en'}, 'B')),
+          h('p', {lang: 'fr'}, h('q', {lang: 'en-GB'}, 'C')),
+          h('p', {lang: 'fr'}, h('q', {lang: ''}, 'D')),
+          h('p', {lang: 'fr'}, h('q', 'E')),
+          h('p', {lang: 'en'}, h('q', {lang: 'fr'}, 'F')),
+          h('p', {lang: 'en'}, h('q', {lang: 'en'}, 'G')),
+          h('p', {lang: 'en'}, h('q', {lang: 'en-GB'}, 'H')),
+          h('p', {lang: 'en'}, h('q', {lang: ''}, 'I')),
+          h('p', {lang: 'en'}, h('q', 'J')),
+          h('p', {lang: 'en-GB'}, h('q', {lang: 'fr'}, 'K')),
+          h('p', {lang: 'en-GB'}, h('q', {lang: 'en'}, 'L')),
+          h('p', {lang: 'en-GB'}, h('q', {lang: 'en-GB'}, 'M')),
+          h('p', {lang: 'en-GB'}, h('q', {lang: ''}, 'N')),
+          h('p', {lang: 'en-GB'}, h('q', 'O'))
+        ])
+      ),
+      [
+        h('q', {lang: 'en'}, 'B'),
+        h('q', {lang: 'en-GB'}, 'C'),
+        h('q', {lang: 'en'}, 'G'),
+        h('q', {lang: 'en-GB'}, 'H'),
+        h('q', 'J'),
+        h('q', {lang: 'en'}, 'L'),
+        h('q', {lang: 'en-GB'}, 'M'),
+        h('q', 'O')
+      ],
+      'should return the correct matching elements'
+    )
+  })
+
+  await t.test(':dir()', () => {
+    const ltr = 'a'
+    const rtl = 'أ'
+
+    assert.deepEqual(
+      selectAll(
+        'q:dir(rtl)',
+        u('root', [
+          h('div', {dir: 'rtl'}, h('p', {dir: ''}, h('q#a', ltr))),
+          h('p', {dir: 'ltr'}, h('q#b', {dir: 'ltr'}, rtl)),
+          h('p', {dir: 'ltr'}, h('q#c', {dir: ''}, rtl)),
+          h('p', {dir: 'ltr'}, h('q#d', {dir: 'foo'}, rtl)),
+          h('p', {dir: 'ltr'}, h('q#e', {dir: 'rtl'}, rtl))
+        ])
+      ),
+      [h('q#a', ltr), h('q#e', {dir: 'rtl'}, rtl)],
+      'should return the correct matching element'
+    )
+  })
+
+  await t.test(':read-write', () => {
+    assert.deepEqual(
+      selectAll(
+        'p:read-write',
+        u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
+      ),
+      [h('p', 'A')],
+      'should return elements inside `[contentEditable=true]`'
+    )
+
+    assert.deepEqual(
+      selectAll(
+        'a:read-write',
+        u('root', [
+          h('div', {contentEditable: 'true'}, [
+            s('svg', {viewBox: [0, 0, 50, 50]}, [s('a', {download: true}, '!')])
           ])
-        ),
-        [
-          h('q', {lang: 'en'}, 'B'),
-          h('q', {lang: 'en-GB'}, 'C'),
-          h('q', {lang: 'en'}, 'G'),
-          h('q', {lang: 'en-GB'}, 'H'),
-          h('q', 'J'),
-          h('q', {lang: 'en'}, 'L'),
-          h('q', {lang: 'en-GB'}, 'M'),
-          h('q', 'O')
-        ],
-        'should return the correct matching elements'
-      )
-    })
+        ])
+      ),
+      [],
+      'should not return elements inside SVG embedded in `[contentEditable=true]`'
+    )
+  })
 
-    await t.test(':dir()', () => {
-      const ltr = 'a'
-      const rtl = 'أ'
+  await t.test(':read-only', () => {
+    assert.deepEqual(
+      selectAll(
+        'p:read-only',
+        u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
+      ),
+      [],
+      'should not return elements inside `[contentEditable=true]`'
+    )
 
-      assert.deepEqual(
-        selectAll(
-          'q:dir(rtl)',
-          u('root', [
-            h('div', {dir: 'rtl'}, h('p', {dir: ''}, h('q#a', ltr))),
-            h('p', {dir: 'ltr'}, h('q#b', {dir: 'ltr'}, rtl)),
-            h('p', {dir: 'ltr'}, h('q#c', {dir: ''}, rtl)),
-            h('p', {dir: 'ltr'}, h('q#d', {dir: 'foo'}, rtl)),
-            h('p', {dir: 'ltr'}, h('q#e', {dir: 'rtl'}, rtl))
+    assert.deepEqual(
+      selectAll(
+        'a:read-only',
+        u('root', [
+          h('div', {contentEditable: 'true'}, [
+            s('svg', {viewBox: [0, 0, 50, 50]}, [s('a', {download: true}, '!')])
           ])
-        ),
-        [h('q#a', ltr), h('q#e', {dir: 'rtl'}, rtl)],
-        'should return the correct matching element'
-      )
-    })
+        ])
+      ),
+      [s('a', {download: true}, '!')],
+      'should return elements inside SVG embedded in `[contentEditable=true]`'
+    )
+  })
 
-    await t.test(':read-write', () => {
-      assert.deepEqual(
-        selectAll(
-          'p:read-write',
-          u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
-        ),
-        [h('p', 'A')],
-        'should return elements inside `[contentEditable=true]`'
-      )
+  await t.test(':root', () => {
+    assert.deepEqual(
+      selectAll(
+        ':root',
+        u('root', [
+          u('doctype', {name: 'html'}),
+          h('html', [h('title', 'Hello'), h('p', 'World')])
+        ])
+      ),
+      [h('html', [h('title', 'Hello'), h('p', 'World')])],
+      'should return the `<html>` element with a `root` as parent'
+    )
 
-      assert.deepEqual(
-        selectAll(
-          'a:read-write',
-          u('root', [
-            h('div', {contentEditable: 'true'}, [
-              s('svg', {viewBox: [0, 0, 50, 50]}, [
-                s('a', {download: true}, '!')
-              ])
-            ])
-          ])
-        ),
-        [],
-        'should not return elements inside SVG embedded in `[contentEditable=true]`'
-      )
-    })
+    assert.deepEqual(
+      selectAll(':root', h('html', [h('title', 'Hello'), h('p', 'World')])),
+      [h('html', [h('title', 'Hello'), h('p', 'World')])],
+      'should return the `<html>` element with a no parent'
+    )
 
-    await t.test(':read-only', () => {
-      assert.deepEqual(
-        selectAll(
-          'p:read-only',
-          u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
-        ),
-        [],
-        'should not return elements inside `[contentEditable=true]`'
-      )
-
-      assert.deepEqual(
-        selectAll(
-          'a:read-only',
-          u('root', [
-            h('div', {contentEditable: 'true'}, [
-              s('svg', {viewBox: [0, 0, 50, 50]}, [
-                s('a', {download: true}, '!')
-              ])
-            ])
-          ])
-        ),
-        [s('a', {download: true}, '!')],
-        'should return elements inside SVG embedded in `[contentEditable=true]`'
-      )
-    })
-
-    await t.test(':root', () => {
-      assert.deepEqual(
-        selectAll(
-          ':root',
-          u('root', [
-            u('doctype', {name: 'html'}),
-            h('html', [h('title', 'Hello'), h('p', 'World')])
-          ])
-        ),
-        [h('html', [h('title', 'Hello'), h('p', 'World')])],
-        'should return the `<html>` element with a `root` as parent'
-      )
-
-      assert.deepEqual(
-        selectAll(':root', h('html', [h('title', 'Hello'), h('p', 'World')])),
-        [h('html', [h('title', 'Hello'), h('p', 'World')])],
-        'should return the `<html>` element with a no parent'
-      )
-
-      assert.deepEqual(
-        selectAll(
-          ':root',
-          u('root', [
-            s('svg', {viewBox: [0, 0, 10, 10]}, [
-              s('circle', {cx: 10, cy: 10, r: 10})
-            ])
-          ]),
-          'svg'
-        ),
-        [
+    assert.deepEqual(
+      selectAll(
+        ':root',
+        u('root', [
           s('svg', {viewBox: [0, 0, 10, 10]}, [
             s('circle', {cx: 10, cy: 10, r: 10})
           ])
-        ],
-        'should return the `<svg>` element with a `root` as parent'
-      )
+        ]),
+        'svg'
+      ),
+      [
+        s('svg', {viewBox: [0, 0, 10, 10]}, [
+          s('circle', {cx: 10, cy: 10, r: 10})
+        ])
+      ],
+      'should return the `<svg>` element with a `root` as parent'
+    )
 
-      assert.deepEqual(
-        selectAll(
-          ':root',
-          s('svg', {viewBox: [0, 0, 10, 10]}, [
-            s('circle', {cx: 10, cy: 10, r: 10})
-          ]),
-          'svg'
-        ),
-        [
-          s('svg', {viewBox: [0, 0, 10, 10]}, [
-            s('circle', {cx: 10, cy: 10, r: 10})
-          ])
-        ],
-        'should return the `<svg>` element with a no parent'
-      )
+    assert.deepEqual(
+      selectAll(
+        ':root',
+        s('svg', {viewBox: [0, 0, 10, 10]}, [
+          s('circle', {cx: 10, cy: 10, r: 10})
+        ]),
+        'svg'
+      ),
+      [
+        s('svg', {viewBox: [0, 0, 10, 10]}, [
+          s('circle', {cx: 10, cy: 10, r: 10})
+        ])
+      ],
+      'should return the `<svg>` element with a no parent'
+    )
 
-      assert.deepEqual(
-        selectAll(
-          ':root',
-          u('root', [
-            u('doctype', {name: 'html'}),
-            h('html', [
-              h('title', 'Hello'),
-              h('p', 'World'),
-              s('svg', {viewBox: [0, 0, 10, 10]}, [
-                s('circle', {cx: 10, cy: 10, r: 10})
-              ])
-            ])
-          ])
-        ),
-        [
+    assert.deepEqual(
+      selectAll(
+        ':root',
+        u('root', [
+          u('doctype', {name: 'html'}),
           h('html', [
             h('title', 'Hello'),
             h('p', 'World'),
@@ -903,50 +890,59 @@ test('select.selectAll()', async (t) => {
               s('circle', {cx: 10, cy: 10, r: 10})
             ])
           ])
-        ],
-        'should return the `<html>` element, not an embedded `<svg>` element'
-      )
-    })
+        ])
+      ),
+      [
+        h('html', [
+          h('title', 'Hello'),
+          h('p', 'World'),
+          s('svg', {viewBox: [0, 0, 10, 10]}, [
+            s('circle', {cx: 10, cy: 10, r: 10})
+          ])
+        ])
+      ],
+      'should return the `<html>` element, not an embedded `<svg>` element'
+    )
+  })
 
-    await t.test(':scope', () => {
-      assert.deepEqual(
-        selectAll(
-          ':scope',
-          u('root', [h('strong', h('b', 'a')), h('em', h('i', 'b'))])
-        ),
-        [h('strong', h('b', 'a')), h('em', h('i', 'b'))],
-        'should select the elements directly in `root`, if a `root` is given'
-      )
+  await t.test(':scope', () => {
+    assert.deepEqual(
+      selectAll(
+        ':scope',
+        u('root', [h('strong', h('b', 'a')), h('em', h('i', 'b'))])
+      ),
+      [h('strong', h('b', 'a')), h('em', h('i', 'b'))],
+      'should select the elements directly in `root`, if a `root` is given'
+    )
 
-      assert.deepEqual(
-        selectAll(':scope', h('em', h('i', 'b'))),
-        [h('em', h('i', 'b'))],
-        'should select the root element if one is given'
-      )
-    })
+    assert.deepEqual(
+      selectAll(':scope', h('em', h('i', 'b'))),
+      [h('em', h('i', 'b'))],
+      'should select the root element if one is given'
+    )
+  })
 
-    await t.test(':any', () => {
-      assert.deepEqual(
-        selectAll('y:any(:first-child)', h('x', [h('y#a'), h('y#b')])),
-        [h('y#a')],
-        'should support parent-sensitive `:any`'
-      )
-    })
+  await t.test(':any', () => {
+    assert.deepEqual(
+      selectAll('y:any(:first-child)', h('x', [h('y#a'), h('y#b')])),
+      [h('y#a')],
+      'should support parent-sensitive `:any`'
+    )
+  })
 
-    await t.test(':matches', () => {
-      assert.deepEqual(
-        selectAll('y:matches(:first-child)', h('x', [h('y#a'), h('y#b')])),
-        [h('y#a')],
-        'should support parent-sensitive `:matches`'
-      )
-    })
+  await t.test(':matches', () => {
+    assert.deepEqual(
+      selectAll('y:matches(:first-child)', h('x', [h('y#a'), h('y#b')])),
+      [h('y#a')],
+      'should support parent-sensitive `:matches`'
+    )
+  })
 
-    await t.test(':not', () => {
-      assert.deepEqual(
-        selectAll('y:not(:first-child)', h('x', [h('y#a'), h('y#b')])),
-        [h('y#b')],
-        'should support parent-sensitive `:not`'
-      )
-    })
+  await t.test(':not', () => {
+    assert.deepEqual(
+      selectAll('y:not(:first-child)', h('x', [h('y#a'), h('y#b')])),
+      [h('y#b')],
+      'should support parent-sensitive `:not`'
+    )
   })
 })
