@@ -21,6 +21,7 @@ and `matches`.
     *   [`matches(selector, node[, space])`](#matchesselector-node-space)
     *   [`select(selector, tree[, space])`](#selectselector-tree-space)
     *   [`selectAll(selector, tree[, space])`](#selectallselector-tree-space)
+    *   [`Space`](#space)
 *   [Support](#support)
 *   [Unsupported](#unsupported)
 *   [Types](#types)
@@ -55,7 +56,7 @@ find and match any unist node.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+, 16.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-select
@@ -102,7 +103,8 @@ console.log(selectAll('h1 ~ :nth-child(even)', tree))
 
 ## API
 
-This package exports the identifiers `matches`, `select`, and `selectAll`.
+This package exports the identifiers [`matches`][matches], [`select`][select],
+and [`selectAll`][selectall].
 There is no default export.
 
 ### `matches(selector, node[, space])`
@@ -120,7 +122,7 @@ This only checks that the given element matches the selector.
     — CSS selector, such as (`h1`, `a, b`)
 *   `node` ([`Node`][node], optional)
     — node that might match `selector`, should be an element
-*   `space` (`'svg'` or `'html'`, default: `'html'`)
+*   `space` ([`Space`][space], default: `'html'`)
     — name of namespace
 
 ###### Returns
@@ -153,7 +155,7 @@ Searches the tree in *[preorder][]*.
     — CSS selector, such as (`h1`, `a, b`)
 *   `tree` ([`Node`][node], optional)
     — tree to search
-*   `space` (`'svg'` or `'html'`, default: `'html'`)
+*   `space` ([`Space`][space], default: `'html'`)
     — name of namespace
 
 ###### Returns
@@ -193,7 +195,7 @@ Yields:
 ### `selectAll(selector, tree[, space])`
 
 Select all elements that match `selector` in the given `tree`.
-Searches the tree in *preorder*.
+Searches the tree in *[preorder][]*.
 
 ###### Parameters
 
@@ -201,7 +203,7 @@ Searches the tree in *preorder*.
     — CSS selector, such as (`h1`, `a, b`)
 *   `tree` ([`Node`][node], optional)
     — tree to search
-*   `space` (`'svg'` or `'html'`, default: `'html'`)
+*   `space` ([`Space`][space], default: `'html'`)
     — name of namespace
 
 ###### Returns
@@ -242,6 +244,16 @@ Yields:
     tagName: 'p',
     properties: {},
     children: [ { type: 'text', value: 'Foxtrot' } ] } ]
+```
+
+### `Space`
+
+Namespace (TypeScript type).
+
+###### Type
+
+```ts
+type Space = 'html' | 'svg'
 ```
 
 ## Support
@@ -354,7 +366,7 @@ Yields:
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional type `Space`.
+It exports the additional type [`Space`][space].
 
 ## Compatibility
 
@@ -452,3 +464,11 @@ abide by its terms.
 [unist-util-visit]: https://github.com/syntax-tree/unist-util-visit
 
 [unist-util-select]: https://github.com/syntax-tree/unist-util-select
+
+[matches]: #matchesselector-node-space
+
+[select]: #selectselector-tree-space
+
+[selectall]: #selectallselector-tree-space
+
+[space]: #space
