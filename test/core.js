@@ -3,6 +3,15 @@ import test from 'node:test'
 import {u} from 'unist-builder'
 import {h} from 'hastscript'
 import {selectAll} from '../index.js'
+import * as mod from '../index.js'
+
+test('select', () => {
+  assert.deepEqual(
+    Object.keys(mod).sort(),
+    ['matches', 'select', 'selectAll'],
+    'should expose the public api'
+  )
+})
 
 test('all together now', () => {
   assert.deepEqual(
