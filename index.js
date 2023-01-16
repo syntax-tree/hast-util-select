@@ -86,7 +86,7 @@ export function selectAll(selector, tree, space) {
  *   Name of namespace (`'svg'` or `'html'`).
  * @returns {SelectState} SelectState
  */
-export function createState(selector, tree, space) {
+function createState(selector, tree, space) {
   return {
     // State of the query.
     rootQuery: queryToSelectors(parse(selector)),
