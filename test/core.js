@@ -119,4 +119,13 @@ test('all together now', () => {
       h('dd', 'Hotel')
     ]
   )
+
+  assert.deepEqual(
+    selectAll(
+      'a:not([class])',
+      u('root', [h('a#w.a'), h('a#x'), h('a#y.b'), h('a#z')])
+    ),
+    [h('a#x'), h('a#z')],
+    'should support `:not` with multiple matches (GH-6)'
+  )
 })
