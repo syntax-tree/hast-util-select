@@ -65,14 +65,14 @@ npm install hast-util-select
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {matches, select, selectAll} from "https://esm.sh/hast-util-select@5"
+import {matches, select, selectAll} from "https://esm.sh/hast-util-select@6"
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {matches, select, selectAll} from "https://esm.sh/hast-util-select@5?bundle"
+  import {matches, select, selectAll} from "https://esm.sh/hast-util-select@6?bundle"
 </script>
 ```
 
