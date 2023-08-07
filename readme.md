@@ -276,7 +276,7 @@ type Space = 'html' | 'svg'
 *   [x] `[attr$=value]` (attribute ends with)
 *   [x] `[attr*=value]` (attribute contains)
 *   [x] `:dir()` (functional pseudo-class)
-*   [x] `:has()` (functional pseudo-class)
+*   [x] `:has()` (functional pseudo-class; also supports `a:has(> b)`)
 *   [x] `:is()` (functional pseudo-class)
 *   [x] `:lang()` (functional pseudo-class)
 *   [x] `:not()` (functional pseudo-class)
@@ -313,8 +313,6 @@ type Space = 'html' | 'svg'
 *   [ ] ‡ `[*|attr]` (any namespace attribute)
 *   [ ] ‡ `[|attr]` (no namespace attribute)
 *   [ ] ‡ `[attr=value i]` (attribute case-insensitive)
-*   [ ] ‡ `:has()` (functional pseudo-class, note: relative selectors such as
-    `:has(> img)` are not supported, but scope is: `:has(:scope > img)`)
 *   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class, note: scoping to
     parents is not supported)
 *   [ ] ‖ `:nth-last-child(n of S)` (functional pseudo-class, note: scoping to
@@ -362,8 +360,7 @@ type Space = 'html' | 'svg'
 *   ‡ — not supported by the underlying algorithm
 *   § — not very interested in writing / including the code for this
 *   ‖ — too new, the spec is still changing
-
-`:any()` and `:matches()` are renamed to `:is()` in CSS.
+*   `:any()` and `:matches()` are renamed to `:is()` in CSS.
 
 ## Types
 

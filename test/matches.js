@@ -1346,31 +1346,28 @@ test('select.matches()', async function (t) {
         assert.ok(matches('a:has( img  ,\t p )', h('a', h('img'))))
       })
 
-      // To do: add `:has(>)`.
-      // Note: These should be uncommented, but that’s not supported by the CSS
-      // parser:
-      // await t.test(
-      //   'should match for relative direct child selector',
-      //   async function () {
-      //     assert.ok(matches('a:has(> img)', h('a', h('img'))))
-      //   }
-      // )
+      await t.test(
+        'should match for relative direct child selector',
+        async function () {
+          assert.ok(matches('a:has(> img)', h('a', h('img'))))
+        }
+      )
 
-      // await t.test(
-      //   'should not match for relative direct child selectors',
-      //   async function () {
-      //     assert.ok(!matches('a:has(> img)', h('a', h('span', h('img')))))
-      //   }
-      // )
+      await t.test(
+        'should not match for relative direct child selectors',
+        async function () {
+          assert.ok(!matches('a:has(> img)', h('a', h('span', h('img')))))
+        }
+      )
 
-      // await t.test(
-      //   'should support a list of relative selectors',
-      //   async function () {
-      //     assert.ok(
-      //       matches('a:has(> img, > span)', h('a', h('span', h('span'))))
-      //     )
-      //   }
-      // )
+      await t.test(
+        'should support a list of relative selectors',
+        async function () {
+          assert.ok(
+            matches('a:has(> img, > span)', h('a', h('span', h('span'))))
+          )
+        }
+      )
     })
 
     await t.test(':any-link', async function (t) {
