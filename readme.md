@@ -160,7 +160,8 @@ Searches the tree in *[preorder][]*.
 
 ###### Returns
 
-First element in `tree` that matches `selector` or `null` if nothing is found.
+First element in `tree` that matches `selector` or `undefined` if nothing is
+found.
 This could be `tree` itself.
 
 ###### Example

@@ -46,7 +46,7 @@ test('svg', async function (t) {
   await t.test('should match svg (#3)', async function () {
     assert.deepEqual(
       select('[writing-mode]', s('text', {writingMode: 'lr-tb'}, '!')),
-      null
+      undefined
     )
   })
 

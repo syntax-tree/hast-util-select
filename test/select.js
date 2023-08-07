@@ -74,13 +74,13 @@ test('select.select()', async function (t) {
     )
 
     await t.test('should not select if not given a node', async function () {
-      assert.equal(select('*'), null)
+      assert.equal(select('*'), undefined)
     })
 
     await t.test(
       'should not select if not given an element',
       async function () {
-        assert.equal(select('*', {type: 'text', value: 'a'}), null)
+        assert.equal(select('*', {type: 'text', value: 'a'}), undefined)
       }
     )
 
@@ -219,7 +219,7 @@ test('select.select()', async function (t) {
             h('p', 'Delta')
           ])
         ),
-        null
+        undefined
       )
     })
   })
@@ -290,7 +290,7 @@ test('select.select()', async function (t) {
           'h1 ~ p',
           u('root', [h('p', 'Alpha'), h('h1', 'Bravo'), h('h2', 'Charlie')])
         ),
-        null
+        undefined
       )
     })
   })
@@ -321,7 +321,7 @@ test('select.select()', async function (t) {
               'h1:first-child',
               u('root', [h('p', 'Alpha'), h('h1', 'Bravo'), h('p', 'Charlie')])
             ),
-            null
+            undefined
           )
         }
       )
@@ -352,7 +352,7 @@ test('select.select()', async function (t) {
               'h1:last-child',
               u('root', [h('p', 'Alpha'), h('h1', 'Bravo'), h('p', 'Charlie')])
             ),
-            null
+            undefined
           )
         }
       )
@@ -383,7 +383,7 @@ test('select.select()', async function (t) {
               'h1:only-child',
               u('root', [h('p', 'Alpha'), h('h1', 'Bravo'), h('p', 'Charlie')])
             ),
-            null
+            undefined
           )
         }
       )
@@ -739,7 +739,7 @@ test('select.select()', async function (t) {
       )
 
       await t.test('should return nothing without matches', async function () {
-        assert.equal(select('dt:first-of-type', h('dl', [])), null)
+        assert.equal(select('dt:first-of-type', h('dl', [])), undefined)
       })
     })
 
@@ -765,7 +765,7 @@ test('select.select()', async function (t) {
       )
 
       await t.test('should return nothing without matches', async function () {
-        assert.equal(select('dt:last-of-type', h('dl', [])), null)
+        assert.equal(select('dt:last-of-type', h('dl', [])), undefined)
       })
     })
 
@@ -800,13 +800,13 @@ test('select.select()', async function (t) {
                 h('dd', 'Foxtrot')
               ])
             ),
-            null
+            undefined
           )
         }
       )
 
       await t.test('should return nothing without matches', async function () {
-        assert.equal(select('dt:only-of-type', h('dl', [])), null)
+        assert.equal(select('dt:only-of-type', h('dl', [])), undefined)
       })
     })
   })
@@ -885,7 +885,7 @@ test('select.select()', async function (t) {
               ])
             ])
           ),
-          null
+          undefined
         )
       }
     )
@@ -900,7 +900,7 @@ test('select.select()', async function (t) {
             'p:read-only',
             u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
           ),
-          null
+          undefined
         )
       }
     )
