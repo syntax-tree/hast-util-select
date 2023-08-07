@@ -8,8 +8,8 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[hast][] utility with equivalents for `querySelector`, `querySelectorAll`,
-and `matches`.
+[hast][] utility with equivalents for `matches`, `querySelector`,
+and `querySelectorAll`.
 
 ## Contents
 
@@ -33,8 +33,8 @@ and `matches`.
 
 ## What is this?
 
-This package lets you find nodes in a tree, similar to how `querySelector`,
-`querySelectorAll`, and `matches` work with the DOM.
+This package lets you find nodes in a tree, similar to how `matches`,
+`querySelector`, and `querySelectorAll` work with the DOM.
 
 One notable difference between DOM and hast is that DOM nodes have references
 to their parents, meaning that `document.body.matches(':last-child')` can
@@ -56,7 +56,7 @@ find and match any unist node.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ and 16.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install hast-util-select
@@ -103,8 +103,8 @@ console.log(selectAll('h1 ~ :nth-child(even)', tree))
 
 ## API
 
-This package exports the identifiers [`matches`][matches], [`select`][select],
-and [`selectAll`][selectall].
+This package exports the identifiers [`matches`][api-matches],
+[`select`][api-select], and [`selectAll`][api-select-all].
 There is no default export.
 
 ### `matches(selector, node[, space])`
@@ -122,7 +122,7 @@ This only checks that the given element matches the selector.
     — CSS selector, such as (`h1`, `a, b`)
 *   `node` ([`Node`][node], optional)
     — node that might match `selector`, should be an element
-*   `space` ([`Space`][space], default: `'html'`)
+*   `space` ([`Space`][api-space], default: `'html'`)
     — name of namespace
 
 ###### Returns
@@ -155,7 +155,7 @@ Searches the tree in *[preorder][]*.
     — CSS selector, such as (`h1`, `a, b`)
 *   `tree` ([`Node`][node], optional)
     — tree to search
-*   `space` ([`Space`][space], default: `'html'`)
+*   `space` ([`Space`][api-space], default: `'html'`)
     — name of namespace
 
 ###### Returns
@@ -203,7 +203,7 @@ Searches the tree in *[preorder][]*.
     — CSS selector, such as (`h1`, `a, b`)
 *   `tree` ([`Node`][node], optional)
     — tree to search
-*   `space` ([`Space`][space], default: `'html'`)
+*   `space` ([`Space`][api-space], default: `'html'`)
     — name of namespace
 
 ###### Returns
@@ -276,8 +276,8 @@ type Space = 'html' | 'svg'
 *   [x] `[attr*=value]` (attribute contains)
 *   [x] `:dir()` (functional pseudo-class)
 *   [x] `:has()` (functional pseudo-class)
-*   [x] `:lang()` (functional pseudo-class)
 *   [x] `:is()` (functional pseudo-class)
+*   [x] `:lang()` (functional pseudo-class)
 *   [x] `:not()` (functional pseudo-class)
 *   [x] `:any-link` (pseudo-class)
 *   [x] `:blank` (pseudo-class)
@@ -367,14 +367,17 @@ type Space = 'html' | 'svg'
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional type [`Space`][space].
+It exports the additional type [`Space`][api-space].
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 14.14+ and 16.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line, `hast-util-select@^5`,
+compatible with Node.js 12.
 
 ## Security
 
@@ -420,9 +423,9 @@ abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/hast-util-select
 
-[size-badge]: https://img.shields.io/bundlephobia/minzip/hast-util-select.svg
+[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=hast-util-select
 
-[size]: https://bundlephobia.com/result?p=hast-util-select
+[size]: https://bundlejs.com/?q=hast-util-select
 
 [sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
 
@@ -466,10 +469,10 @@ abide by its terms.
 
 [unist-util-select]: https://github.com/syntax-tree/unist-util-select
 
-[matches]: #matchesselector-node-space
+[api-matches]: #matchesselector-node-space
 
-[select]: #selectselector-tree-space
+[api-select]: #selectselector-tree-space
 
-[selectall]: #selectallselector-tree-space
+[api-select-all]: #selectallselector-tree-space
 
-[space]: #space
+[api-space]: #space
