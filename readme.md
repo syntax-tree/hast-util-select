@@ -308,60 +308,66 @@ type Space = 'html' | 'svg'
 ## Unsupported
 
 *   [ ] † `||` (column combinator)
-*   [ ] ¶ `ns|E` (namespace type selector)
-*   [ ] ¶ `*|E` (any namespace type selector)
-*   [ ] ¶ `|E` (no namespace type selector)
-*   [ ] ¶ `[ns|attr]` (namespace attribute)
-*   [ ] ¶ `[*|attr]` (any namespace attribute)
-*   [ ] ¶ `[|attr]` (no namespace attribute)
+*   [ ] † `ns|E` (namespace type selector)
+*   [ ] † `*|E` (any namespace type selector)
+*   [ ] † `|E` (no namespace type selector)
+*   [ ] † `[ns|attr]` (namespace attribute)
+*   [ ] † `[*|attr]` (any namespace attribute)
+*   [ ] † `[|attr]` (no namespace attribute)
 *   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class, note: scoping to
     parents is not supported)
 *   [ ] ‖ `:nth-last-child(n of S)` (functional pseudo-class, note: scoping to
     parents is not supported)
 *   [ ] † `:active` (pseudo-class)
+*   [ ] † `:autofill` (pseudo-class)
+*   [ ] † `:buffering` (pseudo-class)
+*   [ ] § `:closed` (pseudo-class)
 *   [ ] † `:current` (pseudo-class)
 *   [ ] † `:current()` (functional pseudo-class)
 *   [ ] † `:default` (pseudo-class)
 *   [ ] † `:defined` (pseudo-class)
-*   [ ] † `:drop` (pseudo-class)
-*   [ ] † `:drop()` (functional pseudo-class)
 *   [ ] † `:focus` (pseudo-class)
 *   [ ] † `:focus-visible` (pseudo-class)
 *   [ ] † `:focus-within` (pseudo-class)
 *   [ ] † `:fullscreen` (pseudo-class)
 *   [ ] † `:future` (pseudo-class)
-*   [ ] ‖ `:host()` (functional pseudo-class)
-*   [ ] ‖ `:host-context()` (functional pseudo-class)
+*   [ ] § `:host()` (functional pseudo-class)
+*   [ ] § `:host-context()` (functional pseudo-class)
 *   [ ] † `:hover` (pseudo-class)
-*   [ ] § `:in-range` (pseudo-class)
+*   [ ] ‡ `:in-range` (pseudo-class)
 *   [ ] † `:indeterminate` (pseudo-class)
-*   [ ] § `:invalid` (pseudo-class)
+*   [ ] ‡ `:invalid` (pseudo-class)
 *   [ ] † `:link` (pseudo-class)
 *   [ ] † `:local-link` (pseudo-class)
-*   [ ] † `:nth-column()` (functional pseudo-class)
-*   [ ] † `:nth-last-column()` (functional pseudo-class)
-*   [ ] § `:out-of-range` (pseudo-class)
+*   [ ] † `:modal` (pseudo-class)
+*   [ ] † `:muted` (pseudo-class)
+*   [ ] † `:nth-col()` (functional pseudo-class)
+*   [ ] † `:nth-last-col()` (functional pseudo-class)
+*   [ ] § `:open` (pseudo-class)
+*   [ ] ‡ `:out-of-range` (pseudo-class)
 *   [ ] † `:past` (pseudo-class)
 *   [ ] † `:paused` (pseudo-class)
 *   [ ] † `:placeholder-shown` (pseudo-class)
 *   [ ] † `:playing` (pseudo-class)
-*   [ ] ‖ `:something()` (functional pseudo-class)
+*   [ ] † `:seeking` (pseudo-class)
+*   [ ] † `:stalled` (pseudo-class)
 *   [ ] † `:target` (pseudo-class)
 *   [ ] † `:target-within` (pseudo-class)
-*   [ ] † `:user-error` (pseudo-class)
 *   [ ] † `:user-invalid` (pseudo-class)
-*   [ ] § `:valid` (pseudo-class)
+*   [ ] ‡ `:valid` (pseudo-class)
 *   [ ] † `:visited` (pseudo-class)
+*   [ ] † `:volume-locked` (pseudo-class)
+*   [ ] § `:where()` (functional pseudo-class)
 *   [ ] † `::before` (pseudo-elements: none are supported)
 
 ###### Notes
 
 *   \* — not supported in `matches`
-*   † — needs a user, browser, interactivity, or scripting to make sense
-*   ‡ — not supported by the underlying algorithm
-*   § — not very interested in writing / including the code for this
-*   ‖ — too new, the spec is still changing
-*   ¶ — requires whole CSS files, not just selectors, to make sense
+*   † — needs a user, browser, interactivity, scripting, or whole CSS to make
+    sense
+*   ‡ — not very interested in writing / including the code for this
+*   § — too new, the spec is still changing
+*   ‖ — pr wanted!
 *   `:any()` and `:matches()` are renamed to `:is()` in CSS.
 
 ## Types

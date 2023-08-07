@@ -479,6 +479,89 @@ test('select.selectAll()', async function (t) {
           [h('li', 'Bravo'), h('li', 'Delta'), h('li', 'Foxtrot')]
         )
       })
+
+      await t.test(
+        'should throw on unsupported `of` syntax',
+        async function () {
+          assert.throws(function () {
+            selectAll(':nth-child(odd of a)', h('span'))
+          }, /Expected `nth` formula, such as `even` or `2n\+1` \(`of` is not yet supported\)/)
+        }
+      )
+
+      // To do: add `of Selector` syntax.
+      // These can be deep, such as `:nth-child(even of section h1)`.
+      // To add this, I think we need to add support to `matches` to pass a
+      // list of ancestors (which is likely useful in and of itself).
+      // In `:nth` stuff we can than filter nodes both on the `nth`, and the
+      // `of` selector.
+      // await t.test('should support `of` syntax (reference)', async function () {
+      //   const tree = h('section', [
+      //     h('p', 'Alpha'),
+      //     h('p', 'Bravo'),
+      //     h('h1', 'Charlie'),
+      //     h('p', 'Delta'),
+      //     h('p', 'Echo'),
+      //     h('p', 'Foxtrot'),
+      //     h('h1', 'Golf')
+      //   ])
+
+      //   assert.deepEqual(selectAll(':is(h1, p):nth-child(even)', tree), [
+      //     tree.children[1],
+      //     tree.children[3],
+      //     tree.children[5]
+      //   ])
+      // })
+
+      // await t.test('should support `of` syntax (#1)', async function () {
+      //   const tree = h('section', [
+      //     h('p', 'Alpha'),
+      //     h('p', 'Bravo'),
+      //     h('h1', 'Charlie'),
+      //     h('p', 'Delta'),
+      //     h('p', 'Echo'),
+      //     h('p', 'Foxtrot'),
+      //     h('h1', 'Golf')
+      //   ])
+
+      //   assert.deepEqual(selectAll(':is(h1, p):nth-child(even of p)', tree), [
+      //     tree.children[1],
+      //     tree.children[4]
+      //   ])
+      // })
+
+      // await t.test('should support `of` syntax (#2)', async function () {
+      //   const tree = h('section', [
+      //     h('p', 'Alpha'),
+      //     h('p', 'Bravo'),
+      //     h('h1', 'Charlie'),
+      //     h('p', 'Delta'),
+      //     h('p', 'Echo'),
+      //     h('p', 'Foxtrot'),
+      //     h('h1', 'Golf')
+      //   ])
+
+      //   assert.deepEqual(selectAll(':is(h1, p):nth-child(even of h1)', tree), [
+      //     tree.children[6]
+      //   ])
+      // })
+
+      // await t.test('should support `of` syntax (#3)', async function () {
+      //   const tree = h('section', [
+      //     h('p', 'Alpha'),
+      //     h('p', 'Bravo'),
+      //     h('h1', 'Charlie'),
+      //     h('p', 'Delta'),
+      //     h('p', 'Echo'),
+      //     h('p', 'Foxtrot'),
+      //     h('h1', 'Golf')
+      //   ])
+
+      //   assert.deepEqual(
+      //     selectAll(':is(h1, p):nth-child(even of section h1)', tree),
+      //     [tree.children[6]]
+      //   )
+      // })
     })
 
     await t.test(':nth-last-child', async function (t) {
