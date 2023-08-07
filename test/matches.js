@@ -28,7 +28,7 @@ test('select.matches()', async (t) => {
       () => {
         matches('@supports (transform-origin: 5% 5%) {}', h(''))
       },
-      /Error: Rule expected but "@" found./,
+      /Expected rule but "@" found/,
       'should throw w/ invalid selector (2)'
     )
 
@@ -36,7 +36,7 @@ test('select.matches()', async (t) => {
       () => {
         matches('[foo%=bar]', h(''))
       },
-      /Error: Expected "=" but "%" found./,
+      /Expected a valid attribute selector operator/,
       'should throw on invalid attribute operators'
     )
 
@@ -52,7 +52,7 @@ test('select.matches()', async (t) => {
       () => {
         matches(':nth-foo(2n+1)', h(''))
       },
-      /Error: Unknown pseudo-selector `nth-foo`/,
+      /Unknown pseudo-class/,
       'should throw on invalid pseudo class “functions”'
     )
 
@@ -60,7 +60,7 @@ test('select.matches()', async (t) => {
       () => {
         matches('::before', h(''))
       },
-      /Error: Unexpected pseudo-element or empty pseudo-class/,
+      /Invalid selector: `::before`/,
       'should throw on invalid pseudo elements'
     )
 
@@ -117,16 +117,31 @@ test('select.matches()', async (t) => {
         () => {
           matches(':' + pseudo + '()', h(''))
         },
-        /n-th rule couldn't be parsed/,
+        /Formula parse error/,
         'should throw on `' + pseudo + '()`'
       )
     }
   })
 
   await t.test('general', () => {
-    assert.ok(!matches('', h('')), 'false for the empty string as selector')
-    assert.ok(!matches(' ', h('')), 'false for a white-space only selector')
+    assert.throws(
+      function () {
+        matches('', h())
+      },
+      /Expected rule but end of input reached/,
+      'should throw on empty selectors'
+    )
+
+    assert.throws(
+      function () {
+        matches(' ', h())
+      },
+      /Expected rule but end of input reached/,
+      'should throw for a white-space only selector'
+    )
+
     assert.ok(!matches('*'), 'false if not given a node')
+
     assert.ok(
       !matches('*', {type: 'text', value: 'a'}),
       'false if not given an element'
@@ -198,12 +213,12 @@ test('select.matches()', async (t) => {
       'true if attribute matches (space-separated list, 1)'
     )
     assert.ok(
-      matches('[class=one two]', h('.one.two')),
+      matches('[class="one two"]', h('.one.two')),
       'true if attribute matches (space-separated list, 2)'
     )
     assert.ok(
       matches(
-        '[accept=audio/*]',
+        '[accept="audio/*"]',
         h('input', {type: 'file', accept: ['audio/*']})
       ),
       'true if attribute matches (comma-separated list)'
@@ -217,7 +232,7 @@ test('select.matches()', async (t) => {
       'true if attribute matches (overloaded boolean, 1)'
     )
     assert.ok(
-      matches('[download=image.png]', h('a', {download: 'image.png'})),
+      matches('[download="image.png"]', h('a', {download: 'image.png'})),
       'true if attribute matches (overloaded boolean, 2)'
     )
     assert.ok(
@@ -238,12 +253,12 @@ test('select.matches()', async (t) => {
       'false if attribute does not matches (space-separated list, 1)'
     )
     assert.ok(
-      !matches('[class=three four]', h('.one.two')),
+      !matches('[class="three four"]', h('.one.two')),
       'false if attribute does not matches (space-separated list, 2)'
     )
     assert.ok(
       !matches(
-        '[accept=image/*]',
+        '[accept="image/*"]',
         h('input', {type: 'file', accept: ['audio/*']})
       ),
       'false if attribute does not matches (comma-separated list)'
@@ -257,7 +272,7 @@ test('select.matches()', async (t) => {
       'false if attribute does not matches (overloaded boolean, 1)'
     )
     assert.ok(
-      !matches('[download=image.png]', h('a', {download: 'photo.png'})),
+      !matches('[download="image.png"]', h('a', {download: 'photo.png'})),
       'false if attribute does not matches (overloaded boolean, 2)'
     )
     assert.ok(
@@ -362,7 +377,7 @@ test('select.matches()', async (t) => {
       'true if attribute ends with (space-separated list)'
     )
     assert.ok(
-      matches('[accept$=*]', h('input', {type: 'file', accept: ['audio/*']})),
+      matches('[accept$="*"]', h('input', {type: 'file', accept: ['audio/*']})),
       'true if attribute ends with (comma-separated list)'
     )
     assert.ok(
@@ -438,7 +453,7 @@ test('select.matches()', async (t) => {
     )
     assert.ok(
       matches(
-        '[accept*=audio/*]',
+        '[accept*="audio/*"]',
         h('input', {type: 'file', accept: ['audio/*']})
       ),
       'true if attribute contains (comma-separated list)'
@@ -474,7 +489,7 @@ test('select.matches()', async (t) => {
     )
     assert.ok(
       !matches(
-        '[accept*=video/*]',
+        '[accept*="video/*"]',
         h('input', {type: 'file', accept: ['audio/*']})
       ),
       'false if attribute does not contain (comma-separated list)'
@@ -514,12 +529,12 @@ test('select.matches()', async (t) => {
         'true if attribute matches (space-separated list, 1)'
       )
       assert.ok(
-        matches('[class~=one two]', h('.one.two')),
+        matches('[class~="one two"]', h('.one.two')),
         'true if attribute matches (space-separated list, 2)'
       )
       assert.ok(
         matches(
-          '[accept~=audio/*]',
+          '[accept~="audio/*"]',
           h('input', {type: 'file', accept: ['audio/*']})
         ),
         'true if attribute matches (comma-separated list)'
@@ -533,7 +548,7 @@ test('select.matches()', async (t) => {
         'true if attribute matches (overloaded boolean, 1)'
       )
       assert.ok(
-        matches('[download~=image.png]', h('a', {download: 'image.png'})),
+        matches('[download~="image.png"]', h('a', {download: 'image.png'})),
         'true if attribute matches (overloaded boolean, 2)'
       )
       assert.ok(
@@ -554,12 +569,12 @@ test('select.matches()', async (t) => {
         'false if attribute does not matches (space-separated list, 1)'
       )
       assert.ok(
-        !matches('[class~=three four]', h('.one.two')),
+        !matches('[class~="three four"]', h('.one.two')),
         'false if attribute does not matches (space-separated list, 2)'
       )
       assert.ok(
         !matches(
-          '[accept~=video/*]',
+          '[accept~="video/*"]',
           h('input', {type: 'file', accept: ['audio/*']})
         ),
         'false if attribute does not matches (comma-separated list)'
@@ -573,7 +588,7 @@ test('select.matches()', async (t) => {
         'false if attribute does not matches (overloaded boolean, 1)'
       )
       assert.ok(
-        !matches('[download~=image.png]', h('a', {download: 'photo.png'})),
+        !matches('[download~="image.png"]', h('a', {download: 'photo.png'})),
         'false if attribute does not matches (overloaded boolean, 2)'
       )
       assert.ok(
@@ -610,12 +625,12 @@ test('select.matches()', async (t) => {
       'true if attribute matches (space-separated list, 1)'
     )
     assert.ok(
-      matches('[class|=one two]', h('.one.two')),
+      matches('[class|="one two"]', h('.one.two')),
       'true if attribute matches (space-separated list, 2)'
     )
     assert.ok(
       matches(
-        '[accept|=audio/*]',
+        '[accept|="audio/*"]',
         h('input', {type: 'file', accept: ['audio/*']})
       ),
       'true if attribute matches (comma-separated list)'
@@ -629,7 +644,7 @@ test('select.matches()', async (t) => {
       'true if attribute matches (overloaded boolean, 1)'
     )
     assert.ok(
-      matches('[download|=image.png]', h('a', {download: 'image.png'})),
+      matches('[download|="image.png"]', h('a', {download: 'image.png'})),
       'true if attribute matches (overloaded boolean, 2)'
     )
     assert.ok(
@@ -650,12 +665,12 @@ test('select.matches()', async (t) => {
       'false if attribute does not matches (space-separated list, 1)'
     )
     assert.ok(
-      !matches('[class|=three four]', h('.one.two')),
+      !matches('[class|="three four"]', h('.one.two')),
       'false if attribute does not matches (space-separated list, 2)'
     )
     assert.ok(
       !matches(
-        '[accept|=video/*]',
+        '[accept|="video/*"]',
         h('input', {type: 'file', accept: ['audio/*']})
       ),
       'false if attribute does not matches (comma-separated list)'
@@ -669,7 +684,7 @@ test('select.matches()', async (t) => {
       'false if attribute does not matches (overloaded boolean, 1)'
     )
     assert.ok(
-      !matches('[download|=image.png]', h('a', {download: 'photo.png'})),
+      !matches('[download|="image.png"]', h('a', {download: 'photo.png'})),
       'false if attribute does not matches (overloaded boolean, 2)'
     )
     assert.ok(
@@ -700,35 +715,28 @@ test('select.matches()', async (t) => {
   })
 
   await t.test('pseudo-classes', async (t) => {
-    const anyMatchesPseudos = [':any', ':matches']
-    let index = -1
-
-    while (++index < anyMatchesPseudos.length) {
-      const pseudo = anyMatchesPseudos[index]
-
-      await t.test(pseudo, () => {
-        assert.ok(
-          matches(pseudo + '(a, [title], .class)', h('a')),
-          'true if any matches (type)'
-        )
-        assert.ok(
-          matches(pseudo + '(a, [title], .class)', h('.class')),
-          'true if any matches (.class)'
-        )
-        assert.ok(
-          matches(pseudo + '(a, [title], .class)', h('div', {title: '1'})),
-          'true if any matches (attribute existence)'
-        )
-        assert.ok(
-          !matches(pseudo + '(a, [title], .class)', h('i')),
-          'false if nothing matches'
-        )
-        assert.ok(
-          !matches(pseudo + '(a, [title], .class)', h('div', h('i.class'))),
-          'false if children match'
-        )
-      })
-    }
+    await t.test(':is()', () => {
+      assert.ok(
+        matches(':is(a, [title], .class)', h('a')),
+        'true if any matches (type)'
+      )
+      assert.ok(
+        matches(':is(a, [title], .class)', h('.class')),
+        'true if any matches (.class)'
+      )
+      assert.ok(
+        matches(':is(a, [title], .class)', h('div', {title: '1'})),
+        'true if any matches (attribute existence)'
+      )
+      assert.ok(
+        !matches(':is(a, [title], .class)', h('i')),
+        'false if nothing matches'
+      )
+      assert.ok(
+        !matches(':is(a, [title], .class)', h('div', h('i.class'))),
+        'false if children match'
+      )
+    })
 
     await t.test(':not()', () => {
       assert.ok(
@@ -754,13 +762,21 @@ test('select.matches()', async (t) => {
     })
 
     await t.test(':has', () => {
-      assert.doesNotThrow(() => {
-        matches('section:not(:has())', h('p'))
-      }, 'should not throw on empty selectors')
+      assert.throws(
+        () => {
+          matches('a:not(:has())', h('p'))
+        },
+        /Expected rule but "\)" found/,
+        'should throw on empty selectors'
+      )
 
-      assert.doesNotThrow(() => {
-        matches('section:has()', h('p'))
-      }, 'should not throw on empty selectors')
+      assert.throws(
+        () => {
+          matches('a:has()', h('p'))
+        },
+        /Expected rule but "\)" found/,
+        'should throw on empty selectors'
+      )
 
       assert.ok(
         !matches('p:has(p)', h('p', h('s'))),
@@ -830,6 +846,7 @@ test('select.matches()', async (t) => {
         ),
         'should ignore commas in parens (#1)'
       )
+
       assert.ok(
         matches(
           'section:has(:lang(en, fr))',
@@ -839,17 +856,11 @@ test('select.matches()', async (t) => {
       )
 
       assert.ok(
-        !matches(
-          'section:has(:matches(i), :matches(b))',
-          h('section', [h('s')])
-        ),
+        !matches('section:has(:is(i), :is(b))', h('section', [h('s')])),
         'should support multiple relative selectors (#1)'
       )
       assert.ok(
-        matches(
-          'section:has(:matches(i), :matches(b))',
-          h('section', [h('b')])
-        ),
+        matches('section:has(:is(i), :is(b))', h('section', [h('b')])),
         'should support multiple relative selectors (#2)'
       )
 
@@ -1091,7 +1102,7 @@ test('select.matches()', async (t) => {
       )
 
       assert.ok(
-        matches(':lang("*")', h('html', {lang: 'en'})),
+        matches(':lang(*)', h('html', {lang: 'en'})),
         'should support wildcards'
       )
 
@@ -1106,16 +1117,14 @@ test('select.matches()', async (t) => {
       )
 
       assert.ok(
-        matches(':lang("de-*-DE")', h('html', {lang: 'de-Latn-DE'})),
+        matches(':lang(de-*-DE)', h('html', {lang: 'de-Latn-DE'})),
         'should support non-primary wildcard subtags (#1)'
       )
 
-      // Not supported by `css-selector-parser` yet :(
-      //
-      // assert.ok(
-      //   matches(':lang("fr-BE", "de-*-DE")', h('html', {lang: 'de-Latn-DE'})),
-      //   'should support non-primary wildcard subtags (#2)'
-      // )
+      assert.ok(
+        matches(':lang(fr-BE, de-*-DE)', h('html', {lang: 'de-Latn-DE'})),
+        'should support non-primary wildcard subtags (#2)'
+      )
     })
 
     await t.test(':dir()', () => {

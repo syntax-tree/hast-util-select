@@ -92,7 +92,7 @@ const tree = h('section', [
   h('p', 'Golf')
 ])
 
-matches('section', tree) // `true`
+console.log(matches('section', tree)) // `true`
 
 console.log(select('h1 ~ :nth-child(even)', tree))
 // The paragraph with `Delta`
@@ -274,11 +274,10 @@ type Space = 'html' | 'svg'
 *   [x] `[attr^=value]` (attribute begins with)
 *   [x] `[attr$=value]` (attribute ends with)
 *   [x] `[attr*=value]` (attribute contains)
-*   [x] `:any()` (functional pseudo-class, use `:matches` instead)
 *   [x] `:dir()` (functional pseudo-class)
 *   [x] `:has()` (functional pseudo-class)
 *   [x] `:lang()` (functional pseudo-class)
-*   [x] `:matches()` (functional pseudo-class)
+*   [x] `:is()` (functional pseudo-class)
 *   [x] `:not()` (functional pseudo-class)
 *   [x] `:any-link` (pseudo-class)
 *   [x] `:blank` (pseudo-class)
@@ -362,6 +361,8 @@ type Space = 'html' | 'svg'
 *   ‡ — not supported by the underlying algorithm
 *   § — not very interested in writing / including the code for this
 *   ‖ — too new, the spec is still changing
+
+`:any()` and `:matches()` are renamed to `:is()` in CSS.
 
 ## Types
 

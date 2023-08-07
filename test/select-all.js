@@ -28,7 +28,7 @@ test('select.selectAll()', async (t) => {
       () => {
         selectAll('@supports (transform-origin: 5% 5%) {}', h(''))
       },
-      /Error: Rule expected but "@" found./,
+      /Expected rule but "@" found/,
       'should throw w/ invalid selector (2)'
     )
 
@@ -36,7 +36,7 @@ test('select.selectAll()', async (t) => {
       () => {
         selectAll('[foo%=bar]', h(''))
       },
-      /Error: Expected "=" but "%" found./,
+      /Expected a valid attribute selector operator/,
       'should throw on invalid attribute operators'
     )
 
@@ -52,7 +52,7 @@ test('select.selectAll()', async (t) => {
       () => {
         selectAll(':nth-foo(2n+1)', h(''))
       },
-      /Error: Unknown pseudo-selector `nth-foo`/,
+      /Unknown pseudo-class/,
       'should throw on invalid pseudo class “functions”'
     )
 
@@ -60,23 +60,30 @@ test('select.selectAll()', async (t) => {
       () => {
         selectAll('::before', h(''))
       },
-      /Error: Unexpected pseudo-element or empty pseudo-class/,
+      /Invalid selector: `::before`/,
       'should throw on invalid pseudo elements'
     )
   })
 
   await t.test('general', () => {
-    assert.deepEqual(
-      selectAll('', h('')),
-      [],
-      'nothing for the empty string as selector'
+    assert.throws(
+      function () {
+        selectAll('', h())
+      },
+      /Expected rule but end of input reached/,
+      'should throw on empty selectors'
     )
-    assert.deepEqual(
-      selectAll(' ', h('')),
-      [],
-      'nothing for a white-space only selector'
+
+    assert.throws(
+      function () {
+        selectAll(' ', h())
+      },
+      /Expected rule but end of input reached/,
+      'should throw for a white-space only selector'
     )
+
     assert.deepEqual(selectAll('*'), [], 'nothing if not given a node')
+
     assert.deepEqual(
       selectAll('*', {type: 'text', value: 'a'}),
       [],
@@ -117,8 +124,12 @@ test('select.selectAll()', async (t) => {
       'should return matches with nested matches'
     )
 
+    const xxx = selectAll('p i s', u('root', [h('p', h('i', h('s', h('s'))))]))
+
+    console.dir(xxx, {depth: null})
+
     assert.deepEqual(
-      selectAll('p i s', u('root', [h('p', h('i', h('s', h('s'))))])),
+      xxx,
       [h('s', h('s')), h('s')],
       'should return deep matches'
     )
@@ -922,19 +933,11 @@ test('select.selectAll()', async (t) => {
     )
   })
 
-  await t.test(':any', () => {
+  await t.test(':is', () => {
     assert.deepEqual(
-      selectAll('y:any(:first-child)', h('x', [h('y#a'), h('y#b')])),
+      selectAll('y:is(:first-child)', h('x', [h('y#a'), h('y#b')])),
       [h('y#a')],
-      'should support parent-sensitive `:any`'
-    )
-  })
-
-  await t.test(':matches', () => {
-    assert.deepEqual(
-      selectAll('y:matches(:first-child)', h('x', [h('y#a'), h('y#b')])),
-      [h('y#a')],
-      'should support parent-sensitive `:matches`'
+      'should support parent-sensitive `:is`'
     )
   })
 
