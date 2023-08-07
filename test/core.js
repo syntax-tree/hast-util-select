@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {h} from 'hastscript'
+import {selectAll} from 'hast-util-select'
 import {u} from 'unist-builder'
-import {selectAll} from '../index.js'
 
 test('hast-util-select', async function (t) {
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('../index.js')).sort(), [
+    assert.deepEqual(Object.keys(await import('hast-util-select')).sort(), [
       'matches',
       'select',
       'selectAll'

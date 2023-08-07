@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {h, s} from 'hastscript'
+import {select, selectAll} from 'hast-util-select'
 import {u} from 'unist-builder'
-import {select, selectAll} from '../index.js'
 
 test('svg', async function (t) {
   await t.test('should match svg (#1)', async function () {

@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {h, s} from 'hastscript'
+import {matches} from 'hast-util-select'
 import {u} from 'unist-builder'
-import {matches} from '../index.js'
 
 test('select.matches()', async function (t) {
   await t.test('invalid selector', async function (t) {

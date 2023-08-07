@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {h, s} from 'hastscript'
+import {selectAll} from 'hast-util-select'
 import {u} from 'unist-builder'
-import {selectAll} from '../index.js'
 
 test('select.selectAll()', async function (t) {
   await t.test('invalid selectors', async function (t) {
