@@ -101,7 +101,9 @@
           "test/**/*.js"
         ],
         "rules": {
-          "no-await-in-loop": 0
+          "import/no-unassigned-import": "off",
+          "max-nested-callbacks": "off",
+          "no-await-in-loop": "off"
         }
       }
     ],

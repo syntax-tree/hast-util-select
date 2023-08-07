@@ -1,87 +1,81 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import {u} from 'unist-builder'
 import {h, s} from 'hastscript'
+import {u} from 'unist-builder'
 import {matches} from '../index.js'
 
-test('select.matches()', async (t) => {
-  await t.test('invalid selector', () => {
-    assert.throws(
-      () => {
-        // @ts-expect-error runtime.
+test('select.matches()', async function (t) {
+  await t.test('invalid selector', async function (t) {
+    await t.test('should throw without selector', async function () {
+      assert.throws(function () {
+        // @ts-expect-error: check how the runtime handles a missing `selector`.
         matches()
-      },
-      /Error: Expected `string` as selector, not `undefined`/,
-      'should throw without selector'
-    )
+      }, /Error: Expected `string` as selector, not `undefined`/)
+    })
 
-    assert.throws(
-      () => {
-        // @ts-expect-error runtime.
+    await t.test('should throw w/ invalid selector (1)', async function () {
+      assert.throws(function () {
+        // @ts-expect-error: check how the runtime handles an incorrect `selector`.
         matches([], h(''))
-      },
-      /Error: Expected `string` as selector, not ``/,
-      'should throw w/ invalid selector (1)'
-    )
+      }, /Error: Expected `string` as selector, not ``/)
+    })
 
-    assert.throws(
-      () => {
+    await t.test('should throw w/ invalid selector (2)', async function () {
+      assert.throws(function () {
         matches('@supports (transform-origin: 5% 5%) {}', h(''))
-      },
-      /Expected rule but "@" found/,
-      'should throw w/ invalid selector (2)'
+      }, /Expected rule but "@" found/)
+    })
+
+    await t.test(
+      'should throw on invalid attribute operators',
+      async function () {
+        assert.throws(function () {
+          matches('[foo%=bar]', h(''))
+        }, /Expected a valid attribute selector operator/)
+      }
     )
 
-    assert.throws(
-      () => {
-        matches('[foo%=bar]', h(''))
-      },
-      /Expected a valid attribute selector operator/,
-      'should throw on invalid attribute operators'
-    )
-
-    assert.throws(
-      () => {
+    await t.test('should throw on invalid pseudo classes', async function () {
+      assert.throws(function () {
         matches(':active', h(''))
-      },
-      /Error: Unknown pseudo-selector `active`/,
-      'should throw on invalid pseudo classes'
+      }, /Error: Unknown pseudo-selector `active`/)
+    })
+
+    await t.test(
+      'should throw on invalid pseudo class “functions”',
+      async function () {
+        assert.throws(function () {
+          matches(':nth-foo(2n+1)', h(''))
+        }, /Unknown pseudo-class/)
+      }
     )
 
-    assert.throws(
-      () => {
-        matches(':nth-foo(2n+1)', h(''))
-      },
-      /Unknown pseudo-class/,
-      'should throw on invalid pseudo class “functions”'
-    )
-
-    assert.throws(
-      () => {
+    await t.test('should throw on invalid pseudo elements', async function () {
+      assert.throws(function () {
         matches('::before', h(''))
-      },
-      /Invalid selector: `::before`/,
-      'should throw on invalid pseudo elements'
+      }, /Invalid selector: `::before`/)
+    })
+
+    await t.test(
+      'should throw on nested selectors (descendant)',
+      async function () {
+        assert.throws(function () {
+          matches('foo bar', h(''))
+        }, /Error: Expected selector without nesting/)
+      }
     )
 
-    assert.throws(
-      () => {
-        matches('foo bar', h(''))
-      },
-      /Error: Expected selector without nesting/,
-      'should throw on nested selectors (descendant)'
-    )
-
-    assert.throws(
-      () => {
-        matches('foo > bar', h(''))
-      },
-      /Error: Expected selector without nesting/,
-      'should throw on nested selectors (direct child)'
+    await t.test(
+      'should throw on nested selectors (direct child)',
+      async function () {
+        assert.throws(function () {
+          matches('foo > bar', h(''))
+        }, /Error: Expected selector without nesting/)
+      }
     )
   })
 
-  await t.test('parent-sensitive pseudo-selectors', () => {
+  await t.test('parent-sensitive pseudo-selectors', async function (t) {
     const simplePseudos = [
       'first-child',
       'first-of-type',
@@ -100,1000 +94,1401 @@ test('select.matches()', async (t) => {
 
     while (++index < simplePseudos.length) {
       const pseudo = simplePseudos[index]
-      assert.throws(
-        () => {
-          matches(':' + pseudo, h(''))
-        },
-        new RegExp('Error: Cannot use `:' + pseudo + '` without parent'),
-        'should throw on `' + pseudo + '`'
-      )
+
+      await t.test('should throw on `' + pseudo + '`', async function () {
+        assert.throws(
+          function () {
+            matches(':' + pseudo, h(''))
+          },
+          new RegExp('Error: Cannot use `:' + pseudo + '` without parent')
+        )
+      })
     }
 
     index = -1
 
     while (++index < functionalPseudos.length) {
       const pseudo = functionalPseudos[index]
-      assert.throws(
-        () => {
+
+      await t.test('should throw on `' + pseudo + '()`', async function () {
+        assert.throws(function () {
           matches(':' + pseudo + '()', h(''))
-        },
-        /Formula parse error/,
-        'should throw on `' + pseudo + '()`'
-      )
+        }, /Formula parse error/)
+      })
     }
   })
 
-  await t.test('general', () => {
-    assert.throws(
-      function () {
+  await t.test('general', async function (t) {
+    await t.test('should throw on empty selectors', async function () {
+      assert.throws(function () {
         matches('', h())
-      },
-      /Expected rule but end of input reached/,
-      'should throw on empty selectors'
+      }, /Expected rule but end of input reached/)
+    })
+
+    await t.test(
+      'should throw for a white-space only selector',
+      async function () {
+        assert.throws(function () {
+          matches(' ', h())
+        }, /Expected rule but end of input reached/)
+      }
     )
 
-    assert.throws(
-      function () {
-        matches(' ', h())
-      },
-      /Expected rule but end of input reached/,
-      'should throw for a white-space only selector'
-    )
+    await t.test('should not match w/o a node', async function () {
+      assert.ok(!matches('*'))
+    })
 
-    assert.ok(!matches('*'), 'false if not given a node')
+    await t.test('should not match w/ non-element', async function () {
+      assert.ok(!matches('*', {type: 'text', value: 'a'}))
+    })
+  })
 
-    assert.ok(
-      !matches('*', {type: 'text', value: 'a'}),
-      'false if not given an element'
+  await t.test('multiple selectors', async function (t) {
+    await t.test('should match if one selector matches', async function () {
+      assert.ok(matches('b, i', h('b')))
+    })
+
+    await t.test('should not match if no selector matches', async function () {
+      assert.ok(!matches('i, s', h('b')))
+    })
+  })
+
+  await t.test('tag-names: `div`, `*`', async function (t) {
+    await t.test('should match the wildcard `*`', async function () {
+      assert.ok(matches('*', h('')))
+    })
+
+    await t.test('should match a tag name', async function () {
+      assert.ok(matches('b', h('b')))
+    })
+
+    await t.test(
+      'should not match if the tag names doesn’t',
+      async function () {
+        assert.ok(!matches('b', h('i')))
+      }
     )
   })
 
-  await t.test('multiple selectors', () => {
-    assert.ok(matches('b, i', h('b')), 'true for string')
+  await t.test('id: `#id`', async function (t) {
+    await t.test('should not match if no id exists', async function () {
+      assert.ok(!matches('#one', h('')))
+    })
 
-    assert.ok(!matches('i, s', h('b')), 'false for string')
-  })
+    await t.test('should match for matchesing id’s', async function () {
+      assert.ok(matches('#one', h('#one')))
+    })
 
-  await t.test('tag-names: `div`, `*`', () => {
-    assert.ok(matches('*', h('')), 'true for `*`')
+    await t.test('should not match for mismatchesed id’s', async function () {
+      assert.ok(!matches('#two', h('#one')))
+    })
 
-    assert.ok(matches('b', h('b')), 'true if tag-names matches')
-
-    assert.ok(!matches('b', h('i')), 'false if tag-names don’t matches')
-  })
-
-  await t.test('id: `#id`', () => {
-    assert.ok(!matches('#one', h('')), 'false if no id exists')
-
-    assert.ok(matches('#one', h('#one')), 'true for matchesing id’s')
-
-    assert.ok(!matches('#two', h('#one')), 'false for mismatchesed id’s')
-
-    assert.ok(
-      matches('#two#one', h('#one')),
-      'should prefer the last id if multiple id’s are specified (1)'
+    await t.test(
+      'should prefer the last id if multiple id’s are specified (1)',
+      async function () {
+        assert.ok(matches('#two#one', h('#one')))
+      }
     )
 
-    assert.ok(
-      !matches('#one#two', h('#one')),
-      'should prefer the last id if multiple id’s are specified (2)'
+    await t.test(
+      'should prefer the last id if multiple id’s are specified (2)',
+      async function () {
+        assert.ok(!matches('#one#two', h('#one')))
+      }
     )
   })
 
-  await t.test('class: `.class`', () => {
-    assert.ok(!matches('.one', h('')), 'false if no class-name exists')
+  await t.test('class: `.class`', async function (t) {
+    await t.test('should not match if no class-name exists', async function () {
+      assert.ok(!matches('.one', h('')))
+    })
 
-    assert.ok(matches('.one', h('.one')), 'true for matchesing class-name')
+    await t.test('should match for matchesing class-name', async function () {
+      assert.ok(matches('.one', h('.one')))
+    })
 
-    assert.ok(
-      matches('.one', h('.one.two')),
-      'true when matchesing in multiple class-name'
+    await t.test(
+      'should match when matchesing in multiple class-name',
+      async function () {
+        assert.ok(matches('.one', h('.one.two')))
+      }
     )
 
-    assert.ok(
-      !matches('.one.two', h('.one')),
-      'false if not all class-names exist'
-    )
-  })
-
-  await t.test('attributes, existence: `[attr]`', () => {
-    assert.ok(matches('[class]', h('.one')), 'true if attribute exists')
-
-    assert.ok(!matches('[for]', h('.one')), 'false if attribute does not exist')
-
-    assert.ok(
-      matches('[accesskey]', h('div', {accessKey: ['a']})),
-      'true if attribute exists (2)'
-    )
-
-    assert.ok(
-      matches('[data-foo]', h('div', {dataFoo: 'bar'})),
-      'true if attribute exists (3)'
-    )
-
-    assert.ok(
-      !matches('[data-bar]', h('div', {dataFoo: 'bar'})),
-      'false if attribute does not exist (2)'
+    await t.test(
+      'should not match if not all class-names exist',
+      async function () {
+        assert.ok(!matches('.one.two', h('.one')))
+      }
     )
   })
 
-  await t.test('attributes, equality: `[attr=value]`', () => {
-    assert.ok(
-      matches('[id=one]', h('#one')),
-      'true if attribute matches (string value)'
+  await t.test('attributes, existence: `[attr]`', async function (t) {
+    await t.test('should match if attribute exists', async function () {
+      assert.ok(matches('[class]', h('.one')))
+    })
+
+    await t.test(
+      'should not match if attribute does not exist',
+      async function () {
+        assert.ok(!matches('[for]', h('.one')))
+      }
     )
 
-    assert.ok(
-      matches('[class=one]', h('.one')),
-      'true if attribute matches (space-separated list, 1)'
-    )
+    await t.test('should match if attribute exists (2)', async function () {
+      assert.ok(matches('[accesskey]', h('div', {accessKey: ['a']})))
+    })
 
-    assert.ok(
-      matches('[class="one two"]', h('.one.two')),
-      'true if attribute matches (space-separated list, 2)'
-    )
+    await t.test('should match if attribute exists (3)', async function () {
+      assert.ok(matches('[data-foo]', h('div', {dataFoo: 'bar'})))
+    })
 
-    assert.ok(
-      matches(
-        '[accept="audio/*"]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'true if attribute matches (comma-separated list)'
-    )
-
-    assert.ok(
-      matches('[hidden=hidden]', h('div', {hidden: true})),
-      'true if attribute matches (boolean)'
-    )
-
-    assert.ok(
-      matches('[download=download]', h('a', {download: true})),
-      'true if attribute matches (overloaded boolean, 1)'
-    )
-
-    assert.ok(
-      matches('[download="image.png"]', h('a', {download: 'image.png'})),
-      'true if attribute matches (overloaded boolean, 2)'
-    )
-
-    assert.ok(
-      matches('[tabindex=-1]', h('div', {tabIndex: -1})),
-      'true if attribute matches (numeric)'
-    )
-
-    assert.ok(
-      matches('[minlength=3]', h('input', {minLength: 3})),
-      'true if attribute matches (positive numeric)'
-    )
-
-    assert.ok(
-      !matches('[id=two]', h('#one')),
-      'false if attribute does not matches (string value)'
-    )
-
-    assert.ok(
-      !matches('[class=two]', h('.one')),
-      'false if attribute does not matches (space-separated list, 1)'
-    )
-
-    assert.ok(
-      !matches('[class="three four"]', h('.one.two')),
-      'false if attribute does not matches (space-separated list, 2)'
-    )
-
-    assert.ok(
-      !matches(
-        '[accept="image/*"]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'false if attribute does not matches (comma-separated list)'
-    )
-
-    assert.ok(
-      !matches('[hidden=hidden]', h('div', {hidden: false})),
-      'false if attribute does not matches (boolean)'
-    )
-
-    assert.ok(
-      !matches('[download=download]', h('a', {download: false})),
-      'false if attribute does not matches (overloaded boolean, 1)'
-    )
-
-    assert.ok(
-      !matches('[download="image.png"]', h('a', {download: 'photo.png'})),
-      'false if attribute does not matches (overloaded boolean, 2)'
-    )
-
-    assert.ok(
-      !matches('[tabindex=-1]', h('div', {tabIndex: -2})),
-      'false if attribute does not matches (numeric)'
-    )
-
-    assert.ok(
-      !matches('[minlength=3]', h('input', {minLength: 2})),
-      'false if attribute does not matches (positive numeric)'
+    await t.test(
+      'should not match if attribute does not exist (2)',
+      async function () {
+        assert.ok(!matches('[data-bar]', h('div', {dataFoo: 'bar'})))
+      }
     )
   })
 
-  await t.test('attributes, begins: `[attr^=value]`', () => {
-    assert.ok(
-      matches('[id^=one]', h('#one')),
-      'true if attribute matches (string value)'
+  await t.test('attributes, equality: `[attr=value]`', async function (t) {
+    await t.test(
+      'should match if attribute matches (string value)',
+      async function () {
+        assert.ok(matches('[id=one]', h('#one')))
+      }
     )
 
-    assert.ok(
-      matches('[id^=on]', h('#one')),
-      'true if attribute starts with (string value)'
+    await t.test(
+      'should match if attribute matches (space-separated list, 1)',
+      async function () {
+        assert.ok(matches('[class=one]', h('.one')))
+      }
     )
 
-    assert.ok(
-      matches('[class^=one]', h('.one.two')),
-      'true if attribute starts with (space-separated list)'
+    await t.test(
+      'should match if attribute matches (space-separated list, 2)',
+      async function () {
+        assert.ok(matches('[class="one two"]', h('.one.two')))
+      }
     )
 
-    assert.ok(
-      matches(
-        '[accept^=audio]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'true if attribute starts with (comma-separated list)'
+    await t.test(
+      'should match if attribute matches (comma-separated list)',
+      async function () {
+        assert.ok(
+          matches(
+            '[accept="audio/*"]',
+            h('input', {type: 'file', accept: ['audio/*']})
+          )
+        )
+      }
     )
 
-    assert.ok(
-      matches('[hidden^=hid]', h('div', {hidden: true})),
-      'true if attribute starts with (boolean)'
+    await t.test(
+      'should match if attribute matches (boolean)',
+      async function () {
+        assert.ok(matches('[hidden=hidden]', h('div', {hidden: true})))
+      }
     )
 
-    assert.ok(
-      matches('[download^=down]', h('a', {download: true})),
-      'true if attribute starts with (overloaded boolean)'
+    await t.test(
+      'should match if attribute matches (overloaded boolean, 1)',
+      async function () {
+        assert.ok(matches('[download=download]', h('a', {download: true})))
+      }
     )
 
-    assert.ok(
-      matches('[download^=ima]', h('a', {download: 'image.png'})),
-      'true if attribute starts with (overloaded boolean, 2)'
+    await t.test(
+      'should match if attribute matches (overloaded boolean, 2)',
+      async function () {
+        assert.ok(
+          matches('[download="image.png"]', h('a', {download: 'image.png'}))
+        )
+      }
     )
 
-    assert.ok(
-      matches('[tabindex^=-]', h('div', {tabIndex: -1})),
-      'true if attribute starts with (numeric)'
+    await t.test(
+      'should match if attribute matches (numeric)',
+      async function () {
+        assert.ok(matches('[tabindex=-1]', h('div', {tabIndex: -1})))
+      }
     )
 
-    assert.ok(
-      matches('[minlength^=1]', h('input', {minLength: 10})),
-      'true if attribute starts with (positive numeric)'
+    await t.test(
+      'should match if attribute matches (positive numeric)',
+      async function () {
+        assert.ok(matches('[minlength=3]', h('input', {minLength: 3})))
+      }
     )
 
-    assert.ok(
-      !matches('[id^=t]', h('#one')),
-      'false if attribute does not start with (string value)'
+    await t.test(
+      'should not match if attribute does not matches (string value)',
+      async function () {
+        assert.ok(!matches('[id=two]', h('#one')))
+      }
     )
 
-    assert.ok(
-      !matches('[class^=t]', h('.one')),
-      'false if attribute does not start with (space-separated list)'
+    await t.test(
+      'should not match if attribute does not matches (space-separated list, 1)',
+      async function () {
+        assert.ok(!matches('[class=two]', h('.one')))
+      }
     )
 
-    assert.ok(
-      !matches(
-        '[accept^=video]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'false if attribute does not start with (comma-separated list)'
+    await t.test(
+      'should not match if attribute does not matches (space-separated list, 2)',
+      async function () {
+        assert.ok(!matches('[class="three four"]', h('.one.two')))
+      }
     )
 
-    assert.ok(
-      !matches('[hidden^=hid]', h('div', {hidden: false})),
-      'false if attribute does not start with (boolean)'
+    await t.test(
+      'should not match if attribute does not matches (comma-separated list)',
+      async function () {
+        assert.ok(
+          !matches(
+            '[accept="image/*"]',
+            h('input', {type: 'file', accept: ['audio/*']})
+          )
+        )
+      }
     )
 
-    assert.ok(
-      !matches('[download^=down]', h('a', {download: false})),
-      'false if attribute does not start with (overloaded boolean, 1)'
+    await t.test(
+      'should not match if attribute does not matches (boolean)',
+      async function () {
+        assert.ok(!matches('[hidden=hidden]', h('div', {hidden: false})))
+      }
     )
 
-    assert.ok(
-      !matches('[download^=image]', h('a', {download: 'photo.png'})),
-      'false if attribute does not start with (overloaded boolean, 2)'
+    await t.test(
+      'should not match if attribute does not matches (overloaded boolean, 1)',
+      async function () {
+        assert.ok(!matches('[download=download]', h('a', {download: false})))
+      }
     )
 
-    assert.ok(
-      !matches('[tabindex^=-]', h('div', {tabIndex: 2})),
-      'false if attribute does not start with (numeric)'
+    await t.test(
+      'should not match if attribute does not matches (overloaded boolean, 2)',
+      async function () {
+        assert.ok(
+          !matches('[download="image.png"]', h('a', {download: 'photo.png'}))
+        )
+      }
     )
 
-    assert.ok(
-      !matches('[minlength^=1]', h('input', {minLength: 2})),
-      'false if attribute does not start with (positive numeric)'
-    )
-  })
-
-  await t.test('attributes, ends: `[attr$=value]`', () => {
-    assert.ok(
-      matches('[id$=one]', h('#one')),
-      'true if attribute matches (string value)'
+    await t.test(
+      'should not match if attribute does not matches (numeric)',
+      async function () {
+        assert.ok(!matches('[tabindex=-1]', h('div', {tabIndex: -2})))
+      }
     )
 
-    assert.ok(
-      matches('[id$=ne]', h('#one')),
-      'true if attribute ends with (string value)'
-    )
-
-    assert.ok(
-      matches('[class$=wo]', h('.one.two')),
-      'true if attribute ends with (space-separated list)'
-    )
-
-    assert.ok(
-      matches('[accept$="*"]', h('input', {type: 'file', accept: ['audio/*']})),
-      'true if attribute ends with (comma-separated list)'
-    )
-
-    assert.ok(
-      matches('[hidden$=den]', h('div', {hidden: true})),
-      'true if attribute ends with (boolean)'
-    )
-
-    assert.ok(
-      matches('[download$=load]', h('a', {download: true})),
-      'true if attribute ends with (overloaded boolean)'
-    )
-
-    assert.ok(
-      matches('[download$=png]', h('a', {download: 'image.png'})),
-      'true if attribute ends with (overloaded boolean, 2)'
-    )
-
-    assert.ok(
-      matches('[tabindex$=1]', h('div', {tabIndex: -1})),
-      'true if attribute ends with (numeric)'
-    )
-
-    assert.ok(
-      matches('[minlength$=0]', h('input', {minLength: 10})),
-      'true if attribute ends with (positive numeric)'
-    )
-
-    assert.ok(
-      !matches('[id$=wo]', h('#one')),
-      'false if attribute does not end with (string value)'
-    )
-
-    assert.ok(
-      !matches('[class$=wo]', h('.one')),
-      'false if attribute does not end with (space-separated list)'
-    )
-
-    assert.ok(
-      !matches(
-        '[accept$=doc]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'false if attribute does not end with (comma-separated list)'
-    )
-
-    assert.ok(
-      !matches('[hidden$=den]', h('div', {hidden: false})),
-      'false if attribute does not end with (boolean)'
-    )
-
-    assert.ok(
-      !matches('[download$=load]', h('a', {download: false})),
-      'false if attribute does not end with (overloaded boolean, 1)'
-    )
-
-    assert.ok(
-      !matches('[download$=jpg]', h('a', {download: 'photo.png'})),
-      'false if attribute does not end with (overloaded boolean, 2)'
-    )
-
-    assert.ok(
-      !matches('[tabindex$=2]', h('div', {tabIndex: -1})),
-      'false if attribute does not end with (numeric)'
-    )
-
-    assert.ok(
-      !matches('[minlength$=1]', h('input', {minLength: 2})),
-      'false if attribute does not start with (positive numeric)'
+    await t.test(
+      'should not match if attribute does not matches (positive numeric)',
+      async function () {
+        assert.ok(!matches('[minlength=3]', h('input', {minLength: 2})))
+      }
     )
   })
 
-  await t.test('attributes, contains: `[attr*=value]`', () => {
-    assert.ok(
-      matches('[id*=one]', h('#one')),
-      'true if attribute matches (string value)'
+  await t.test('attributes, begins: `[attr^=value]`', async function (t) {
+    await t.test(
+      'should match if attribute matches (string value)',
+      async function () {
+        assert.ok(matches('[id^=one]', h('#one')))
+      }
     )
 
-    assert.ok(
-      matches('[id*=n]', h('#one')),
-      'true if attribute contains (string value)'
+    await t.test(
+      'should match if attribute starts with (string value)',
+      async function () {
+        assert.ok(matches('[id^=on]', h('#one')))
+      }
     )
 
-    assert.ok(
-      matches('[class*=w]', h('.one.two')),
-      'true if attribute contains (space-separated list)'
+    await t.test(
+      'should match if attribute starts with (space-separated list)',
+      async function () {
+        assert.ok(matches('[class^=one]', h('.one.two')))
+      }
     )
 
-    assert.ok(
-      matches(
-        '[accept*="audio/*"]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'true if attribute contains (comma-separated list)'
+    await t.test(
+      'should match if attribute starts with (comma-separated list)',
+      async function () {
+        assert.ok(
+          matches(
+            '[accept^=audio]',
+            h('input', {type: 'file', accept: ['audio/*']})
+          )
+        )
+      }
     )
 
-    assert.ok(
-      matches('[hidden*=dd]', h('div', {hidden: true})),
-      'true if attribute contains (boolean)'
+    await t.test(
+      'should match if attribute starts with (boolean)',
+      async function () {
+        assert.ok(matches('[hidden^=hid]', h('div', {hidden: true})))
+      }
     )
 
-    assert.ok(
-      matches('[download*=nl]', h('a', {download: true})),
-      'true if attribute contains (overloaded boolean)'
+    await t.test(
+      'should match if attribute starts with (overloaded boolean)',
+      async function () {
+        assert.ok(matches('[download^=down]', h('a', {download: true})))
+      }
     )
 
-    assert.ok(
-      matches('[download*=age]', h('a', {download: 'image.png'})),
-      'true if attribute contains (overloaded boolean, 2)'
+    await t.test(
+      'should match if attribute starts with (overloaded boolean, 2)',
+      async function () {
+        assert.ok(matches('[download^=ima]', h('a', {download: 'image.png'})))
+      }
     )
 
-    assert.ok(
-      matches('[tabindex*=1]', h('div', {tabIndex: -12})),
-      'true if attribute contains (numeric)'
+    await t.test(
+      'should match if attribute starts with (numeric)',
+      async function () {
+        assert.ok(matches('[tabindex^=-]', h('div', {tabIndex: -1})))
+      }
     )
 
-    assert.ok(
-      matches('[minlength*=0]', h('input', {minLength: 102})),
-      'true if attribute contains (positive numeric)'
+    await t.test(
+      'should match if attribute starts with (positive numeric)',
+      async function () {
+        assert.ok(matches('[minlength^=1]', h('input', {minLength: 10})))
+      }
     )
 
-    assert.ok(
-      !matches('[id*=w]', h('#one')),
-      'false if attribute does not contain (string value)'
+    await t.test(
+      'should not match if attribute does not start with (string value)',
+      async function () {
+        assert.ok(!matches('[id^=t]', h('#one')))
+      }
     )
 
-    assert.ok(
-      !matches('[class*=w]', h('.one')),
-      'false if attribute does not contain (space-separated list)'
+    await t.test(
+      'should not match if attribute does not start with (space-separated list)',
+      async function () {
+        assert.ok(!matches('[class^=t]', h('.one')))
+      }
     )
 
-    assert.ok(
-      !matches(
-        '[accept*="video/*"]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'false if attribute does not contain (comma-separated list)'
+    await t.test(
+      'should not match if attribute does not start with (comma-separated list)',
+      async function () {
+        assert.ok(
+          !matches(
+            '[accept^=video]',
+            h('input', {type: 'file', accept: ['audio/*']})
+          )
+        )
+      }
     )
 
-    assert.ok(
-      !matches('[hidden*=dd]', h('div', {hidden: false})),
-      'false if attribute does not contain (boolean)'
+    await t.test(
+      'should not match if attribute does not start with (boolean)',
+      async function () {
+        assert.ok(!matches('[hidden^=hid]', h('div', {hidden: false})))
+      }
     )
 
-    assert.ok(
-      !matches('[download*=nl]', h('a', {download: false})),
-      'false if attribute does not contain (overloaded boolean, 1)'
+    await t.test(
+      'should not match if attribute does not start with (overloaded boolean, 1)',
+      async function () {
+        assert.ok(!matches('[download^=down]', h('a', {download: false})))
+      }
     )
 
-    assert.ok(
-      !matches('[download*=age]', h('a', {download: 'photo.png'})),
-      'false if attribute does not contain (overloaded boolean, 2)'
+    await t.test(
+      'should not match if attribute does not start with (overloaded boolean, 2)',
+      async function () {
+        assert.ok(
+          !matches('[download^=image]', h('a', {download: 'photo.png'}))
+        )
+      }
     )
 
-    assert.ok(
-      !matches('[tabindex*=3]', h('div', {tabIndex: -12})),
-      'false if attribute does not contain (numeric)'
+    await t.test(
+      'should not match if attribute does not start with (numeric)',
+      async function () {
+        assert.ok(!matches('[tabindex^=-]', h('div', {tabIndex: 2})))
+      }
     )
 
-    assert.ok(
-      !matches('[minlength*=3]', h('input', {minLength: 102})),
-      'false if attribute does not contain (positive numeric)'
+    await t.test(
+      'should not match if attribute does not start with (positive numeric)',
+      async function () {
+        assert.ok(!matches('[minlength^=1]', h('input', {minLength: 2})))
+      }
+    )
+  })
+
+  await t.test('attributes, ends: `[attr$=value]`', async function (t) {
+    await t.test(
+      'should match if attribute matches (string value)',
+      async function () {
+        assert.ok(matches('[id$=one]', h('#one')))
+      }
+    )
+
+    await t.test(
+      'should match if attribute ends with (string value)',
+      async function () {
+        assert.ok(matches('[id$=ne]', h('#one')))
+      }
+    )
+
+    await t.test(
+      'should match if attribute ends with (space-separated list)',
+      async function () {
+        assert.ok(matches('[class$=wo]', h('.one.two')))
+      }
+    )
+
+    await t.test(
+      'should match if attribute ends with (comma-separated list)',
+      async function () {
+        assert.ok(
+          matches(
+            '[accept$="*"]',
+            h('input', {type: 'file', accept: ['audio/*']})
+          )
+        )
+      }
+    )
+
+    await t.test(
+      'should match if attribute ends with (boolean)',
+      async function () {
+        assert.ok(matches('[hidden$=den]', h('div', {hidden: true})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute ends with (overloaded boolean)',
+      async function () {
+        assert.ok(matches('[download$=load]', h('a', {download: true})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute ends with (overloaded boolean, 2)',
+      async function () {
+        assert.ok(matches('[download$=png]', h('a', {download: 'image.png'})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute ends with (numeric)',
+      async function () {
+        assert.ok(matches('[tabindex$=1]', h('div', {tabIndex: -1})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute ends with (positive numeric)',
+      async function () {
+        assert.ok(matches('[minlength$=0]', h('input', {minLength: 10})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not end with (string value)',
+      async function () {
+        assert.ok(!matches('[id$=wo]', h('#one')))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not end with (space-separated list)',
+      async function () {
+        assert.ok(!matches('[class$=wo]', h('.one')))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not end with (comma-separated list)',
+      async function () {
+        assert.ok(
+          !matches(
+            '[accept$=doc]',
+            h('input', {type: 'file', accept: ['audio/*']})
+          )
+        )
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not end with (boolean)',
+      async function () {
+        assert.ok(!matches('[hidden$=den]', h('div', {hidden: false})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not end with (overloaded boolean, 1)',
+      async function () {
+        assert.ok(!matches('[download$=load]', h('a', {download: false})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not end with (overloaded boolean, 2)',
+      async function () {
+        assert.ok(!matches('[download$=jpg]', h('a', {download: 'photo.png'})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not end with (numeric)',
+      async function () {
+        assert.ok(!matches('[tabindex$=2]', h('div', {tabIndex: -1})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not start with (positive numeric)',
+      async function () {
+        assert.ok(!matches('[minlength$=1]', h('input', {minLength: 2})))
+      }
+    )
+  })
+
+  await t.test('attributes, contains: `[attr*=value]`', async function (t) {
+    await t.test(
+      'should match if attribute matches (string value)',
+      async function () {
+        assert.ok(matches('[id*=one]', h('#one')))
+      }
+    )
+
+    await t.test(
+      'should match if attribute contains (string value)',
+      async function () {
+        assert.ok(matches('[id*=n]', h('#one')))
+      }
+    )
+
+    await t.test(
+      'should match if attribute contains (space-separated list)',
+      async function () {
+        assert.ok(matches('[class*=w]', h('.one.two')))
+      }
+    )
+
+    await t.test(
+      'should match if attribute contains (comma-separated list)',
+      async function () {
+        assert.ok(
+          matches(
+            '[accept*="audio/*"]',
+            h('input', {type: 'file', accept: ['audio/*']})
+          )
+        )
+      }
+    )
+
+    await t.test(
+      'should match if attribute contains (boolean)',
+      async function () {
+        assert.ok(matches('[hidden*=dd]', h('div', {hidden: true})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute contains (overloaded boolean)',
+      async function () {
+        assert.ok(matches('[download*=nl]', h('a', {download: true})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute contains (overloaded boolean, 2)',
+      async function () {
+        assert.ok(matches('[download*=age]', h('a', {download: 'image.png'})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute contains (numeric)',
+      async function () {
+        assert.ok(matches('[tabindex*=1]', h('div', {tabIndex: -12})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute contains (positive numeric)',
+      async function () {
+        assert.ok(matches('[minlength*=0]', h('input', {minLength: 102})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not contain (string value)',
+      async function () {
+        assert.ok(!matches('[id*=w]', h('#one')))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not contain (space-separated list)',
+      async function () {
+        assert.ok(!matches('[class*=w]', h('.one')))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not contain (comma-separated list)',
+      async function () {
+        assert.ok(
+          !matches(
+            '[accept*="video/*"]',
+            h('input', {type: 'file', accept: ['audio/*']})
+          )
+        )
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not contain (boolean)',
+      async function () {
+        assert.ok(!matches('[hidden*=dd]', h('div', {hidden: false})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not contain (overloaded boolean, 1)',
+      async function () {
+        assert.ok(!matches('[download*=nl]', h('a', {download: false})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not contain (overloaded boolean, 2)',
+      async function () {
+        assert.ok(!matches('[download*=age]', h('a', {download: 'photo.png'})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not contain (numeric)',
+      async function () {
+        assert.ok(!matches('[tabindex*=3]', h('div', {tabIndex: -12})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not contain (positive numeric)',
+      async function () {
+        assert.ok(!matches('[minlength*=3]', h('input', {minLength: 102})))
+      }
     )
   })
 
   await t.test(
     'attributes, contains in space-separated list: `[attr~=value]`',
-    () => {
-      assert.ok(
-        matches('[id~=one]', h('#one')),
-        'true if attribute matches (string value)'
+    async function (t) {
+      await t.test(
+        'should match if attribute matches (string value)',
+        async function () {
+          assert.ok(matches('[id~=one]', h('#one')))
+        }
       )
 
-      assert.ok(
-        matches('[class~=one]', h('.one')),
-        'true if attribute matches (space-separated list, 1)'
+      await t.test(
+        'should match if attribute matches (space-separated list, 1)',
+        async function () {
+          assert.ok(matches('[class~=one]', h('.one')))
+        }
       )
 
-      assert.ok(
-        matches('[class~="one two"]', h('.one.two')),
-        'true if attribute matches (space-separated list, 2)'
+      await t.test(
+        'should match if attribute matches (space-separated list, 2)',
+        async function () {
+          assert.ok(matches('[class~="one two"]', h('.one.two')))
+        }
       )
 
-      assert.ok(
-        matches(
-          '[accept~="audio/*"]',
-          h('input', {type: 'file', accept: ['audio/*']})
-        ),
-        'true if attribute matches (comma-separated list)'
+      await t.test(
+        'should match if attribute matches (comma-separated list)',
+        async function () {
+          assert.ok(
+            matches(
+              '[accept~="audio/*"]',
+              h('input', {type: 'file', accept: ['audio/*']})
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches('[hidden~=hidden]', h('div', {hidden: true})),
-        'true if attribute matches (boolean)'
+      await t.test(
+        'should match if attribute matches (boolean)',
+        async function () {
+          assert.ok(matches('[hidden~=hidden]', h('div', {hidden: true})))
+        }
       )
 
-      assert.ok(
-        matches('[download~=download]', h('a', {download: true})),
-        'true if attribute matches (overloaded boolean, 1)'
+      await t.test(
+        'should match if attribute matches (overloaded boolean, 1)',
+        async function () {
+          assert.ok(matches('[download~=download]', h('a', {download: true})))
+        }
       )
 
-      assert.ok(
-        matches('[download~="image.png"]', h('a', {download: 'image.png'})),
-        'true if attribute matches (overloaded boolean, 2)'
+      await t.test(
+        'should match if attribute matches (overloaded boolean, 2)',
+        async function () {
+          assert.ok(
+            matches('[download~="image.png"]', h('a', {download: 'image.png'}))
+          )
+        }
       )
 
-      assert.ok(
-        matches('[tabindex~=-1]', h('div', {tabIndex: -1})),
-        'true if attribute matches (numeric)'
+      await t.test(
+        'should match if attribute matches (numeric)',
+        async function () {
+          assert.ok(matches('[tabindex~=-1]', h('div', {tabIndex: -1})))
+        }
       )
 
-      assert.ok(
-        matches('[minlength~=3]', h('input', {minLength: 3})),
-        'true if attribute matches (positive numeric)'
+      await t.test(
+        'should match if attribute matches (positive numeric)',
+        async function () {
+          assert.ok(matches('[minlength~=3]', h('input', {minLength: 3})))
+        }
       )
 
-      assert.ok(
-        !matches('[id~=two]', h('#one')),
-        'false if attribute does not matches (string value)'
+      await t.test(
+        'should not match if attribute does not matches (string value)',
+        async function () {
+          assert.ok(!matches('[id~=two]', h('#one')))
+        }
       )
 
-      assert.ok(
-        !matches('[class~=two]', h('.one')),
-        'false if attribute does not matches (space-separated list, 1)'
+      await t.test(
+        'should not match if attribute does not matches (space-separated list, 1)',
+        async function () {
+          assert.ok(!matches('[class~=two]', h('.one')))
+        }
       )
 
-      assert.ok(
-        !matches('[class~="three four"]', h('.one.two')),
-        'false if attribute does not matches (space-separated list, 2)'
+      await t.test(
+        'should not match if attribute does not matches (space-separated list, 2)',
+        async function () {
+          assert.ok(!matches('[class~="three four"]', h('.one.two')))
+        }
       )
 
-      assert.ok(
-        !matches(
-          '[accept~="video/*"]',
-          h('input', {type: 'file', accept: ['audio/*']})
-        ),
-        'false if attribute does not matches (comma-separated list)'
+      await t.test(
+        'should not match if attribute does not matches (comma-separated list)',
+        async function () {
+          assert.ok(
+            !matches(
+              '[accept~="video/*"]',
+              h('input', {type: 'file', accept: ['audio/*']})
+            )
+          )
+        }
       )
 
-      assert.ok(
-        !matches('[hidden~=hidden]', h('div', {hidden: false})),
-        'false if attribute does not matches (boolean)'
+      await t.test(
+        'should not match if attribute does not matches (boolean)',
+        async function () {
+          assert.ok(!matches('[hidden~=hidden]', h('div', {hidden: false})))
+        }
       )
 
-      assert.ok(
-        !matches('[download~=download]', h('a', {download: false})),
-        'false if attribute does not matches (overloaded boolean, 1)'
+      await t.test(
+        'should not match if attribute does not matches (overloaded boolean, 1)',
+        async function () {
+          assert.ok(!matches('[download~=download]', h('a', {download: false})))
+        }
       )
 
-      assert.ok(
-        !matches('[download~="image.png"]', h('a', {download: 'photo.png'})),
-        'false if attribute does not matches (overloaded boolean, 2)'
+      await t.test(
+        'should not match if attribute does not matches (overloaded boolean, 2)',
+        async function () {
+          assert.ok(
+            !matches('[download~="image.png"]', h('a', {download: 'photo.png'}))
+          )
+        }
       )
 
-      assert.ok(
-        !matches('[tabindex~=-1]', h('div', {tabIndex: -2})),
-        'false if attribute does not matches (numeric)'
+      await t.test(
+        'should not match if attribute does not matches (numeric)',
+        async function () {
+          assert.ok(!matches('[tabindex~=-1]', h('div', {tabIndex: -2})))
+        }
       )
 
-      assert.ok(
-        !matches('[minlength~=3]', h('input', {minLength: 2})),
-        'false if attribute does not matches (positive numeric)'
+      await t.test(
+        'should not match if attribute does not matches (positive numeric)',
+        async function () {
+          assert.ok(!matches('[minlength~=3]', h('input', {minLength: 2})))
+        }
       )
 
-      assert.ok(
-        matches('[class~=one]', h('.one.two')),
-        'true if attribute part exists (space-separated list, 1)'
+      await t.test(
+        'should match if attribute part exists (space-separated list, 1)',
+        async function () {
+          assert.ok(matches('[class~=one]', h('.one.two')))
+        }
       )
 
-      assert.ok(
-        matches('[class~=two]', h('.one.two')),
-        'true if attribute part exists (space-separated list, 2)'
+      await t.test(
+        'should match if attribute part exists (space-separated list, 2)',
+        async function () {
+          assert.ok(matches('[class~=two]', h('.one.two')))
+        }
       )
 
-      assert.ok(
-        !matches('[class~=three]', h('.one.two')),
-        'false if attribute part does not exist (space-separated list)'
+      await t.test(
+        'should not match if attribute part does not exist (space-separated list)',
+        async function () {
+          assert.ok(!matches('[class~=three]', h('.one.two')))
+        }
       )
     }
   )
 
-  await t.test('attributes, starts or prefixes: `[attr|=value]`', () => {
-    assert.ok(
-      matches('[id|=one]', h('#one')),
-      'true if attribute matches (string value)'
-    )
-
-    assert.ok(
-      matches('[class|=one]', h('.one')),
-      'true if attribute matches (space-separated list, 1)'
-    )
-
-    assert.ok(
-      matches('[class|="one two"]', h('.one.two')),
-      'true if attribute matches (space-separated list, 2)'
-    )
-
-    assert.ok(
-      matches(
-        '[accept|="audio/*"]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'true if attribute matches (comma-separated list)'
-    )
-
-    assert.ok(
-      matches('[hidden|=hidden]', h('div', {hidden: true})),
-      'true if attribute matches (boolean)'
-    )
-
-    assert.ok(
-      matches('[download|=download]', h('a', {download: true})),
-      'true if attribute matches (overloaded boolean, 1)'
-    )
-
-    assert.ok(
-      matches('[download|="image.png"]', h('a', {download: 'image.png'})),
-      'true if attribute matches (overloaded boolean, 2)'
-    )
-
-    assert.ok(
-      matches('[tabindex|=-1]', h('div', {tabIndex: -1})),
-      'true if attribute matches (numeric)'
-    )
-
-    assert.ok(
-      matches('[minlength|=3]', h('input', {minLength: 3})),
-      'true if attribute matches (positive numeric)'
-    )
-
-    assert.ok(
-      !matches('[id|=two]', h('#one')),
-      'false if attribute does not matches (string value)'
-    )
-
-    assert.ok(
-      !matches('[class|=two]', h('.one')),
-      'false if attribute does not matches (space-separated list, 1)'
-    )
-
-    assert.ok(
-      !matches('[class|="three four"]', h('.one.two')),
-      'false if attribute does not matches (space-separated list, 2)'
-    )
-
-    assert.ok(
-      !matches(
-        '[accept|="video/*"]',
-        h('input', {type: 'file', accept: ['audio/*']})
-      ),
-      'false if attribute does not matches (comma-separated list)'
-    )
-
-    assert.ok(
-      !matches('[hidden|=hidden]', h('div', {hidden: false})),
-      'false if attribute does not matches (boolean)'
-    )
-
-    assert.ok(
-      !matches('[download|=download]', h('a', {download: false})),
-      'false if attribute does not matches (overloaded boolean, 1)'
-    )
-
-    assert.ok(
-      !matches('[download|="image.png"]', h('a', {download: 'photo.png'})),
-      'false if attribute does not matches (overloaded boolean, 2)'
-    )
-
-    assert.ok(
-      !matches('[tabindex|=-1]', h('div', {tabIndex: -2})),
-      'false if attribute does not matches (numeric)'
-    )
-
-    assert.ok(
-      !matches('[minlength|=3]', h('input', {minLength: 2})),
-      'false if attribute does not matches (positive numeric)'
-    )
-
-    assert.ok(
-      matches('[alpha|=bravo]', h('div', {alpha: 'bravo'})),
-      'true if value starts with'
-    )
-
-    assert.ok(
-      matches('[alpha|=bravo]', h('div', {alpha: 'bravo-charlie'})),
-      'true if value prefixes'
-    )
-
-    assert.ok(
-      !matches('[alpha|=bravo]', h('div', {alpha: 'bravocharlie'})),
-      'false if value does not prefix'
-    )
-
-    assert.ok(
-      !matches('[alpha|=charlie]', h('div', {alpha: 'bravo'})),
-      'false if value does start with'
-    )
-  })
-
-  await t.test('pseudo-classes', async (t) => {
-    await t.test(':is()', () => {
-      assert.ok(
-        matches(':is(a, [title], .class)', h('a')),
-        'true if any matches (type)'
+  await t.test(
+    'attributes, starts or prefixes: `[attr|=value]`',
+    async function (t) {
+      await t.test(
+        'should match if attribute matches (string value)',
+        async function () {
+          assert.ok(matches('[id|=one]', h('#one')))
+        }
       )
 
-      assert.ok(
-        matches(':is(a, [title], .class)', h('.class')),
-        'true if any matches (.class)'
+      await t.test(
+        'should match if attribute matches (space-separated list, 1)',
+        async function () {
+          assert.ok(matches('[class|=one]', h('.one')))
+        }
       )
 
-      assert.ok(
-        matches(':is(a, [title], .class)', h('div', {title: '1'})),
-        'true if any matches (attribute existence)'
+      await t.test(
+        'should match if attribute matches (space-separated list, 2)',
+        async function () {
+          assert.ok(matches('[class|="one two"]', h('.one.two')))
+        }
       )
 
-      assert.ok(
-        !matches(':is(a, [title], .class)', h('i')),
-        'false if nothing matches'
+      await t.test(
+        'should match if attribute matches (comma-separated list)',
+        async function () {
+          assert.ok(
+            matches(
+              '[accept|="audio/*"]',
+              h('input', {type: 'file', accept: ['audio/*']})
+            )
+          )
+        }
       )
 
-      assert.ok(
-        !matches(':is(a, [title], .class)', h('div', h('i.class'))),
-        'false if children match'
+      await t.test(
+        'should match if attribute matches (boolean)',
+        async function () {
+          assert.ok(matches('[hidden|=hidden]', h('div', {hidden: true})))
+        }
       )
+
+      await t.test(
+        'should match if attribute matches (overloaded boolean, 1)',
+        async function () {
+          assert.ok(matches('[download|=download]', h('a', {download: true})))
+        }
+      )
+
+      await t.test(
+        'should match if attribute matches (overloaded boolean, 2)',
+        async function () {
+          assert.ok(
+            matches('[download|="image.png"]', h('a', {download: 'image.png'}))
+          )
+        }
+      )
+
+      await t.test(
+        'should match if attribute matches (numeric)',
+        async function () {
+          assert.ok(matches('[tabindex|=-1]', h('div', {tabIndex: -1})))
+        }
+      )
+
+      await t.test(
+        'should match if attribute matches (positive numeric)',
+        async function () {
+          assert.ok(matches('[minlength|=3]', h('input', {minLength: 3})))
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (string value)',
+        async function () {
+          assert.ok(!matches('[id|=two]', h('#one')))
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (space-separated list, 1)',
+        async function () {
+          assert.ok(!matches('[class|=two]', h('.one')))
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (space-separated list, 2)',
+        async function () {
+          assert.ok(!matches('[class|="three four"]', h('.one.two')))
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (comma-separated list)',
+        async function () {
+          assert.ok(
+            !matches(
+              '[accept|="video/*"]',
+              h('input', {type: 'file', accept: ['audio/*']})
+            )
+          )
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (boolean)',
+        async function () {
+          assert.ok(!matches('[hidden|=hidden]', h('div', {hidden: false})))
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (overloaded boolean, 1)',
+        async function () {
+          assert.ok(!matches('[download|=download]', h('a', {download: false})))
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (overloaded boolean, 2)',
+        async function () {
+          assert.ok(
+            !matches('[download|="image.png"]', h('a', {download: 'photo.png'}))
+          )
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (numeric)',
+        async function () {
+          assert.ok(!matches('[tabindex|=-1]', h('div', {tabIndex: -2})))
+        }
+      )
+
+      await t.test(
+        'should not match if attribute does not matches (positive numeric)',
+        async function () {
+          assert.ok(!matches('[minlength|=3]', h('input', {minLength: 2})))
+        }
+      )
+
+      await t.test('should match if value starts with', async function () {
+        assert.ok(matches('[alpha|=bravo]', h('div', {alpha: 'bravo'})))
+      })
+
+      await t.test('should match if value prefixes', async function () {
+        assert.ok(matches('[alpha|=bravo]', h('div', {alpha: 'bravo-charlie'})))
+      })
+
+      await t.test(
+        'should not match if value does not prefix',
+        async function () {
+          assert.ok(
+            !matches('[alpha|=bravo]', h('div', {alpha: 'bravocharlie'}))
+          )
+        }
+      )
+
+      await t.test(
+        'should not match if value does start with',
+        async function () {
+          assert.ok(!matches('[alpha|=charlie]', h('div', {alpha: 'bravo'})))
+        }
+      )
+    }
+  )
+
+  await t.test('pseudo-classes', async function (t) {
+    await t.test(':is()', async function (t) {
+      await t.test('should match if any matches (type)', async function () {
+        assert.ok(matches(':is(a, [title], .class)', h('a')))
+      })
+
+      await t.test('should match if any matches (.class)', async function () {
+        assert.ok(matches(':is(a, [title], .class)', h('.class')))
+      })
+
+      await t.test(
+        'should match if any matches (attribute existence)',
+        async function () {
+          assert.ok(matches(':is(a, [title], .class)', h('div', {title: '1'})))
+        }
+      )
+
+      await t.test('should not match if nothing matches', async function () {
+        assert.ok(!matches(':is(a, [title], .class)', h('i')))
+      })
+
+      await t.test('should not match if children match', async function () {
+        assert.ok(!matches(':is(a, [title], .class)', h('div', h('i.class'))))
+      })
     })
 
-    await t.test(':not()', () => {
-      assert.ok(
-        !matches(':not(a, [title], .class)', h('a')),
-        'false if any matches (type)'
+    await t.test(':not()', async function (t) {
+      await t.test('should not match if any matches (type)', async function () {
+        assert.ok(!matches(':not(a, [title], .class)', h('a')))
+      })
+
+      await t.test(
+        'should not match if any matches (.class)',
+        async function () {
+          assert.ok(!matches(':not(a, [title], .class)', h('.class')))
+        }
       )
 
-      assert.ok(
-        !matches(':not(a, [title], .class)', h('.class')),
-        'false if any matches (.class)'
+      await t.test(
+        'should not match if any matches (attribute existence)',
+        async function () {
+          assert.ok(
+            !matches(':not(a, [title], .class)', h('div', {title: '1'}))
+          )
+        }
       )
 
-      assert.ok(
-        !matches(':not(a, [title], .class)', h('div', {title: '1'})),
-        'false if any matches (attribute existence)'
-      )
+      await t.test('should match if nothing matches', async function () {
+        assert.ok(matches(':not(a, [title], .class)', h('i')))
+      })
 
-      assert.ok(
-        matches(':not(a, [title], .class)', h('i')),
-        'true if nothing matches'
-      )
-
-      assert.ok(
-        matches(':not(a, [title], .class)', h('div', h('i.class'))),
-        'true if children match'
-      )
+      await t.test('should match if children match', async function () {
+        assert.ok(matches(':not(a, [title], .class)', h('div', h('i.class'))))
+      })
     })
 
-    await t.test(':has', () => {
-      assert.throws(
-        () => {
+    await t.test(':has', async function (t) {
+      await t.test('should throw on empty selectors', async function () {
+        assert.throws(function () {
           matches('a:not(:has())', h('p'))
-        },
-        /Expected rule but "\)" found/,
-        'should throw on empty selectors'
-      )
+        }, /Expected rule but "\)" found/)
+      })
 
-      assert.throws(
-        () => {
+      await t.test('should throw on empty selectors', async function () {
+        assert.throws(function () {
           matches('a:has()', h('p'))
-        },
-        /Expected rule but "\)" found/,
-        'should throw on empty selectors'
+        }, /Expected rule but "\)" found/)
+      })
+
+      await t.test(
+        'should not match the scope element (#1)',
+        async function () {
+          assert.ok(!matches('p:has(p)', h('p', h('s'))))
+        }
       )
 
-      assert.ok(
-        !matches('p:has(p)', h('p', h('s'))),
-        'should not match the scope element (#1)'
+      await t.test(
+        'should not match the scope element (#2)',
+        async function () {
+          assert.ok(matches('p:has(p)', h('p', h('p'))))
+        }
       )
 
-      assert.ok(
-        matches('p:has(p)', h('p', h('p'))),
-        'should not match the scope element (#2)'
+      await t.test(
+        'should match if children match the descendant selector',
+        async function () {
+          assert.ok(matches('a:has(img)', h('a', h('img'))))
+        }
       )
 
-      assert.ok(
-        matches('a:has(img)', h('a', h('img'))),
-        'true if children match the descendant selector'
+      await t.test(
+        'should not match if no children match the descendant selector',
+        async function () {
+          assert.ok(!matches('a:has(img)', h('a', h('span'))))
+        }
       )
 
-      assert.ok(
-        !matches('a:has(img)', h('a', h('span'))),
-        'false if no children match the descendant selector'
+      await t.test(
+        'should match if descendants match the descendant selector',
+        async function () {
+          assert.ok(matches('a:has(img)', h('a', h('span'), h('img'))))
+        }
       )
 
-      assert.ok(
-        matches('a:has(img)', h('a', h('span'), h('img'))),
-        'true if descendants match the descendant selector'
+      await t.test(
+        'should not match if no descendants match the descendant selector',
+        async function () {
+          assert.ok(!matches('a:has(img)', h('a', h('span', h('span')))))
+        }
       )
 
-      assert.ok(
-        !matches('a:has(img)', h('a', h('span', h('span')))),
-        'false if no descendants match the descendant selector'
+      await t.test(
+        'should support a nested next-sibling selector (#1)',
+        async function () {
+          assert.ok(matches('dd:has(dt + dd)', h('dd', [h('dt'), h('dd')])))
+        }
       )
 
-      assert.ok(
-        matches('dd:has(dt + dd)', h('dd', [h('dt'), h('dd')])),
-        'should support a nested next-sibling selector (#1)'
+      await t.test(
+        'should support a nested next-sibling selector (#2)',
+        async function () {
+          assert.ok(!matches('dd:has(dt + dd)', h('dd', [h('dt'), h('dt')])))
+        }
       )
 
-      assert.ok(
-        !matches('dd:has(dt + dd)', h('dd', [h('dt'), h('dt')])),
-        'should support a nested next-sibling selector (#2)'
+      await t.test(
+        'should add `:scope` to sub-selectors (#1)',
+        async function () {
+          assert.ok(matches('a:has([title])', h('a', h('s', {title: 'a'}))))
+        }
       )
 
-      assert.ok(
-        matches('a:has([title])', h('a', h('s', {title: 'a'}))),
-        'should add `:scope` to sub-selectors (#1)'
+      await t.test(
+        'should add `:scope` to sub-selectors (#2)',
+        async function () {
+          assert.ok(!matches('a:has([title])', h('a', {title: '!'}, h('s'))))
+        }
       )
 
-      assert.ok(
-        !matches('a:has([title])', h('a', {title: '!'}, h('s'))),
-        'should add `:scope` to sub-selectors (#2)'
+      await t.test(
+        'should add `:scope` to all sub-selectors (#2)',
+        async function () {
+          assert.ok(!matches('a:has(a, :scope i)', h('a', h('s'))))
+        }
       )
 
-      assert.ok(
-        !matches('a:has(a, :scope i)', h('a', h('s'))),
-        'should add `:scope` to all sub-selectors (#2)'
+      await t.test(
+        'should add `:scope` to all sub-selectors (#3)',
+        async function () {
+          assert.ok(
+            matches(
+              'section:not(:has(h1, h2, h3, h4, h5, h6))',
+              h('section', [])
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches('section:not(:has(h1, h2, h3, h4, h5, h6))', h('section', [])),
-        'should add `:scope` to all sub-selectors (#3)'
+      await t.test(
+        'should add `:scope` to all sub-selectors (#4)',
+        async function () {
+          assert.ok(
+            matches(
+              'section:not(:has(h1, h2, h3, h4, h5, h6))',
+              h('section', [h('p', '!')])
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          'section:not(:has(h1, h2, h3, h4, h5, h6))',
-          h('section', [h('p', '!')])
-        ),
-        'should add `:scope` to all sub-selectors (#4)'
+      await t.test('should ignore commas in parens (#1)', async function () {
+        assert.ok(
+          !matches(
+            'section:has(:lang(en, fr))',
+            h('section', [h('q', {lang: 'de'})])
+          )
+        )
+      })
+
+      await t.test('should ignore commas in parens (#2)', async function () {
+        assert.ok(
+          matches(
+            'section:has(:lang(en, fr))',
+            h('section', [h('q', {lang: 'en'})])
+          )
+        )
+      })
+
+      await t.test(
+        'should support multiple relative selectors (#1)',
+        async function () {
+          assert.ok(
+            !matches('section:has(:is(i), :is(b))', h('section', [h('s')]))
+          )
+        }
       )
 
-      assert.ok(
-        !matches(
-          'section:has(:lang(en, fr))',
-          h('section', [h('q', {lang: 'de'})])
-        ),
-        'should ignore commas in parens (#1)'
+      await t.test(
+        'should support multiple relative selectors (#2)',
+        async function () {
+          assert.ok(
+            matches('section:has(:is(i), :is(b))', h('section', [h('b')]))
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          'section:has(:lang(en, fr))',
-          h('section', [h('q', {lang: 'en'})])
-        ),
-        'should ignore commas in parens (#2)'
-      )
+      // These check white space.
 
-      assert.ok(
-        !matches('section:has(:is(i), :is(b))', h('section', [h('s')])),
-        'should support multiple relative selectors (#1)'
-      )
+      await t.test('should match w/o whitespace (#1)', async function () {
+        assert.ok(matches('a:has( img)', h('a', h('img'))))
+      })
 
-      assert.ok(
-        matches('section:has(:is(i), :is(b))', h('section', [h('b')])),
-        'should support multiple relative selectors (#2)'
-      )
+      await t.test('should match w/o whitespace (#2)', async function () {
+        assert.ok(matches('a:has( img  )', h('a', h('img'))))
+      })
 
-      // This checks white-space.
-      assert.ok(matches('a:has( img)', h('a', h('img'))), 'assertion (#1)')
+      await t.test('should match w/o whitespace (#3)', async function () {
+        assert.ok(matches('a:has(img )', h('a', h('img'))))
+      })
 
-      assert.ok(matches('a:has( img  )', h('a', h('img'))), 'assertion (#2)')
+      await t.test('should match w/o whitespace (#4)', async function () {
+        assert.ok(matches('a:has( img  ,\t p )', h('a', h('img'))))
+      })
 
-      assert.ok(matches('a:has(img )', h('a', h('img'))), 'assertion (#3)')
-
-      assert.ok(
-        matches('a:has( img  ,\t p )', h('a', h('img'))),
-        'assertion (#4)'
-      )
-
+      // To do: add `:has(>)`.
       // Note: These should be uncommented, but that’s not supported by the CSS
       // parser:
-      //
-      // assert.ok(
-      //   matches('a:has(> img)', h('a', h('img'))),
-      //   'true for relative direct child selector'
+      // await t.test(
+      //   'should match for relative direct child selector',
+      //   async function () {
+      //     assert.ok(matches('a:has(> img)', h('a', h('img'))))
+      //   }
       // )
-      // assert.ok(!
-      //   matches('a:has(> img)', h('a', h('span', h('img')))),
-      //   'false for relative direct child selectors'
+
+      // await t.test(
+      //   'should not match for relative direct child selectors',
+      //   async function () {
+      //     assert.ok(!matches('a:has(> img)', h('a', h('span', h('img')))))
+      //   }
       // )
-      // assert.ok(
-      //   matches('a:has(> img, > span)', h('a', h('span', h('span')))),
-      //   'should support a list of relative selectors'
+
+      // await t.test(
+      //   'should support a list of relative selectors',
+      //   async function () {
+      //     assert.ok(
+      //       matches('a:has(> img, > span)', h('a', h('span', h('span'))))
+      //     )
+      //   }
       // )
     })
 
-    await t.test(':any-link', () => {
+    await t.test(':any-link', async function (t) {
       const links = ['a', 'area', 'link']
       let index = -1
 
       while (++index < links.length) {
         const name = links[index]
 
-        assert.ok(
-          matches(':any-link', h(name, {href: '#'})),
-          'true if w/ href on ' + name
-        )
+        await t.test('should match if w/ href on ' + name, async function () {
+          assert.ok(matches(':any-link', h(name, {href: '#'})))
+        })
 
-        assert.ok(
-          !matches(':any-link', h(name)),
-          'false if w/o href on ' + name
+        await t.test(
+          'should not match if w/o href on ' + name,
+          async function () {
+            assert.ok(!matches(':any-link', h(name)))
+          }
         )
       }
     })
 
-    await t.test(':checked', () => {
-      assert.ok(
-        matches(':checked', h('input', {type: 'checkbox', checked: true})),
-        'true for checkbox inputs w/ `checked`'
+    await t.test(':checked', async function (t) {
+      await t.test(
+        'should match for checkbox inputs w/ `checked`',
+        async function () {
+          assert.ok(
+            matches(':checked', h('input', {type: 'checkbox', checked: true}))
+          )
+        }
       )
 
-      assert.ok(
-        matches(':checked', h('input', {type: 'radio', checked: true})),
-        'true for radio inputs w/ `checked`'
+      await t.test(
+        'should match for radio inputs w/ `checked`',
+        async function () {
+          assert.ok(
+            matches(':checked', h('input', {type: 'radio', checked: true}))
+          )
+        }
       )
 
-      assert.ok(
-        matches(':checked', h('menuitem', {type: 'checkbox', checked: true})),
-        'true for checkbox menuitems w/ `checked`'
+      await t.test(
+        'should match for checkbox menuitems w/ `checked`',
+        async function () {
+          assert.ok(
+            matches(
+              ':checked',
+              h('menuitem', {type: 'checkbox', checked: true})
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(':checked', h('menuitem', {type: 'radio', checked: true})),
-        'true for radio menuitems w/ `checked`'
+      await t.test(
+        'should match for radio menuitems w/ `checked`',
+        async function () {
+          assert.ok(
+            matches(':checked', h('menuitem', {type: 'radio', checked: true}))
+          )
+        }
       )
 
-      assert.ok(
-        matches(':checked', h('option', {selected: true})),
-        'true for options w/ `selected`'
+      await t.test('should match for options w/ `selected`', async function () {
+        assert.ok(matches(':checked', h('option', {selected: true})))
+      })
+
+      await t.test(
+        'should not match for checkbox inputs w/o `checked`',
+        async function () {
+          assert.ok(
+            !matches(':checked', h('input', {type: 'checkbox', checked: false}))
+          )
+        }
       )
 
-      assert.ok(
-        !matches(':checked', h('input', {type: 'checkbox', checked: false})),
-        'false for checkbox inputs w/o `checked`'
+      await t.test(
+        'should not match for radio inputs w/o `checked`',
+        async function () {
+          assert.ok(
+            !matches(':checked', h('input', {type: 'radio', checked: false}))
+          )
+        }
       )
 
-      assert.ok(
-        !matches(':checked', h('input', {type: 'radio', checked: false})),
-        'false for radio inputs w/o `checked`'
+      await t.test(
+        'should not match for checkbox menuitems w/o `checked`',
+        async function () {
+          assert.ok(
+            !matches(
+              ':checked',
+              h('menuitem', {type: 'checkbox', checked: false})
+            )
+          )
+        }
       )
 
-      assert.ok(
-        !matches(':checked', h('menuitem', {type: 'checkbox', checked: false})),
-        'false for checkbox menuitems w/o `checked`'
+      await t.test(
+        'should not match for radio menuitems w/o `checked`',
+        async function () {
+          assert.ok(
+            !matches(':checked', h('menuitem', {type: 'radio', checked: false}))
+          )
+        }
       )
 
-      assert.ok(
-        !matches(':checked', h('menuitem', {type: 'radio', checked: false})),
-        'false for radio menuitems w/o `checked`'
+      await t.test(
+        'should not match for options w/o `selected`',
+        async function () {
+          assert.ok(!matches(':checked', h('option', {selected: false})))
+        }
       )
 
-      assert.ok(
-        !matches(':checked', h('option', {selected: false})),
-        'false for options w/o `selected`'
-      )
-
-      assert.ok(!matches(':checked', h('')), 'false for other nodes')
+      await t.test('should not match for other nodes', async function () {
+        assert.ok(!matches(':checked', h('')))
+      })
     })
 
-    await t.test(':disabled', () => {
+    await t.test(':disabled', async function (t) {
       const things = [
         'button',
         'input',
@@ -1109,19 +1504,23 @@ test('select.matches()', async (t) => {
       while (++index < things.length) {
         const name = things[index]
 
-        assert.ok(
-          matches(':disabled', h(name, {disabled: true})),
-          'true if w/ disabled on ' + name
+        await t.test(
+          'should match if w/ disabled on ' + name,
+          async function () {
+            assert.ok(matches(':disabled', h(name, {disabled: true})))
+          }
         )
 
-        assert.ok(
-          !matches(':disabled', h(name)),
-          'false if w/o disabled on ' + name
+        await t.test(
+          'should not match if w/o disabled on ' + name,
+          async function () {
+            assert.ok(!matches(':disabled', h(name)))
+          }
         )
       }
     })
 
-    await t.test(':enabled', () => {
+    await t.test(':enabled', async function (t) {
       const things = [
         'button',
         'input',
@@ -1136,384 +1535,534 @@ test('select.matches()', async (t) => {
 
       while (++index < things.length) {
         const name = things[index]
-        assert.ok(
-          matches(':enabled', h(name)),
-          'true if w/o disabled on ' + name
+
+        await t.test(
+          'should match if w/o disabled on ' + name,
+          async function () {
+            assert.ok(matches(':enabled', h(name)))
+          }
         )
 
-        assert.ok(
-          !matches(':enabled', h(name, {disabled: true})),
-          'false if w/ disabled on ' + name
+        await t.test(
+          'should not match if w/ disabled on ' + name,
+          async function () {
+            assert.ok(!matches(':enabled', h(name, {disabled: true})))
+          }
         )
       }
     })
 
-    await t.test(':required', () => {
+    await t.test(':required', async function (t) {
       const things = ['input', 'textarea', 'select']
       let index = -1
 
       while (++index < things.length) {
         const name = things[index]
-        assert.ok(
-          matches(':required', h(name, {required: true})),
-          'true if w/ required on ' + name
+
+        await t.test(
+          'should match if w/ required on ' + name,
+          async function () {
+            assert.ok(matches(':required', h(name, {required: true})))
+          }
         )
 
-        assert.ok(
-          !matches(':required', h(name)),
-          'false if w/o required on ' + name
+        await t.test(
+          'should not match if w/o required on ' + name,
+          async function () {
+            assert.ok(!matches(':required', h(name)))
+          }
         )
       }
     })
 
-    await t.test(':optional', () => {
+    await t.test(':optional', async function (t) {
       const things = ['input', 'textarea', 'select']
 
       let index = -1
 
       while (++index < things.length) {
         const name = things[index]
-        assert.ok(
-          matches(':optional', h(name)),
-          'true if w/o required on ' + name
+
+        await t.test(
+          'should match if w/o required on ' + name,
+          async function () {
+            assert.ok(matches(':optional', h(name)))
+          }
         )
 
-        assert.ok(
-          !matches(':optional', h(name, {required: true})),
-          'false if w/ required on ' + name
+        await t.test(
+          'should not match if w/ required on ' + name,
+          async function () {
+            assert.ok(!matches(':optional', h(name, {required: true})))
+          }
         )
       }
     })
 
-    await t.test(':empty', () => {
-      assert.ok(matches(':empty', h('')), 'true if w/o children')
+    await t.test(':empty', async function (t) {
+      await t.test('should match if w/o children', async function () {
+        assert.ok(matches(':empty', h('')))
+      })
 
-      assert.ok(
-        matches(':empty', h('', u('comment', '?'))),
-        'true if w/o elements or texts'
-      )
+      await t.test('should match if w/o elements or texts', async function () {
+        assert.ok(matches(':empty', h('', u('comment', '?'))))
+      })
 
-      assert.ok(!matches(':empty', h('', h(''))), 'false if w/ elements')
+      await t.test('should not match if w/ elements', async function () {
+        assert.ok(!matches(':empty', h('', h(''))))
+      })
 
-      assert.ok(!matches(':empty', h('', u('text', '.'))), 'false if w/ text')
+      await t.test('should not match if w/ text', async function () {
+        assert.ok(!matches(':empty', h('', u('text', '.'))))
+      })
 
-      assert.ok(
-        !matches(':empty', h('', u('text', ' '))),
-        'false if w/ white-space text'
-      )
-    })
-
-    await t.test(':blank', () => {
-      assert.ok(matches(':blank', h('')), 'true if w/o children')
-
-      assert.ok(
-        matches(':blank', h('', u('comment', '?'))),
-        'true if w/o elements or texts'
-      )
-
-      assert.ok(
-        matches(':blank', h('', u('text', ' '))),
-        'true if w/ white-space text'
-      )
-
-      assert.ok(!matches(':blank', h('', h(''))), 'false if w/ elements')
-
-      assert.ok(!matches(':blank', h('', u('text', '.'))), 'false if w/ text')
-    })
-
-    await t.test(':lang()', () => {
-      assert.ok(
-        matches(':lang(de, en)', h('html', {xmlLang: 'en'})),
-        'true if the element has an `xml:lang` attribute'
-      )
-
-      assert.ok(
-        matches(':lang(de, en)', h('html', {lang: 'de'})),
-        'true if the element has a `lang` attribute'
-      )
-
-      assert.ok(
-        !matches(':lang(de, en)', h('html', {xmlLang: 'jp'})),
-        'false if the element has an different language set'
-      )
-
-      assert.ok(
-        !matches(':lang(de, en)', h('html', {xmlLang: 'jp', lang: 'de'})),
-        'should prefer `xmlLang` over `lang` (#1)'
-      )
-
-      assert.ok(
-        matches(':lang(de, en)', h('html', {xmlLang: 'de', lang: 'jp'})),
-        'should prefer `xmlLang` over `lang` (#2)'
-      )
-
-      assert.ok(
-        !matches(':lang(de, en)', h('html', {xmlLang: 'jp'})),
-        'false if the element has an different language set'
-      )
-
-      assert.ok(
-        matches(':lang(*)', h('html', {lang: 'en'})),
-        'should support wildcards'
-      )
-
-      assert.ok(
-        !matches(':lang(en)', h('html', {lang: ''})),
-        'false if [lang] is an empty string (means unknown language)'
-      )
-
-      assert.ok(
-        !matches(':lang(*)', h('html', {lang: ''})),
-        'false with wildcard if [lang] is an empty string (means unknown language)'
-      )
-
-      assert.ok(
-        matches(':lang(de-*-DE)', h('html', {lang: 'de-Latn-DE'})),
-        'should support non-primary wildcard subtags (#1)'
-      )
-
-      assert.ok(
-        matches(':lang(fr-BE, de-*-DE)', h('html', {lang: 'de-Latn-DE'})),
-        'should support non-primary wildcard subtags (#2)'
+      await t.test(
+        'should not match if w/ white-space text',
+        async function () {
+          assert.ok(!matches(':empty', h('', u('text', ' '))))
+        }
       )
     })
 
-    await t.test(':dir()', () => {
+    await t.test(':blank', async function (t) {
+      await t.test('should match if w/o children', async function () {
+        assert.ok(matches(':blank', h('')))
+      })
+
+      await t.test('should match if w/o elements or texts', async function () {
+        assert.ok(matches(':blank', h('', u('comment', '?'))))
+      })
+
+      await t.test('should match if w/ white-space text', async function () {
+        assert.ok(matches(':blank', h('', u('text', ' '))))
+      })
+
+      await t.test('should not match if w/ elements', async function () {
+        assert.ok(!matches(':blank', h('', h(''))))
+      })
+
+      await t.test('should not match if w/ text', async function () {
+        assert.ok(!matches(':blank', h('', u('text', '.'))))
+      })
+    })
+
+    await t.test(':lang()', async function (t) {
+      await t.test(
+        'should match if the element has an `xml:lang` attribute',
+        async function () {
+          assert.ok(matches(':lang(de, en)', h('html', {xmlLang: 'en'})))
+        }
+      )
+
+      await t.test(
+        'should match if the element has a `lang` attribute',
+        async function () {
+          assert.ok(matches(':lang(de, en)', h('html', {lang: 'de'})))
+        }
+      )
+
+      await t.test(
+        'should not match if the element has an different language set',
+        async function () {
+          assert.ok(!matches(':lang(de, en)', h('html', {xmlLang: 'jp'})))
+        }
+      )
+
+      await t.test(
+        'should prefer `xmlLang` over `lang` (#1)',
+        async function () {
+          assert.ok(
+            !matches(':lang(de, en)', h('html', {xmlLang: 'jp', lang: 'de'}))
+          )
+        }
+      )
+
+      await t.test(
+        'should prefer `xmlLang` over `lang` (#2)',
+        async function () {
+          assert.ok(
+            matches(':lang(de, en)', h('html', {xmlLang: 'de', lang: 'jp'}))
+          )
+        }
+      )
+
+      await t.test(
+        'should not match if the element has an different language set',
+        async function () {
+          assert.ok(!matches(':lang(de, en)', h('html', {xmlLang: 'jp'})))
+        }
+      )
+
+      await t.test('should support wildcards', async function () {
+        assert.ok(matches(':lang(*)', h('html', {lang: 'en'})))
+      })
+
+      await t.test(
+        'should not match if [lang] is an empty string (means unknown language)',
+        async function () {
+          assert.ok(!matches(':lang(en)', h('html', {lang: ''})))
+        }
+      )
+
+      await t.test(
+        'should not match with wildcard if [lang] is an empty string (means unknown language)',
+        async function () {
+          assert.ok(!matches(':lang(*)', h('html', {lang: ''})))
+        }
+      )
+
+      await t.test(
+        'should support non-primary wildcard subtags (#1)',
+        async function () {
+          assert.ok(matches(':lang(de-*-DE)', h('html', {lang: 'de-Latn-DE'})))
+        }
+      )
+
+      await t.test(
+        'should support non-primary wildcard subtags (#2)',
+        async function () {
+          assert.ok(
+            matches(':lang(fr-BE, de-*-DE)', h('html', {lang: 'de-Latn-DE'}))
+          )
+        }
+      )
+    })
+
+    await t.test(':dir()', async function (t) {
       const ltr = 'a'
       const rtl = 'أ'
       const neutral = '!'
 
-      assert.ok(
-        matches(':dir(ltr)', h('html', {dir: 'ltr'})),
-        'matching `ltr` if the element has a matching explicit `dir` attribute'
+      await t.test(
+        'should match `ltr` if the element has a matching explicit `dir` attribute',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('html', {dir: 'ltr'})))
+        }
       )
 
-      assert.ok(
-        matches(':dir(rtl)', h('html', {dir: 'rtl'})),
-        'matching `rtl` if the element has a matching explicit `dir` attribute'
+      await t.test(
+        'should match `rtl` if the element has a matching explicit `dir` attribute',
+        async function () {
+          assert.ok(matches(':dir(rtl)', h('html', {dir: 'rtl'})))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('html')),
-        'matching `ltr` if the element is `html` with no `dir` attribute'
+      await t.test(
+        'should match `ltr` if the element is `html` with no `dir` attribute',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('html')))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('html', {dir: 'foo'})),
-        'matching `ltr` if the element is `html` with an invalid `dir` attribute'
+      await t.test(
+        'should match `ltr` if the element is `html` with an invalid `dir` attribute',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('html', {dir: 'foo'})))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('input', {type: 'tel'})),
-        'matching `ltr` if the element is `input[type=tel]` with no `dir` attribute'
+      await t.test(
+        'should match `ltr` if the element is `input[type=tel]` with no `dir` attribute',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('input', {type: 'tel'})))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('input', {type: 'tel', dir: 'foo'})),
-        'matching `ltr` if the element is `input[type=tel]` with an invalid `dir` attribute'
+      await t.test(
+        'should match `ltr` if the element is `input[type=tel]` with an invalid `dir` attribute',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('input', {type: 'tel', dir: 'foo'})))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('textarea', {dir: 'auto'}, ltr)),
-        'matching `ltr` if `[dir=auto]` on a textarea and it’s content is BIDI LTR'
+      await t.test(
+        'should match `ltr` if `[dir=auto]` on a textarea and it’s content is BIDI LTR',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('textarea', {dir: 'auto'}, ltr)))
+        }
       )
 
-      assert.ok(
-        matches(':dir(rtl)', h('textarea', {dir: 'auto'}, rtl)),
-        'matching `rtl` if `[dir=auto]` on a textarea and it’s content is BIDI RTL'
+      await t.test(
+        'should match `rtl` if `[dir=auto]` on a textarea and it’s content is BIDI RTL',
+        async function () {
+          assert.ok(matches(':dir(rtl)', h('textarea', {dir: 'auto'}, rtl)))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('textarea', {dir: 'auto'}, neutral)),
-        'matching `ltr` if `[dir=auto]` on a textarea and it’s content is BIDI neutral'
+      await t.test(
+        'should match `ltr` if `[dir=auto]` on a textarea and it’s content is BIDI neutral',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('textarea', {dir: 'auto'}, neutral)))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('input', {dir: 'auto', value: ltr})),
-        'matching `ltr` if `[dir=auto]` on a text input and it’s value is BIDI LTR'
+      await t.test(
+        'should match `ltr` if `[dir=auto]` on a text input and it’s value is BIDI LTR',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('input', {dir: 'auto', value: ltr})))
+        }
       )
 
-      assert.ok(
-        matches(
-          ':dir(rtl)',
-          h('input', {type: 'search', dir: 'auto', value: rtl})
-        ),
-        'matching `rtl` if `[dir=auto]` on a search input and it’s value is BIDI RTL'
+      await t.test(
+        'should match `rtl` if `[dir=auto]` on a search input and it’s value is BIDI RTL',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(rtl)',
+              h('input', {type: 'search', dir: 'auto', value: rtl})
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          ':dir(ltr)',
-          h('input', {type: 'url', dir: 'auto', value: neutral})
-        ),
-        'matching `ltr` if `[dir=auto]` on a URL input and it’s value is BIDI neutral'
+      await t.test(
+        'should match `ltr` if `[dir=auto]` on a URL input and it’s value is BIDI neutral',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(ltr)',
+              h('input', {type: 'url', dir: 'auto', value: neutral})
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('input', {type: 'email', dir: 'auto'})),
-        'matching `ltr` if `[dir=auto]` on an email input without value'
+      await t.test(
+        'should match `ltr` if `[dir=auto]` on an email input without value',
+        async function () {
+          assert.ok(
+            matches(':dir(ltr)', h('input', {type: 'email', dir: 'auto'}))
+          )
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('p', {dir: 'auto'}, ltr)),
-        'matching `ltr` if `[dir=auto]` and the element has BIDI LTR text'
+      await t.test(
+        'should match `ltr` if `[dir=auto]` and the element has BIDI LTR text',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('p', {dir: 'auto'}, ltr)))
+        }
       )
 
-      assert.ok(
-        matches(':dir(rtl)', h('p', {dir: 'auto'}, rtl)),
-        'matching `rtl` if `[dir=auto]` and the element has BIDI RTL text'
+      await t.test(
+        'should match `rtl` if `[dir=auto]` and the element has BIDI RTL text',
+        async function () {
+          assert.ok(matches(':dir(rtl)', h('p', {dir: 'auto'}, rtl)))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('p', {dir: 'auto'}, neutral)),
-        'matching `ltr` if `[dir=auto]` and the element has BIDI neutral text'
+      await t.test(
+        'should match `ltr` if `[dir=auto]` and the element has BIDI neutral text',
+        async function () {
+          assert.ok(matches(':dir(ltr)', h('p', {dir: 'auto'}, neutral)))
+        }
       )
 
-      assert.ok(
-        matches(':dir(ltr)', h('p', {dir: 'auto'}, [neutral, ltr, rtl])),
-        'matching `ltr` if `[dir=auto]` and the element has BIDI neutral text followed by LTR text'
+      await t.test(
+        'should match `ltr` if `[dir=auto]` and the element has BIDI neutral text followed by LTR text',
+        async function () {
+          assert.ok(
+            matches(':dir(ltr)', h('p', {dir: 'auto'}, [neutral, ltr, rtl]))
+          )
+        }
       )
 
-      assert.ok(
-        matches(':dir(rtl)', h('p', {dir: 'auto'}, [neutral, rtl, ltr])),
-        'matching `rtl` if `[dir=auto]` and the element has BIDI neutral text followed by RTL text'
+      await t.test(
+        'should match `rtl` if `[dir=auto]` and the element has BIDI neutral text followed by RTL text',
+        async function () {
+          assert.ok(
+            matches(':dir(rtl)', h('p', {dir: 'auto'}, [neutral, rtl, ltr]))
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          ':dir(ltr)',
-          h('p', {dir: 'auto'}, [neutral, h('script', rtl), ltr])
-        ),
-        'matching `ltr` if `[dir=auto]`, ignoring BIDI text in scripts, followed by LTR text'
+      await t.test(
+        'should match `ltr` if `[dir=auto]`, ignoring BIDI text in scripts, followed by LTR text',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(ltr)',
+              h('p', {dir: 'auto'}, [neutral, h('script', rtl), ltr])
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          ':dir(rtl)',
-          h('p', {dir: 'auto'}, [neutral, h('style', ltr), rtl])
-        ),
-        'matching `rtl` if `[dir=auto]`, ignoring BIDI text in styles, followed by RTL text'
+      await t.test(
+        'should match `rtl` if `[dir=auto]`, ignoring BIDI text in styles, followed by RTL text',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(rtl)',
+              h('p', {dir: 'auto'}, [neutral, h('style', ltr), rtl])
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          ':dir(ltr)',
-          h('p', {dir: 'auto'}, [neutral, h('span', {dir: 'rtl'}, rtl), ltr])
-        ),
-        'matching `ltr` if `[dir=auto]`, ignoring elements with directions, followed by LTR text'
+      await t.test(
+        'should match `ltr` if `[dir=auto]`, ignoring elements with directions, followed by LTR text',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(ltr)',
+              h('p', {dir: 'auto'}, [
+                neutral,
+                h('span', {dir: 'rtl'}, rtl),
+                ltr
+              ])
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          ':dir(rtl)',
-          h('p', {dir: 'auto'}, [neutral, h('span', {dir: 'ltr'}, ltr), rtl])
-        ),
-        'matching `rtl` if `[dir=auto]`, ignoring elements with directions, followed by RTL text'
+      await t.test(
+        'should match `rtl` if `[dir=auto]`, ignoring elements with directions, followed by RTL text',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(rtl)',
+              h('p', {dir: 'auto'}, [
+                neutral,
+                h('span', {dir: 'ltr'}, ltr),
+                rtl
+              ])
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          ':dir(ltr)',
-          h('bdi', [neutral, h('span', {dir: 'rtl'}, rtl), ltr])
-        ),
-        'matching `ltr` on `bdi` elements, ignoring elements with directions, followed by LTR text'
+      await t.test(
+        'should match `ltr` on `bdi` elements, ignoring elements with directions, followed by LTR text',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(ltr)',
+              h('bdi', [neutral, h('span', {dir: 'rtl'}, rtl), ltr])
+            )
+          )
+        }
       )
 
-      assert.ok(
-        matches(
-          ':dir(rtl)',
-          h('bdi', [neutral, h('span', {dir: 'ltr'}, ltr), rtl])
-        ),
-        'matching `rtl` on `bdi` elements, ignoring elements with directions, followed by RTL text'
+      await t.test(
+        'should match `rtl` on `bdi` elements, ignoring elements with directions, followed by RTL text',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(rtl)',
+              h('bdi', [neutral, h('span', {dir: 'ltr'}, ltr), rtl])
+            )
+          )
+        }
       )
     })
 
-    await t.test(':root', () => {
-      assert.ok(matches(':root', h('html')), 'true if `<html>` in HTML space')
+    await t.test(':root', async function (t) {
+      await t.test('should match if `<html>` in HTML space', async function () {
+        assert.ok(matches(':root', h('html')))
+      })
 
-      assert.ok(
-        !matches(':root', h('div')),
-        'false if not `<html>` in HTML space'
+      await t.test(
+        'should not match if not `<html>` in HTML space',
+        async function () {
+          assert.ok(!matches(':root', h('div')))
+        }
       )
 
-      assert.ok(
-        matches(':root', s('svg'), 'svg'),
-        'true if `<svg>` in SVG space'
-      )
+      await t.test('should match if `<svg>` in SVG space', async function () {
+        assert.ok(matches(':root', s('svg'), 'svg'))
+      })
 
-      assert.ok(
-        !matches(':root', s('circle'), 'svg'),
-        'false if not `<svg>` in SVG space'
-      )
-    })
-
-    await t.test(':scope', () => {
-      assert.ok(matches(':scope', h('html')), 'always true for elements')
-
-      assert.ok(matches(':scope', h('p')), 'always true for elements')
-
-      assert.ok(!matches(':scope', u('text', '!')), 'always true for elements')
-    })
-
-    await t.test(':read-write', () => {
-      assert.ok(matches(':read-write', h('input')), 'true on input')
-
-      assert.ok(matches(':read-write', h('input')), 'true on textarea')
-
-      assert.ok(
-        !matches(':read-write', h('input', {readOnly: true})),
-        'false on input w/ readonly'
-      )
-
-      assert.ok(
-        !matches(':read-write', h('textarea', {readOnly: true})),
-        'false on textarea w/ readonly'
-      )
-
-      assert.ok(
-        !matches(':read-write', h('input', {disabled: true})),
-        'false on input w/ disabled'
-      )
-
-      assert.ok(
-        !matches(':read-write', h('textarea', {disabled: true})),
-        'false on textarea w/ disabled'
-      )
-
-      assert.ok(
-        matches(':read-write', h('div', {contentEditable: 'true'})),
-        'true on element w/ contenteditable'
+      await t.test(
+        'should not match if not `<svg>` in SVG space',
+        async function () {
+          assert.ok(!matches(':root', s('circle'), 'svg'))
+        }
       )
     })
 
-    await t.test(':read-only', () => {
-      assert.ok(!matches(':read-only', h('input')), 'false on input')
+    await t.test(':scope', async function (t) {
+      await t.test('should always be true for elements', async function () {
+        assert.ok(matches(':scope', h('html')))
+      })
 
-      assert.ok(!matches(':read-only', h('input')), 'false on textarea')
+      await t.test('should always be true for elements', async function () {
+        assert.ok(matches(':scope', h('p')))
+      })
 
-      assert.ok(
-        matches(':read-only', h('input', {readOnly: true})),
-        'true on input w/ readonly'
+      await t.test('should always be true for elements', async function () {
+        assert.ok(!matches(':scope', u('text', '!')))
+      })
+    })
+
+    await t.test(':read-write', async function (t) {
+      await t.test('should match on input', async function () {
+        assert.ok(matches(':read-write', h('input')))
+      })
+
+      await t.test('should match on textarea', async function () {
+        assert.ok(matches(':read-write', h('input')))
+      })
+
+      await t.test('should not match on input w/ readonly', async function () {
+        assert.ok(!matches(':read-write', h('input', {readOnly: true})))
+      })
+
+      await t.test(
+        'should not match on textarea w/ readonly',
+        async function () {
+          assert.ok(!matches(':read-write', h('textarea', {readOnly: true})))
+        }
       )
 
-      assert.ok(
-        matches(':read-only', h('textarea', {readOnly: true})),
-        'true on textarea w/ readonly'
+      await t.test('should not match on input w/ disabled', async function () {
+        assert.ok(!matches(':read-write', h('input', {disabled: true})))
+      })
+
+      await t.test(
+        'should not match on textarea w/ disabled',
+        async function () {
+          assert.ok(!matches(':read-write', h('textarea', {disabled: true})))
+        }
       )
 
-      assert.ok(
-        matches(':read-only', h('input', {disabled: true})),
-        'true on input w/ disabled'
+      await t.test(
+        'should match on element w/ contenteditable',
+        async function () {
+          assert.ok(matches(':read-write', h('div', {contentEditable: 'true'})))
+        }
       )
+    })
 
-      assert.ok(
-        matches(':read-only', h('textarea', {disabled: true})),
-        'true on textarea w/ disabled'
-      )
+    await t.test(':read-only', async function (t) {
+      await t.test('should not match on input', async function () {
+        assert.ok(!matches(':read-only', h('input')))
+      })
 
-      assert.ok(
-        !matches(':read-only', h('div', {contentEditable: 'true'})),
-        'false on element w/ contenteditable'
+      await t.test('should not match on textarea', async function () {
+        assert.ok(!matches(':read-only', h('input')))
+      })
+
+      await t.test('should match on input w/ readonly', async function () {
+        assert.ok(matches(':read-only', h('input', {readOnly: true})))
+      })
+
+      await t.test('should match on textarea w/ readonly', async function () {
+        assert.ok(matches(':read-only', h('textarea', {readOnly: true})))
+      })
+
+      await t.test('should match on input w/ disabled', async function () {
+        assert.ok(matches(':read-only', h('input', {disabled: true})))
+      })
+
+      await t.test('should match on textarea w/ disabled', async function () {
+        assert.ok(matches(':read-only', h('textarea', {disabled: true})))
+      })
+
+      await t.test(
+        'should not match on element w/ contenteditable',
+        async function () {
+          assert.ok(!matches(':read-only', h('div', {contentEditable: 'true'})))
+        }
       )
     })
   })
