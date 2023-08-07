@@ -124,12 +124,8 @@ test('select.selectAll()', async (t) => {
       'should return matches with nested matches'
     )
 
-    const xxx = selectAll('p i s', u('root', [h('p', h('i', h('s', h('s'))))]))
-
-    console.dir(xxx, {depth: null})
-
     assert.deepEqual(
-      xxx,
+      selectAll('p i s', u('root', [h('p', h('i', h('s', h('s'))))])),
       [h('s', h('s')), h('s')],
       'should return deep matches'
     )
