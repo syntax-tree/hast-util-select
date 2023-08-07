@@ -183,19 +183,13 @@ test('select.matches()', async function (t) {
       assert.ok(!matches('#two', h('#one')))
     })
 
-    await t.test(
-      'should prefer the last id if multiple id’s are specified (1)',
-      async function () {
-        assert.ok(matches('#two#one', h('#one')))
-      }
-    )
+    await t.test('should never match multiple ids (#1)', async function () {
+      assert.ok(!matches('#a#x', h('#a')))
+    })
 
-    await t.test(
-      'should prefer the last id if multiple id’s are specified (2)',
-      async function () {
-        assert.ok(!matches('#one#two', h('#one')))
-      }
-    )
+    await t.test('should never match multiple ids (#2)', async function () {
+      assert.ok(!matches('#a#x', h('#x')))
+    })
   })
 
   await t.test('class: `.class`', async function (t) {
