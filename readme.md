@@ -269,6 +269,8 @@ type Space = 'html' | 'svg'
 *   [x] `h1 + p` (combinator: next-sibling selector)
 *   [x] `h1 ~ p` (combinator: subsequent sibling selector)
 *   [x] `[attr]` (attribute existence)
+*   [x] `[attr… i]` (attribute case-insensitive)
+*   [x] `[attr… s]` (attribute case-sensitive) (useless, default)
 *   [x] `[attr=value]` (attribute equality)
 *   [x] `[attr~=value]` (attribute contains in space-separated list)
 *   [x] `[attr|=value]` (attribute equality or prefix)
@@ -306,13 +308,12 @@ type Space = 'html' | 'svg'
 ## Unsupported
 
 *   [ ] † `||` (column combinator)
-*   [ ] ‡ `ns|E` (namespace type selector)
-*   [ ] ‡ `*|E` (any namespace type selector)
-*   [ ] ‡ `|E` (no namespace type selector)
-*   [ ] ‡ `[ns|attr]` (namespace attribute)
-*   [ ] ‡ `[*|attr]` (any namespace attribute)
-*   [ ] ‡ `[|attr]` (no namespace attribute)
-*   [ ] ‡ `[attr=value i]` (attribute case-insensitive)
+*   [ ] ¶ `ns|E` (namespace type selector)
+*   [ ] ¶ `*|E` (any namespace type selector)
+*   [ ] ¶ `|E` (no namespace type selector)
+*   [ ] ¶ `[ns|attr]` (namespace attribute)
+*   [ ] ¶ `[*|attr]` (any namespace attribute)
+*   [ ] ¶ `[|attr]` (no namespace attribute)
 *   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class, note: scoping to
     parents is not supported)
 *   [ ] ‖ `:nth-last-child(n of S)` (functional pseudo-class, note: scoping to
@@ -360,6 +361,7 @@ type Space = 'html' | 'svg'
 *   ‡ — not supported by the underlying algorithm
 *   § — not very interested in writing / including the code for this
 *   ‖ — too new, the spec is still changing
+*   ¶ — requires whole CSS files, not just selectors, to make sense
 *   `:any()` and `:matches()` are renamed to `:is()` in CSS.
 
 ## Types
