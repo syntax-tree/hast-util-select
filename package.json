@@ -45,7 +45,7 @@
     "devlop": "^1.0.0",
     "direction": "^2.0.0",
     "hast-util-has-property": "^3.0.0",
-    "hast-util-to-string": "^2.0.0",
+    "hast-util-to-string": "^3.0.0",
     "hast-util-whitespace": "^3.0.0",
     "not": "^0.1.0",
     "nth-check": "^2.0.0",
