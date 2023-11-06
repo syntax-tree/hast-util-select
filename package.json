@@ -41,7 +41,7 @@
     "@types/unist": "^3.0.0",
     "bcp-47-match": "^2.0.0",
     "comma-separated-tokens": "^2.0.0",
-    "css-selector-parser": "^2.0.0",
+    "css-selector-parser": "^3.0.0",
     "devlop": "^1.0.0",
     "direction": "^2.0.0",
     "hast-util-has-property": "^3.0.0",
