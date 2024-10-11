@@ -304,21 +304,21 @@ test('select.matches()', async function (t) {
     await t.test(
       'should match if attribute matches (numeric)',
       async function () {
-        assert.ok(matches('[tabindex=-1]', h('div', {tabIndex: -1})))
+        assert.ok(matches('[tabindex="-1"]', h('div', {tabIndex: -1})))
       }
     )
 
     await t.test(
       'should match if attribute matches (positive numeric)',
       async function () {
-        assert.ok(matches('[minlength=3]', h('input', {minLength: 3})))
+        assert.ok(matches('[minlength="3"]', h('input', {minLength: 3})))
       }
     )
 
     await t.test(
       'should not match if attribute does not matches (string value)',
       async function () {
-        assert.ok(!matches('[id=two]', h('#one')))
+        assert.ok(!matches('[id="two"]', h('#one')))
       }
     )
 
@@ -374,14 +374,14 @@ test('select.matches()', async function (t) {
     await t.test(
       'should not match if attribute does not matches (numeric)',
       async function () {
-        assert.ok(!matches('[tabindex=-1]', h('div', {tabIndex: -2})))
+        assert.ok(!matches('[tabindex="-1"]', h('div', {tabIndex: -2})))
       }
     )
 
     await t.test(
       'should not match if attribute does not matches (positive numeric)',
       async function () {
-        assert.ok(!matches('[minlength=3]', h('input', {minLength: 2})))
+        assert.ok(!matches('[minlength="3"]', h('input', {minLength: 2})))
       }
     )
   })
@@ -444,14 +444,14 @@ test('select.matches()', async function (t) {
     await t.test(
       'should match if attribute starts with (numeric)',
       async function () {
-        assert.ok(matches('[tabindex^=-]', h('div', {tabIndex: -1})))
+        assert.ok(matches('[tabindex^="-"]', h('div', {tabIndex: -1})))
       }
     )
 
     await t.test(
       'should match if attribute starts with (positive numeric)',
       async function () {
-        assert.ok(matches('[minlength^=1]', h('input', {minLength: 10})))
+        assert.ok(matches('[minlength^="1"]', h('input', {minLength: 10})))
       }
     )
 
@@ -507,14 +507,14 @@ test('select.matches()', async function (t) {
     await t.test(
       'should not match if attribute does not start with (numeric)',
       async function () {
-        assert.ok(!matches('[tabindex^=-]', h('div', {tabIndex: 2})))
+        assert.ok(!matches('[tabindex^="-"]', h('div', {tabIndex: 2})))
       }
     )
 
     await t.test(
       'should not match if attribute does not start with (positive numeric)',
       async function () {
-        assert.ok(!matches('[minlength^=1]', h('input', {minLength: 2})))
+        assert.ok(!matches('[minlength^="1"]', h('input', {minLength: 2})))
       }
     )
   })
@@ -577,14 +577,14 @@ test('select.matches()', async function (t) {
     await t.test(
       'should match if attribute ends with (numeric)',
       async function () {
-        assert.ok(matches('[tabindex$=1]', h('div', {tabIndex: -1})))
+        assert.ok(matches('[tabindex$="1"]', h('div', {tabIndex: -1})))
       }
     )
 
     await t.test(
       'should match if attribute ends with (positive numeric)',
       async function () {
-        assert.ok(matches('[minlength$=0]', h('input', {minLength: 10})))
+        assert.ok(matches('[minlength$="0"]', h('input', {minLength: 10})))
       }
     )
 
@@ -638,14 +638,14 @@ test('select.matches()', async function (t) {
     await t.test(
       'should not match if attribute does not end with (numeric)',
       async function () {
-        assert.ok(!matches('[tabindex$=2]', h('div', {tabIndex: -1})))
+        assert.ok(!matches('[tabindex$="2"]', h('div', {tabIndex: -1})))
       }
     )
 
     await t.test(
       'should not match if attribute does not start with (positive numeric)',
       async function () {
-        assert.ok(!matches('[minlength$=1]', h('input', {minLength: 2})))
+        assert.ok(!matches('[minlength$="1"]', h('input', {minLength: 2})))
       }
     )
   })
@@ -708,14 +708,14 @@ test('select.matches()', async function (t) {
     await t.test(
       'should match if attribute contains (numeric)',
       async function () {
-        assert.ok(matches('[tabindex*=1]', h('div', {tabIndex: -12})))
+        assert.ok(matches('[tabindex*="1"]', h('div', {tabIndex: -12})))
       }
     )
 
     await t.test(
       'should match if attribute contains (positive numeric)',
       async function () {
-        assert.ok(matches('[minlength*=0]', h('input', {minLength: 102})))
+        assert.ok(matches('[minlength*="0"]', h('input', {minLength: 102})))
       }
     )
 
@@ -769,14 +769,14 @@ test('select.matches()', async function (t) {
     await t.test(
       'should not match if attribute does not contain (numeric)',
       async function () {
-        assert.ok(!matches('[tabindex*=3]', h('div', {tabIndex: -12})))
+        assert.ok(!matches('[tabindex*="3"]', h('div', {tabIndex: -12})))
       }
     )
 
     await t.test(
       'should not match if attribute does not contain (positive numeric)',
       async function () {
-        assert.ok(!matches('[minlength*=3]', h('input', {minLength: 102})))
+        assert.ok(!matches('[minlength*="3"]', h('input', {minLength: 102})))
       }
     )
   })
@@ -843,14 +843,14 @@ test('select.matches()', async function (t) {
       await t.test(
         'should match if attribute matches (numeric)',
         async function () {
-          assert.ok(matches('[tabindex~=-1]', h('div', {tabIndex: -1})))
+          assert.ok(matches('[tabindex~="-1"]', h('div', {tabIndex: -1})))
         }
       )
 
       await t.test(
         'should match if attribute matches (positive numeric)',
         async function () {
-          assert.ok(matches('[minlength~=3]', h('input', {minLength: 3})))
+          assert.ok(matches('[minlength~="3"]', h('input', {minLength: 3})))
         }
       )
 
@@ -913,14 +913,14 @@ test('select.matches()', async function (t) {
       await t.test(
         'should not match if attribute does not matches (numeric)',
         async function () {
-          assert.ok(!matches('[tabindex~=-1]', h('div', {tabIndex: -2})))
+          assert.ok(!matches('[tabindex~="-1"]', h('div', {tabIndex: -2})))
         }
       )
 
       await t.test(
         'should not match if attribute does not matches (positive numeric)',
         async function () {
-          assert.ok(!matches('[minlength~=3]', h('input', {minLength: 2})))
+          assert.ok(!matches('[minlength~="3"]', h('input', {minLength: 2})))
         }
       )
 
@@ -1009,14 +1009,14 @@ test('select.matches()', async function (t) {
       await t.test(
         'should match if attribute matches (numeric)',
         async function () {
-          assert.ok(matches('[tabindex|=-1]', h('div', {tabIndex: -1})))
+          assert.ok(matches('[tabindex|="-1"]', h('div', {tabIndex: -1})))
         }
       )
 
       await t.test(
         'should match if attribute matches (positive numeric)',
         async function () {
-          assert.ok(matches('[minlength|=3]', h('input', {minLength: 3})))
+          assert.ok(matches('[minlength|="3"]', h('input', {minLength: 3})))
         }
       )
 
@@ -1079,14 +1079,14 @@ test('select.matches()', async function (t) {
       await t.test(
         'should not match if attribute does not matches (numeric)',
         async function () {
-          assert.ok(!matches('[tabindex|=-1]', h('div', {tabIndex: -2})))
+          assert.ok(!matches('[tabindex|="-1"]', h('div', {tabIndex: -2})))
         }
       )
 
       await t.test(
         'should not match if attribute does not matches (positive numeric)',
         async function () {
-          assert.ok(!matches('[minlength|=3]', h('input', {minLength: 2})))
+          assert.ok(!matches('[minlength|="3"]', h('input', {minLength: 2})))
         }
       )
 
