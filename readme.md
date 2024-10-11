@@ -13,23 +13,23 @@ and `querySelectorAll`.
 
 ## Contents
 
-*   [What is this?](#what-is-this)
-*   [When should I use this?](#when-should-i-use-this)
-*   [Install](#install)
-*   [Use](#use)
-*   [API](#api)
-    *   [`matches(selector, node[, space])`](#matchesselector-node-space)
-    *   [`select(selector, tree[, space])`](#selectselector-tree-space)
-    *   [`selectAll(selector, tree[, space])`](#selectallselector-tree-space)
-    *   [`Space`](#space)
-*   [Support](#support)
-*   [Unsupported](#unsupported)
-*   [Types](#types)
-*   [Compatibility](#compatibility)
-*   [Security](#security)
-*   [Related](#related)
-*   [Contribute](#contribute)
-*   [License](#license)
+* [What is this?](#what-is-this)
+* [When should I use this?](#when-should-i-use-this)
+* [Install](#install)
+* [Use](#use)
+* [API](#api)
+  * [`matches(selector, node[, space])`](#matchesselector-node-space)
+  * [`select(selector, tree[, space])`](#selectselector-tree-space)
+  * [`selectAll(selector, tree[, space])`](#selectallselector-tree-space)
+  * [`Space`](#space)
+* [Support](#support)
+* [Unsupported](#unsupported)
+* [Types](#types)
+* [Compatibility](#compatibility)
+* [Security](#security)
+* [Related](#related)
+* [Contribute](#contribute)
+* [License](#license)
 
 ## What is this?
 
@@ -118,12 +118,12 @@ This only checks that the given element matches the selector.
 
 ###### Parameters
 
-*   `selector` (`string`)
-    — CSS selector, such as (`h1`, `a, b`)
-*   `node` ([`Node`][node], optional)
-    — node that might match `selector`, should be an element
-*   `space` ([`Space`][api-space], default: `'html'`)
-    — name of namespace
+* `selector` (`string`)
+  — CSS selector, such as (`h1`, `a, b`)
+* `node` ([`Node`][node], optional)
+  — node that might match `selector`, should be an element
+* `space` ([`Space`][api-space], default: `'html'`)
+  — name of namespace
 
 ###### Returns
 
@@ -151,12 +151,12 @@ Searches the tree in *[preorder][]*.
 
 ###### Parameters
 
-*   `selector` (`string`)
-    — CSS selector, such as (`h1`, `a, b`)
-*   `tree` ([`Node`][node], optional)
-    — tree to search
-*   `space` ([`Space`][api-space], default: `'html'`)
-    — name of namespace
+* `selector` (`string`)
+  — CSS selector, such as (`h1`, `a, b`)
+* `tree` ([`Node`][node], optional)
+  — tree to search
+* `space` ([`Space`][api-space], default: `'html'`)
+  — name of namespace
 
 ###### Returns
 
@@ -200,12 +200,12 @@ Searches the tree in *[preorder][]*.
 
 ###### Parameters
 
-*   `selector` (`string`)
-    — CSS selector, such as (`h1`, `a, b`)
-*   `tree` ([`Node`][node], optional)
-    — tree to search
-*   `space` ([`Space`][api-space], default: `'html'`)
-    — name of namespace
+* `selector` (`string`)
+  — CSS selector, such as (`h1`, `a, b`)
+* `tree` ([`Node`][node], optional)
+  — tree to search
+* `space` ([`Space`][api-space], default: `'html'`)
+  — name of namespace
 
 ###### Returns
 
@@ -259,116 +259,116 @@ type Space = 'html' | 'svg'
 
 ## Support
 
-*   [x] `*` (universal selector)
-*   [x] `,` (multiple selector)
-*   [x] `p` (type selector)
-*   [x] `.class` (class selector)
-*   [x] `#id` (id selector)
-*   [x] `article p` (combinator: descendant selector)
-*   [x] `article > p` (combinator: child selector)
-*   [x] `h1 + p` (combinator: next-sibling selector)
-*   [x] `h1 ~ p` (combinator: subsequent sibling selector)
-*   [x] `[attr]` (attribute existence)
-*   [x] `[attr… i]` (attribute case-insensitive)
-*   [x] `[attr… s]` (attribute case-sensitive) (useless, default)
-*   [x] `[attr=value]` (attribute equality)
-*   [x] `[attr~=value]` (attribute contains in space-separated list)
-*   [x] `[attr|=value]` (attribute equality or prefix)
-*   [x] `[attr^=value]` (attribute begins with)
-*   [x] `[attr$=value]` (attribute ends with)
-*   [x] `[attr*=value]` (attribute contains)
-*   [x] `:dir()` (functional pseudo-class)
-*   [x] `:has()` (functional pseudo-class; also supports `a:has(> b)`)
-*   [x] `:is()` (functional pseudo-class)
-*   [x] `:lang()` (functional pseudo-class)
-*   [x] `:not()` (functional pseudo-class)
-*   [x] `:any-link` (pseudo-class)
-*   [x] `:blank` (pseudo-class)
-*   [x] `:checked` (pseudo-class)
-*   [x] `:disabled` (pseudo-class)
-*   [x] `:empty` (pseudo-class)
-*   [x] `:enabled` (pseudo-class)
-*   [x] `:optional` (pseudo-class)
-*   [x] `:read-only` (pseudo-class)
-*   [x] `:read-write` (pseudo-class)
-*   [x] `:required` (pseudo-class)
-*   [x] `:root` (pseudo-class)
-*   [x] `:scope` (pseudo-class):
-*   [x] \* `:first-child` (pseudo-class)
-*   [x] \* `:first-of-type` (pseudo-class)
-*   [x] \* `:last-child` (pseudo-class)
-*   [x] \* `:last-of-type` (pseudo-class)
-*   [x] \* `:only-child` (pseudo-class)
-*   [x] \* `:only-of-type` (pseudo-class)
-*   [x] \* `:nth-child()` (functional pseudo-class)
-*   [x] \* `:nth-last-child()` (functional pseudo-class)
-*   [x] \* `:nth-last-of-type()` (functional pseudo-class)
-*   [x] \* `:nth-of-type()` (functional pseudo-class)
+* [x] `*` (universal selector)
+* [x] `,` (multiple selector)
+* [x] `p` (type selector)
+* [x] `.class` (class selector)
+* [x] `#id` (id selector)
+* [x] `article p` (combinator: descendant selector)
+* [x] `article > p` (combinator: child selector)
+* [x] `h1 + p` (combinator: next-sibling selector)
+* [x] `h1 ~ p` (combinator: subsequent sibling selector)
+* [x] `[attr]` (attribute existence)
+* [x] `[attr… i]` (attribute case-insensitive)
+* [x] `[attr… s]` (attribute case-sensitive) (useless, default)
+* [x] `[attr=value]` (attribute equality)
+* [x] `[attr~=value]` (attribute contains in space-separated list)
+* [x] `[attr|=value]` (attribute equality or prefix)
+* [x] `[attr^=value]` (attribute begins with)
+* [x] `[attr$=value]` (attribute ends with)
+* [x] `[attr*=value]` (attribute contains)
+* [x] `:dir()` (functional pseudo-class)
+* [x] `:has()` (functional pseudo-class; also supports `a:has(> b)`)
+* [x] `:is()` (functional pseudo-class)
+* [x] `:lang()` (functional pseudo-class)
+* [x] `:not()` (functional pseudo-class)
+* [x] `:any-link` (pseudo-class)
+* [x] `:blank` (pseudo-class)
+* [x] `:checked` (pseudo-class)
+* [x] `:disabled` (pseudo-class)
+* [x] `:empty` (pseudo-class)
+* [x] `:enabled` (pseudo-class)
+* [x] `:optional` (pseudo-class)
+* [x] `:read-only` (pseudo-class)
+* [x] `:read-write` (pseudo-class)
+* [x] `:required` (pseudo-class)
+* [x] `:root` (pseudo-class)
+* [x] `:scope` (pseudo-class):
+* [x] \* `:first-child` (pseudo-class)
+* [x] \* `:first-of-type` (pseudo-class)
+* [x] \* `:last-child` (pseudo-class)
+* [x] \* `:last-of-type` (pseudo-class)
+* [x] \* `:only-child` (pseudo-class)
+* [x] \* `:only-of-type` (pseudo-class)
+* [x] \* `:nth-child()` (functional pseudo-class)
+* [x] \* `:nth-last-child()` (functional pseudo-class)
+* [x] \* `:nth-last-of-type()` (functional pseudo-class)
+* [x] \* `:nth-of-type()` (functional pseudo-class)
 
 ## Unsupported
 
-*   [ ] † `||` (column combinator)
-*   [ ] † `ns|E` (namespace type selector)
-*   [ ] † `*|E` (any namespace type selector)
-*   [ ] † `|E` (no namespace type selector)
-*   [ ] † `[ns|attr]` (namespace attribute)
-*   [ ] † `[*|attr]` (any namespace attribute)
-*   [ ] † `[|attr]` (no namespace attribute)
-*   [ ] ‖ `:nth-child(n of S)` (functional pseudo-class, note: scoping to
-    parents is not supported)
-*   [ ] ‖ `:nth-last-child(n of S)` (functional pseudo-class, note: scoping to
-    parents is not supported)
-*   [ ] † `:active` (pseudo-class)
-*   [ ] † `:autofill` (pseudo-class)
-*   [ ] † `:buffering` (pseudo-class)
-*   [ ] § `:closed` (pseudo-class)
-*   [ ] † `:current` (pseudo-class)
-*   [ ] † `:current()` (functional pseudo-class)
-*   [ ] † `:default` (pseudo-class)
-*   [ ] † `:defined` (pseudo-class)
-*   [ ] † `:focus` (pseudo-class)
-*   [ ] † `:focus-visible` (pseudo-class)
-*   [ ] † `:focus-within` (pseudo-class)
-*   [ ] † `:fullscreen` (pseudo-class)
-*   [ ] † `:future` (pseudo-class)
-*   [ ] § `:host()` (functional pseudo-class)
-*   [ ] § `:host-context()` (functional pseudo-class)
-*   [ ] † `:hover` (pseudo-class)
-*   [ ] ‡ `:in-range` (pseudo-class)
-*   [ ] † `:indeterminate` (pseudo-class)
-*   [ ] ‡ `:invalid` (pseudo-class)
-*   [ ] † `:link` (pseudo-class)
-*   [ ] † `:local-link` (pseudo-class)
-*   [ ] † `:modal` (pseudo-class)
-*   [ ] † `:muted` (pseudo-class)
-*   [ ] † `:nth-col()` (functional pseudo-class)
-*   [ ] † `:nth-last-col()` (functional pseudo-class)
-*   [ ] § `:open` (pseudo-class)
-*   [ ] ‡ `:out-of-range` (pseudo-class)
-*   [ ] † `:past` (pseudo-class)
-*   [ ] † `:paused` (pseudo-class)
-*   [ ] † `:placeholder-shown` (pseudo-class)
-*   [ ] † `:playing` (pseudo-class)
-*   [ ] † `:seeking` (pseudo-class)
-*   [ ] † `:stalled` (pseudo-class)
-*   [ ] † `:target` (pseudo-class)
-*   [ ] † `:target-within` (pseudo-class)
-*   [ ] † `:user-invalid` (pseudo-class)
-*   [ ] ‡ `:valid` (pseudo-class)
-*   [ ] † `:visited` (pseudo-class)
-*   [ ] † `:volume-locked` (pseudo-class)
-*   [ ] § `:where()` (functional pseudo-class)
-*   [ ] † `::before` (pseudo-elements: none are supported)
+* [ ] † `||` (column combinator)
+* [ ] † `ns|E` (namespace type selector)
+* [ ] † `*|E` (any namespace type selector)
+* [ ] † `|E` (no namespace type selector)
+* [ ] † `[ns|attr]` (namespace attribute)
+* [ ] † `[*|attr]` (any namespace attribute)
+* [ ] † `[|attr]` (no namespace attribute)
+* [ ] ‖ `:nth-child(n of S)` (functional pseudo-class, note: scoping to
+  parents is not supported)
+* [ ] ‖ `:nth-last-child(n of S)` (functional pseudo-class, note: scoping to
+  parents is not supported)
+* [ ] † `:active` (pseudo-class)
+* [ ] † `:autofill` (pseudo-class)
+* [ ] † `:buffering` (pseudo-class)
+* [ ] § `:closed` (pseudo-class)
+* [ ] † `:current` (pseudo-class)
+* [ ] † `:current()` (functional pseudo-class)
+* [ ] † `:default` (pseudo-class)
+* [ ] † `:defined` (pseudo-class)
+* [ ] † `:focus` (pseudo-class)
+* [ ] † `:focus-visible` (pseudo-class)
+* [ ] † `:focus-within` (pseudo-class)
+* [ ] † `:fullscreen` (pseudo-class)
+* [ ] † `:future` (pseudo-class)
+* [ ] § `:host()` (functional pseudo-class)
+* [ ] § `:host-context()` (functional pseudo-class)
+* [ ] † `:hover` (pseudo-class)
+* [ ] ‡ `:in-range` (pseudo-class)
+* [ ] † `:indeterminate` (pseudo-class)
+* [ ] ‡ `:invalid` (pseudo-class)
+* [ ] † `:link` (pseudo-class)
+* [ ] † `:local-link` (pseudo-class)
+* [ ] † `:modal` (pseudo-class)
+* [ ] † `:muted` (pseudo-class)
+* [ ] † `:nth-col()` (functional pseudo-class)
+* [ ] † `:nth-last-col()` (functional pseudo-class)
+* [ ] § `:open` (pseudo-class)
+* [ ] ‡ `:out-of-range` (pseudo-class)
+* [ ] † `:past` (pseudo-class)
+* [ ] † `:paused` (pseudo-class)
+* [ ] † `:placeholder-shown` (pseudo-class)
+* [ ] † `:playing` (pseudo-class)
+* [ ] † `:seeking` (pseudo-class)
+* [ ] † `:stalled` (pseudo-class)
+* [ ] † `:target` (pseudo-class)
+* [ ] † `:target-within` (pseudo-class)
+* [ ] † `:user-invalid` (pseudo-class)
+* [ ] ‡ `:valid` (pseudo-class)
+* [ ] † `:visited` (pseudo-class)
+* [ ] † `:volume-locked` (pseudo-class)
+* [ ] § `:where()` (functional pseudo-class)
+* [ ] † `::before` (pseudo-elements: none are supported)
 
 ###### Notes
 
-*   \* — not supported in `matches`
-*   † — needs a user, browser, interactivity, scripting, or whole CSS to make
-    sense
-*   ‡ — not very interested in writing / including the code for this
-*   § — too new, the spec is still changing
-*   ‖ — pr wanted!
-*   `:any()` and `:matches()` are renamed to `:is()` in CSS.
+* \* — not supported in `matches`
+* † — needs a user, browser, interactivity, scripting, or whole CSS to make
+  sense
+* ‡ — not very interested in writing / including the code for this
+* § — too new, the spec is still changing
+* ‖ — pr wanted!
+* `:any()` and `:matches()` are renamed to `:is()` in CSS.
 
 ## Types
 
@@ -392,14 +392,14 @@ This package does not change the syntax tree so there are no openings for
 
 ## Related
 
-*   [`unist-util-select`](https://github.com/syntax-tree/unist-util-select)
-    — select unist nodes with CSS-like selectors
-*   [`hast-util-find-and-replace`](https://github.com/syntax-tree/hast-util-find-and-replace)
-    — find and replace text in a hast tree
-*   [`hast-util-parse-selector`](https://github.com/syntax-tree/hast-util-parse-selector)
-    — create an element from a simple CSS selector
-*   [`hast-util-from-selector`](https://github.com/syntax-tree/hast-util-from-selector)
-    — create an element from a complex CSS selector
+* [`unist-util-select`](https://github.com/syntax-tree/unist-util-select)
+  — select unist nodes with CSS-like selectors
+* [`hast-util-find-and-replace`](https://github.com/syntax-tree/hast-util-find-and-replace)
+  — find and replace text in a hast tree
+* [`hast-util-parse-selector`](https://github.com/syntax-tree/hast-util-parse-selector)
+  — create an element from a simple CSS selector
+* [`hast-util-from-selector`](https://github.com/syntax-tree/hast-util-from-selector)
+  — create an element from a complex CSS selector
 
 ## Contribute
 
