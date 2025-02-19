@@ -1646,7 +1646,7 @@ test('select.matches()', async function (t) {
       })
 
       await t.test('should match if w/o elements or texts', async function () {
-        assert.ok(matches(':empty', h('', u('comment', '?'))))
+        assert.ok(matches(':empty', h('', [u('comment', '?')])))
       })
 
       await t.test('should not match if w/ elements', async function () {
@@ -1654,13 +1654,13 @@ test('select.matches()', async function (t) {
       })
 
       await t.test('should not match if w/ text', async function () {
-        assert.ok(!matches(':empty', h('', u('text', '.'))))
+        assert.ok(!matches(':empty', h('', [u('text', '.')])))
       })
 
       await t.test(
         'should not match if w/ white-space text',
         async function () {
-          assert.ok(!matches(':empty', h('', u('text', ' '))))
+          assert.ok(!matches(':empty', h('', [u('text', ' ')])))
         }
       )
     })
@@ -1675,7 +1675,7 @@ test('select.matches()', async function (t) {
       })
 
       await t.test('should match if w/ white-space text', async function () {
-        assert.ok(matches(':blank', h('', u('text', ' '))))
+        assert.ok(matches(':blank', h('', [u('text', ' ')])))
       })
 
       await t.test('should not match if w/ elements', async function () {
@@ -1683,7 +1683,7 @@ test('select.matches()', async function (t) {
       })
 
       await t.test('should not match if w/ text', async function () {
-        assert.ok(!matches(':blank', h('', u('text', '.'))))
+        assert.ok(!matches(':blank', h('', [u('text', '.')])))
       })
     })
 
