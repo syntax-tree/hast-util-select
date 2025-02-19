@@ -1,15 +1,12 @@
 # hast-util-select
 
-[![Build][build-badge]][build]
-[![Coverage][coverage-badge]][coverage]
-[![Downloads][downloads-badge]][downloads]
-[![Size][size-badge]][size]
-[![Sponsors][sponsors-badge]][collective]
-[![Backers][backers-badge]][collective]
-[![Chat][chat-badge]][chat]
+[![Build][badge-build-image]][badge-build-url]
+[![Coverage][badge-coverage-image]][badge-coverage-url]
+[![Downloads][badge-downloads-image]][badge-downloads-url]
+[![Size][badge-size-image]][badge-size-url]
 
-[hast][] utility with equivalents for `matches`, `querySelector`,
-and `querySelectorAll`.
+[hast][github-hast] utility with equivalents for
+`matches`, `querySelector`, and `querySelectorAll`.
 
 ## Contents
 
@@ -46,17 +43,19 @@ This information is not stored in hast, so selectors like that don’t work.
 This is a small utility that is quite useful, but is rather slow if you use it a
 lot.
 For each call, it has to walk the entire tree.
-In some cases, walking the tree once with [`unist-util-visit`][unist-util-visit]
+In some cases,
+walking the tree once with [`unist-util-visit`][github-unist-util-visit]
 is smarter, such as when you want to change certain nodes.
 On the other hand, this is quite powerful and fast enough for many other cases.
 
-This utility is similar to [`unist-util-select`][unist-util-select], which can
-find and match any unist node.
+This utility is similar to
+[`unist-util-select`][github-unist-util-select],
+which can find and match any unist node.
 
 ## Install
 
-This package is [ESM only][esm].
-In Node.js (version 16+), install with [npm][]:
+This package is [ESM only][github-gist-esm].
+In Node.js (version 16+), install with [npm][npmjs-install]:
 
 ```sh
 npm install hast-util-select
@@ -120,7 +119,7 @@ This only checks that the given element matches the selector.
 
 * `selector` (`string`)
   — CSS selector, such as (`h1`, `a, b`)
-* `node` ([`Node`][node], optional)
+* `node` ([`Node`][github-hast-nodes], optional)
   — node that might match `selector`, should be an element
 * `space` ([`Space`][api-space], default: `'html'`)
   — name of namespace
@@ -147,13 +146,13 @@ matches('[lang|=en]', h('a', {lang: 'en-GB'})) // => true
 ### `select(selector, tree[, space])`
 
 Select the first element that matches `selector` in the given `tree`.
-Searches the tree in *[preorder][]*.
+Searches the tree in *[preorder][github-unist-preorder]*.
 
 ###### Parameters
 
 * `selector` (`string`)
   — CSS selector, such as (`h1`, `a, b`)
-* `tree` ([`Node`][node], optional)
+* `tree` ([`Node`][github-hast-nodes], optional)
   — tree to search
 * `space` ([`Space`][api-space], default: `'html'`)
   — name of namespace
@@ -196,13 +195,13 @@ Yields:
 ### `selectAll(selector, tree[, space])`
 
 Select all elements that match `selector` in the given `tree`.
-Searches the tree in *[preorder][]*.
+Searches the tree in *[preorder][github-unist-preorder]*.
 
 ###### Parameters
 
 * `selector` (`string`)
   — CSS selector, such as (`h1`, `a, b`)
-* `tree` ([`Node`][node], optional)
+* `tree` ([`Node`][github-hast-nodes], optional)
   — tree to search
 * `space` ([`Space`][api-space], default: `'html'`)
   — name of namespace
@@ -388,11 +387,11 @@ compatible with Node.js 16.
 ## Security
 
 This package does not change the syntax tree so there are no openings for
-[cross-site scripting (XSS)][xss] attacks.
+[cross-site scripting (XSS)][wikipedia-xss] attacks.
 
 ## Related
 
-* [`unist-util-select`](https://github.com/syntax-tree/unist-util-select)
+* [`unist-util-select`][github-unist-util-select]
   — select unist nodes with CSS-like selectors
 * [`hast-util-find-and-replace`](https://github.com/syntax-tree/hast-util-find-and-replace)
   — find and replace text in a hast tree
@@ -403,77 +402,21 @@ This package does not change the syntax tree so there are no openings for
 
 ## Contribute
 
-See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
-ways to get started.
-See [`support.md`][help] for ways to get help.
+See [`contributing.md`][health-contributing]
+in
+[`syntax-tree/.github`][health]
+for ways to get started.
+See [`support.md`][health-support] for ways to get help.
 
-This project has a [code of conduct][coc].
+This project has a [code of conduct][health-coc].
 By interacting with this repository, organization, or community you agree to
 abide by its terms.
 
 ## License
 
-[MIT][license] © [Titus Wormer][author]
+[MIT][file-license] © [Titus Wormer][wooorm]
 
 <!-- Definitions -->
-
-[build-badge]: https://github.com/syntax-tree/hast-util-select/workflows/main/badge.svg
-
-[build]: https://github.com/syntax-tree/hast-util-select/actions
-
-[coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-select.svg
-
-[coverage]: https://codecov.io/github/syntax-tree/hast-util-select
-
-[downloads-badge]: https://img.shields.io/npm/dm/hast-util-select.svg
-
-[downloads]: https://www.npmjs.com/package/hast-util-select
-
-[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=hast-util-select
-
-[size]: https://bundlejs.com/?q=hast-util-select
-
-[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
-
-[backers-badge]: https://opencollective.com/unified/backers/badge.svg
-
-[collective]: https://opencollective.com/unified
-
-[chat-badge]: https://img.shields.io/badge/chat-discussions-success.svg
-
-[chat]: https://github.com/syntax-tree/unist/discussions
-
-[npm]: https://docs.npmjs.com/cli/install
-
-[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
-
-[esmsh]: https://esm.sh
-
-[typescript]: https://www.typescriptlang.org
-
-[license]: license
-
-[author]: https://wooorm.com
-
-[health]: https://github.com/syntax-tree/.github
-
-[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
-
-[help]: https://github.com/syntax-tree/.github/blob/main/support.md
-
-[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
-
-[preorder]: https://github.com/syntax-tree/unist#preorder
-
-[hast]: https://github.com/syntax-tree/hast
-
-[node]: https://github.com/syntax-tree/hast#nodes
-
-[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
-
-[unist-util-visit]: https://github.com/syntax-tree/unist-util-visit
-
-[unist-util-select]: https://github.com/syntax-tree/unist-util-select
 
 [api-matches]: #matchesselector-node-space
 
@@ -482,3 +425,51 @@ abide by its terms.
 [api-select-all]: #selectallselector-tree-space
 
 [api-space]: #space
+
+[badge-build-image]: https://github.com/syntax-tree/hast-util-select/workflows/main/badge.svg
+
+[badge-build-url]: https://github.com/syntax-tree/hast-util-select/actions
+
+[badge-coverage-image]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-select.svg
+
+[badge-coverage-url]: https://codecov.io/github/syntax-tree/hast-util-select
+
+[badge-downloads-image]: https://img.shields.io/npm/dm/hast-util-select.svg
+
+[badge-downloads-url]: https://www.npmjs.com/package/hast-util-select
+
+[badge-size-image]: https://img.shields.io/bundlejs/size/hast-util-select
+
+[badge-size-url]: https://bundlejs.com/?q=hast-util-select
+
+[esmsh]: https://esm.sh
+
+[file-license]: license
+
+[github-gist-esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[github-hast]: https://github.com/syntax-tree/hast
+
+[github-hast-nodes]: https://github.com/syntax-tree/hast#nodes
+
+[github-unist-preorder]: https://github.com/syntax-tree/unist#preorder
+
+[github-unist-util-select]: https://github.com/syntax-tree/unist-util-select
+
+[github-unist-util-visit]: https://github.com/syntax-tree/unist-util-visit
+
+[health]: https://github.com/syntax-tree/.github
+
+[health-coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
+
+[health-contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
+
+[health-support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[npmjs-install]: https://docs.npmjs.com/cli/install
+
+[typescript]: https://www.typescriptlang.org
+
+[wikipedia-xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
+
+[wooorm]: https://wooorm.com
