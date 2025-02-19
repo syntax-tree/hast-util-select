@@ -30,23 +30,32 @@
 
 ## What is this?
 
-This package lets you find nodes in a tree, similar to how `matches`,
-`querySelector`, and `querySelectorAll` work with the DOM.
+This package lets you find nodes in a tree,
+similar to how `matches`,
+`querySelector`,
+and
+`querySelectorAll` work with the DOM.
 
 One notable difference between DOM and hast is that DOM nodes have references
-to their parents, meaning that `document.body.matches(':last-child')` can
-be evaluated to check whether the body is the last child of its parent.
-This information is not stored in hast, so selectors like that don’t work.
+to their parents,
+meaning that `document.body.matches(':last-child')` can be evaluated to check
+whether the body is the last child of its parent.
+This information is not stored in hast,
+so selectors like that don’t work.
 
 ## When should I use this?
 
-This is a small utility that is quite useful, but is rather slow if you use it a
-lot.
-For each call, it has to walk the entire tree.
+This is a small utility that is quite useful,
+but is rather slow if you use it a lot.
+For each call,
+it has to walk the entire tree.
 In some cases,
-walking the tree once with [`unist-util-visit`][github-unist-util-visit]
-is smarter, such as when you want to change certain nodes.
-On the other hand, this is quite powerful and fast enough for many other cases.
+walking the tree once with
+[`unist-util-visit`][github-unist-util-visit]
+is smarter,
+such as when you want to change certain nodes.
+On the other hand,
+this is quite powerful and fast enough for many other cases.
 
 This utility is similar to
 [`unist-util-select`][github-unist-util-select],
@@ -55,7 +64,8 @@ which can find and match any unist node.
 ## Install
 
 This package is [ESM only][github-gist-esm].
-In Node.js (version 16+), install with [npm][npmjs-install]:
+In Node.js (version 16+),
+install with [npm][npmjs-install]:
 
 ```sh
 npm install hast-util-select
@@ -64,14 +74,14 @@ npm install hast-util-select
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {matches, select, selectAll} from "https://esm.sh/hast-util-select@6"
+import {matches, select, selectAll} from 'https://esm.sh/hast-util-select@6'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {matches, select, selectAll} from "https://esm.sh/hast-util-select@6?bundle"
+  import {matches, select, selectAll} from 'https://esm.sh/hast-util-select@6?bundle'
 </script>
 ```
 
@@ -103,25 +113,33 @@ console.log(selectAll('h1 ~ :nth-child(even)', tree))
 ## API
 
 This package exports the identifiers [`matches`][api-matches],
-[`select`][api-select], and [`selectAll`][api-select-all].
+[`select`][api-select],
+and [`selectAll`][api-select-all].
 There is no default export.
 
 ### `matches(selector, node[, space])`
 
 Check that the given `node` matches `selector`.
 
-This only checks the element itself, not the surrounding tree.
-Thus, nesting in selectors is not supported (`p b`, `p > b`), neither are
-selectors like `:first-child`, etc.
+This only checks the element itself,
+not the surrounding tree.
+Thus,
+nesting in selectors is not supported (`p b`, `p > b`),
+neither are selectors like `:first-child`,
+etc.
 This only checks that the given element matches the selector.
 
 ###### Parameters
 
-* `selector` (`string`)
-  — CSS selector, such as (`h1`, `a, b`)
-* `node` ([`Node`][github-hast-nodes], optional)
-  — node that might match `selector`, should be an element
-* `space` ([`Space`][api-space], default: `'html'`)
+* `selector`
+  (`string`, example: `'h1'`, `'a, b'`)
+  — CSS selector
+* `node`
+  ([`Node`][github-hast-nodes], optional)
+  — node that might match `selector`,
+  should be an element
+* `space`
+  ([`Space`][api-space], default: `'html'`)
   — name of namespace
 
 ###### Returns
@@ -150,11 +168,14 @@ Searches the tree in *[preorder][github-unist-preorder]*.
 
 ###### Parameters
 
-* `selector` (`string`)
+* `selector`
+  (`string`, example: `'h1'`, `'a, b'`)
   — CSS selector, such as (`h1`, `a, b`)
-* `tree` ([`Node`][github-hast-nodes], optional)
+* `tree`
+  ([`Node`][github-hast-nodes], optional)
   — tree to search
-* `space` ([`Space`][api-space], default: `'html'`)
+* `space`
+  ([`Space`][api-space], default: `'html'`)
   — name of namespace
 
 ###### Returns
@@ -199,11 +220,14 @@ Searches the tree in *[preorder][github-unist-preorder]*.
 
 ###### Parameters
 
-* `selector` (`string`)
-  — CSS selector, such as (`h1`, `a, b`)
-* `tree` ([`Node`][github-hast-nodes], optional)
+* `selector`
+  (`string`, example: `'h1'`, `'a, b'`)
+  — CSS selector
+* `tree`
+  ([`Node`][github-hast-nodes], optional)
   — tree to search
-* `space` ([`Space`][api-space], default: `'html'`)
+* `space`
+  ([`Space`][api-space], default: `'html'`)
   — name of namespace
 
 ###### Returns
@@ -362,10 +386,14 @@ type Space = 'html' | 'svg'
 ###### Notes
 
 * \* — not supported in `matches`
-* † — needs a user, browser, interactivity, scripting, or whole CSS to make
-  sense
+* † — needs a user,
+  browser,
+  interactivity,
+  scripting,
+  or whole CSS to make sense
 * ‡ — not very interested in writing / including the code for this
-* § — too new, the spec is still changing
+* § — too new,
+  the spec is still changing
 * ‖ — pr wanted!
 * `:any()` and `:matches()` are renamed to `:is()` in CSS.
 
@@ -379,9 +407,10 @@ It exports the additional type [`Space`][api-space].
 Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
 
-When we cut a new major release, we drop support for unmaintained versions of
-Node.
-This means we try to keep the current release line, `hast-util-select@^6`,
+When we cut a new major release,
+we drop support for unmaintained versions of Node.
+This means we try to keep the current release line,
+`hast-util-select@6`,
 compatible with Node.js 16.
 
 ## Security
@@ -409,8 +438,9 @@ for ways to get started.
 See [`support.md`][health-support] for ways to get help.
 
 This project has a [code of conduct][health-coc].
-By interacting with this repository, organization, or community you agree to
-abide by its terms.
+By interacting with this repository,
+organization,
+or community you agree to abide by its terms.
 
 ## License
 
