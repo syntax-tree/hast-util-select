@@ -16,7 +16,7 @@
     "hast-util-to-string": "^3.0.0",
     "hast-util-whitespace": "^3.0.0",
     "nth-check": "^2.0.0",
-    "property-information": "^6.0.0",
+    "property-information": "^7.0.0",
     "space-separated-tokens": "^2.0.0",
     "unist-util-visit": "^5.0.0",
     "zwitch": "^2.0.0"
