@@ -242,6 +242,20 @@ test('select.matches()', async function (t) {
         assert.ok(!matches('[data-bar]', h('div', {dataFoo: 'bar'})))
       }
     )
+
+    await t.test(
+      'should match if attribute exists (empty space-separated list)',
+      async function () {
+        assert.ok(matches('[class]', h('div', {className: []})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute exists (empty comma-separated list)',
+      async function () {
+        assert.ok(matches('[accept]', h('input', {accept: []})))
+      }
+    )
   })
 
   await t.test('attributes, equality: `[attr=value]`', async function (t) {
@@ -384,6 +398,27 @@ test('select.matches()', async function (t) {
         assert.ok(!matches('[minlength="3"]', h('input', {minLength: 2})))
       }
     )
+
+    await t.test(
+      'should match if attribute matches (empty space-separated list)',
+      async function () {
+        assert.ok(matches('[class=""]', h('div', {className: []})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute matches (empty comma-separated list)',
+      async function () {
+        assert.ok(matches('[accept=""]', h('input', {accept: []})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not match (empty space-separated list)',
+      async function () {
+        assert.ok(!matches('[class=one]', h('div', {className: []})))
+      }
+    )
   })
 
   await t.test('attributes, begins: `[attr^=value]`', async function (t) {
@@ -517,6 +552,17 @@ test('select.matches()', async function (t) {
         assert.ok(!matches('[minlength^="1"]', h('input', {minLength: 2})))
       }
     )
+
+    await t.test('should not match if the value is empty', async function () {
+      assert.ok(!matches('[id^=""]', h('#one')))
+    })
+
+    await t.test(
+      'should not match if the value is empty (2)',
+      async function () {
+        assert.ok(!matches('[title^=""]', h('div', {title: ''})))
+      }
+    )
   })
 
   await t.test('attributes, ends: `[attr$=value]`', async function (t) {
@@ -648,6 +694,17 @@ test('select.matches()', async function (t) {
         assert.ok(!matches('[minlength$="1"]', h('input', {minLength: 2})))
       }
     )
+
+    await t.test('should not match if the value is empty', async function () {
+      assert.ok(!matches('[id$=""]', h('#one')))
+    })
+
+    await t.test(
+      'should not match if the value is empty (2)',
+      async function () {
+        assert.ok(!matches('[title$=""]', h('div', {title: ''})))
+      }
+    )
   })
 
   await t.test('attributes, contains: `[attr*=value]`', async function (t) {
@@ -777,6 +834,17 @@ test('select.matches()', async function (t) {
       'should not match if attribute does not contain (positive numeric)',
       async function () {
         assert.ok(!matches('[minlength*="3"]', h('input', {minLength: 102})))
+      }
+    )
+
+    await t.test('should not match if the value is empty', async function () {
+      assert.ok(!matches('[id*=""]', h('#one')))
+    })
+
+    await t.test(
+      'should not match if the value is empty (2)',
+      async function () {
+        assert.ok(!matches('[title*=""]', h('div', {title: ''})))
       }
     )
   })
@@ -942,6 +1010,17 @@ test('select.matches()', async function (t) {
         'should not match if attribute part does not exist (space-separated list)',
         async function () {
           assert.ok(!matches('[class~=three]', h('.one.two')))
+        }
+      )
+
+      await t.test('should not match if the value is empty', async function () {
+        assert.ok(!matches('[class~=""]', h('div', {className: ['']})))
+      })
+
+      await t.test(
+        'should not match if the value is empty (2)',
+        async function () {
+          assert.ok(!matches('[class~=""]', h('div', {className: []})))
         }
       )
     }
