@@ -1941,6 +1941,18 @@ test('select.matches()', async function (t) {
       )
 
       await t.test(
+        'should match `ltr` if `[dir=auto]`, ignoring BIDI text in textareas, followed by LTR text',
+        async function () {
+          assert.ok(
+            matches(
+              ':dir(ltr)',
+              h('div', {dir: 'auto'}, [neutral, h('textarea', rtl), ltr])
+            )
+          )
+        }
+      )
+
+      await t.test(
         'should match `ltr` if `[dir=auto]`, ignoring elements with directions, followed by LTR text',
         async function () {
           assert.ok(
