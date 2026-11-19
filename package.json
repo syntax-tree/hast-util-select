@@ -23,16 +23,16 @@
   },
   "description": "hast utility for `querySelector`, `querySelectorAll`, and `matches`",
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "c8": "^10.0.0",
+    "@types/node": "^26.0.0",
+    "c8": "^12.0.0",
     "hastscript": "^9.0.0",
     "prettier": "^3.0.0",
     "remark-cli": "^12.0.0",
     "remark-preset-wooorm": "^11.0.0",
     "type-coverage": "^2.0.0",
-    "typescript": "^5.0.0",
+    "typescript": "^6.0.0",
     "unist-builder": "^4.0.0",
-    "xo": "^0.60.0"
+    "xo": "^5.0.0"
   },
   "exports": "./index.js",
   "files": [
@@ -92,25 +92,5 @@
     "strict": true
   },
   "type": "module",
-  "version": "6.0.4",
-  "xo": {
-    "overrides": [
-      {
-        "files": [
-          "test/**/*.js"
-        ],
-        "rules": {
-          "import/no-unassigned-import": "off",
-          "max-nested-callbacks": "off",
-          "no-await-in-loop": "off"
-        }
-      }
-    ],
-    "prettier": true,
-    "rules": {
-      "logical-assignment-operators": "off",
-      "max-params": "off",
-      "unicorn/prefer-at": "off"
-    }
-  }
+  "version": "6.0.4"
 }

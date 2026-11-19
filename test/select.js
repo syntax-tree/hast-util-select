@@ -874,7 +874,7 @@ test('select.select()', async function (t) {
     await t.test(
       'should not return elements inside SVG embedded in `[contentEditable=true]`',
       async function () {
-        assert.deepEqual(
+        assert.equal(
           select(
             'a:read-write',
             u('root', [
@@ -895,7 +895,7 @@ test('select.select()', async function (t) {
     await t.test(
       'should not return elements inside `[contentEditable=true]`',
       async function () {
-        assert.deepEqual(
+        assert.equal(
           select(
             'p:read-only',
             u('root', [h('div', {contentEditable: 'true'}, [h('p', 'A')])])
