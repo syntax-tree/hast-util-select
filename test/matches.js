@@ -237,9 +237,44 @@ test('select.matches()', async function (t) {
     })
 
     await t.test(
+      'should match if attribute exists (empty string value)',
+      async function () {
+        assert.ok(matches('[title]', h('div', {title: ''})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute exists (empty space-separated list)',
+      async function () {
+        assert.ok(matches('[class]', h('div', {className: []})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute exists (empty comma-separated list)',
+      async function () {
+        assert.ok(matches('[accept]', h('input', {accept: []})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute exists (boolean)',
+      async function () {
+        assert.ok(matches('[hidden]', h('div', {hidden: true})))
+      }
+    )
+
+    await t.test(
       'should not match if attribute does not exist (2)',
       async function () {
         assert.ok(!matches('[data-bar]', h('div', {dataFoo: 'bar'})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not exist (boolean)',
+      async function () {
+        assert.ok(!matches('[hidden]', h('div', {hidden: false})))
       }
     )
   })
@@ -293,6 +328,20 @@ test('select.matches()', async function (t) {
     )
 
     await t.test(
+      'should match if attribute matches (boolean, empty)',
+      async function () {
+        assert.ok(matches('[hidden=""]', h('div', {hidden: true})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute matches (overloaded boolean, empty)',
+      async function () {
+        assert.ok(matches('[download=""]', h('a', {download: true})))
+      }
+    )
+
+    await t.test(
       'should match if attribute matches (overloaded boolean, 2)',
       async function () {
         assert.ok(
@@ -312,6 +361,27 @@ test('select.matches()', async function (t) {
       'should match if attribute matches (positive numeric)',
       async function () {
         assert.ok(matches('[minlength="3"]', h('input', {minLength: 3})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute matches (empty string value)',
+      async function () {
+        assert.ok(matches('[title=""]', h('div', {title: ''})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute matches (empty space-separated list)',
+      async function () {
+        assert.ok(matches('[class=""]', h('div', {className: []})))
+      }
+    )
+
+    await t.test(
+      'should match if attribute matches (empty comma-separated list)',
+      async function () {
+        assert.ok(matches('[accept=""]', h('input', {accept: []})))
       }
     )
 
@@ -363,6 +433,13 @@ test('select.matches()', async function (t) {
     )
 
     await t.test(
+      'should not match if attribute does not matches (boolean, empty)',
+      async function () {
+        assert.ok(!matches('[hidden=""]', h('div', {hidden: false})))
+      }
+    )
+
+    await t.test(
       'should not match if attribute does not matches (overloaded boolean, 2)',
       async function () {
         assert.ok(
@@ -382,6 +459,20 @@ test('select.matches()', async function (t) {
       'should not match if attribute does not matches (positive numeric)',
       async function () {
         assert.ok(!matches('[minlength="3"]', h('input', {minLength: 2})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not matches (empty string value)',
+      async function () {
+        assert.ok(!matches('[title=""]', h('div', {title: 'a'})))
+      }
+    )
+
+    await t.test(
+      'should not match if attribute does not matches (empty space-separated list)',
+      async function () {
+        assert.ok(!matches('[class=one]', h('div', {className: []})))
       }
     )
   })
@@ -517,6 +608,27 @@ test('select.matches()', async function (t) {
         assert.ok(!matches('[minlength^="1"]', h('input', {minLength: 2})))
       }
     )
+
+    await t.test(
+      'should not match if value is empty (string value)',
+      async function () {
+        assert.ok(!matches('[title^=""]', h('div', {title: 'a'})))
+      }
+    )
+
+    await t.test(
+      'should not match if value is empty (empty string value)',
+      async function () {
+        assert.ok(!matches('[title^=""]', h('div', {title: ''})))
+      }
+    )
+
+    await t.test(
+      'should not match if value is empty (boolean)',
+      async function () {
+        assert.ok(!matches('[hidden^=""]', h('div', {hidden: true})))
+      }
+    )
   })
 
   await t.test('attributes, ends: `[attr$=value]`', async function (t) {
@@ -646,6 +758,27 @@ test('select.matches()', async function (t) {
       'should not match if attribute does not start with (positive numeric)',
       async function () {
         assert.ok(!matches('[minlength$="1"]', h('input', {minLength: 2})))
+      }
+    )
+
+    await t.test(
+      'should not match if value is empty (string value)',
+      async function () {
+        assert.ok(!matches('[title$=""]', h('div', {title: 'a'})))
+      }
+    )
+
+    await t.test(
+      'should not match if value is empty (empty string value)',
+      async function () {
+        assert.ok(!matches('[title$=""]', h('div', {title: ''})))
+      }
+    )
+
+    await t.test(
+      'should not match if value is empty (boolean)',
+      async function () {
+        assert.ok(!matches('[hidden$=""]', h('div', {hidden: true})))
       }
     )
   })
@@ -779,6 +912,27 @@ test('select.matches()', async function (t) {
         assert.ok(!matches('[minlength*="3"]', h('input', {minLength: 102})))
       }
     )
+
+    await t.test(
+      'should not match if value is empty (string value)',
+      async function () {
+        assert.ok(!matches('[title*=""]', h('div', {title: 'a'})))
+      }
+    )
+
+    await t.test(
+      'should not match if value is empty (empty string value)',
+      async function () {
+        assert.ok(!matches('[title*=""]', h('div', {title: ''})))
+      }
+    )
+
+    await t.test(
+      'should not match if value is empty (boolean)',
+      async function () {
+        assert.ok(!matches('[hidden*=""]', h('div', {hidden: true})))
+      }
+    )
   })
 
   await t.test(
@@ -799,9 +953,9 @@ test('select.matches()', async function (t) {
       )
 
       await t.test(
-        'should match if attribute matches (space-separated list, 2)',
+        'should not match if value contains whitespace (space-separated list)',
         async function () {
-          assert.ok(matches('[class~="one two"]', h('.one.two')))
+          assert.ok(!matches('[class~="one two"]', h('.one.two')))
         }
       )
 
@@ -944,6 +1098,36 @@ test('select.matches()', async function (t) {
           assert.ok(!matches('[class~=three]', h('.one.two')))
         }
       )
+
+      await t.test(
+        'should match if attribute part exists (string value)',
+        async function () {
+          assert.ok(matches('[title~=two]', h('div', {title: 'one\ttwo'})))
+        }
+      )
+
+      await t.test(
+        'should not match if value contains whitespace (string value)',
+        async function () {
+          assert.ok(
+            !matches('[title~="one two"]', h('div', {title: 'one two'}))
+          )
+        }
+      )
+
+      await t.test(
+        'should not match if value is empty (string value)',
+        async function () {
+          assert.ok(!matches('[title~=""]', h('div', {title: ''})))
+        }
+      )
+
+      await t.test(
+        'should not match if value is empty (empty space-separated list)',
+        async function () {
+          assert.ok(!matches('[class~=""]', h('div', {className: []})))
+        }
+      )
     }
   )
 
@@ -994,6 +1178,13 @@ test('select.matches()', async function (t) {
         'should match if attribute matches (overloaded boolean, 1)',
         async function () {
           assert.ok(matches('[download|=download]', h('a', {download: true})))
+        }
+      )
+
+      await t.test(
+        'should match if attribute matches (boolean, empty)',
+        async function () {
+          assert.ok(matches('[hidden|=""]', h('div', {hidden: true})))
         }
       )
 
@@ -1111,6 +1302,27 @@ test('select.matches()', async function (t) {
         'should not match if value does start with',
         async function () {
           assert.ok(!matches('[alpha|=charlie]', h('div', {alpha: 'bravo'})))
+        }
+      )
+
+      await t.test(
+        'should match if value is empty and attribute is empty',
+        async function () {
+          assert.ok(matches('[alpha|=""]', h('div', {alpha: ''})))
+        }
+      )
+
+      await t.test(
+        'should match if value is empty and attribute starts with `-`',
+        async function () {
+          assert.ok(matches('[alpha|=""]', h('div', {alpha: '-bravo'})))
+        }
+      )
+
+      await t.test(
+        'should not match if value is empty and attribute is not',
+        async function () {
+          assert.ok(!matches('[alpha|=""]', h('div', {alpha: 'bravo'})))
         }
       )
     }
